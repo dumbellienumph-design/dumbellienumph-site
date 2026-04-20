@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services — UMBILO CAR WASH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           DESIGN TOKENS — identical to index.html
+        ============================================================ */
+        :root {
+            --gold:       #D4AF37;
+            --gold-deep:  #8C6A00;
+            --gold-glow:  rgba(212,175,55,0.35);
+            --gold-faint: rgba(212,175,55,0.08);
+            --cyan:       #00E5FF;
+            --cyan-dark:  #008B99;
+            --cyan-glow:  rgba(0,229,255,0.3);
+            --cyan-faint: rgba(0,229,255,0.07);
+            --black:      #0A0A0A;
+            --dark-2:     #111111;
+            --dark-3:     #181818;
+            --dark-4:     #202020;
+            --grey:       #EAEAEA;
+            --grey-dim:   rgba(234,234,234,0.55);
+            --white:      #F8F8F8;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--black);
+            color: var(--grey);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+        /* ============================================================
+           SCROLL REVEAL
+        ============================================================ */
+        .sr {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .sr.from-left  { transform: translateX(-55px); }
+        .sr.from-right { transform: translateX(55px); }
+        .sr.scale-in   { transform: scale(0.92); }
+        .sr.on         { opacity: 1 !important; transform: none !important; }
+        .sr-d1 { transition-delay: 0.1s; }
+        .sr-d2 { transition-delay: 0.2s; }
+        .sr-d3 { transition-delay: 0.3s; }
+        .sr-d4 { transition-delay: 0.4s; }
+        .sr-d5 { transition-delay: 0.5s; }
+
+        /* ============================================================
+           NAV — exact match to index
+        ============================================================ */
+        nav {
+            position: fixed; top:0; left:0; right:0; z-index:999;
+            height: 66px;
+            background: rgba(10,10,10,0.92);
+            border-bottom: 2px solid rgba(212,175,55,0.25);
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            backdrop-filter: blur(16px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        nav.scrolled {
+            border-bottom-color: var(--gold);
+            box-shadow: 0 4px 40px rgba(212,175,55,0.2);
+        }
+
+        .nav-brand {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            color: var(--gold);
+            text-transform: uppercase;
+            position: relative;
+        }
+        .nav-brand::after {
+            content: '';
+            position: absolute; bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--cyan);
+            transition: width 0.3s;
+        }
+        .nav-brand:hover::after { width: 100%; }
+
+        .nav-links {
+            display: flex; gap: 2.5rem; list-style: none;
+        }
+        .nav-links a {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.88rem; font-weight: 500;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: rgba(234,234,234,0.65);
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute; bottom: -3px; left: 0;
+            width: 0; height: 1.5px;
+            background: var(--cyan);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--gold) !important; }
+        .nav-links a.active::after { width: 100%; background: var(--gold); }
+
+        .nav-btn {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--gold);
+            color: var(--black) !important;
+            padding: 0.5rem 1.4rem;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s !important;
+        }
+        .nav-btn::after { display:none !important; }
+        .nav-btn:hover {
+            background: #e8c34a !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--gold-glow) !important;
+        }
+
+        .nav-toggle {
+            display: none; flex-direction: column; gap: 5px;
+            background: none; border: none; cursor: pointer; padding: 4px;
+        }
+        .nav-toggle span {
+            display: block; width: 24px; height: 2px;
+            background: var(--gold); transition: all 0.3s;
+        }
+
+        /* ============================================================
+           PAGE HERO BANNER
+        ============================================================ */
+        .page-hero {
+            min-height: 55vh;
+            background: var(--black);
+            position: relative;
+            display: flex; align-items: center;
+            overflow: hidden;
+            padding-top: 66px;
+        }
+
+        /* Animated grid bg */
+        .ph-grid {
+            position: absolute; inset:0; pointer-events:none;
+            background-image:
+                linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+
+        /* Gold radial glow */
+        .ph-glow {
+            position: absolute;
+            width: 700px; height: 700px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 70%);
+            top: 50%; left: 40%; transform: translate(-50%,-50%);
+            animation: glow-breathe 5s ease-in-out infinite alternate;
+        }
+        @keyframes glow-breathe {
+            from { transform: translate(-50%,-50%) scale(0.9); opacity:0.6; }
+            to   { transform: translate(-50%,-50%) scale(1.1); opacity:1; }
+        }
+
+        /* Cyan mist particles — removed */
+        .ph-mist { display:none; }
+
+        /* Decorative lines — removed */
+        .ph-lines { display:none; }
+
+        .ph-inner {
+            position: relative; z-index:10;
+            max-width: 1200px; margin:0 auto;
+            padding: 4rem 3rem;
+            width: 100%;
+        }
+
+        .ph-breadcrumb {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--cyan-dark);
+            display: flex; align-items: center; gap: 0.6rem;
+            margin-bottom: 1.75rem;
+            animation: fade-up 0.8s ease 0.1s both;
+        }
+        .ph-breadcrumb a {
+            color: inherit; text-decoration: none;
+            transition: color 0.2s;
+        }
+        .ph-breadcrumb a:hover { color: var(--gold); }
+        .ph-breadcrumb span { color: rgba(0,229,255,0.4); }
+
+        .ph-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 9rem);
+            line-height: 0.9; letter-spacing: 0.03em; text-transform: uppercase;
+            background: linear-gradient(90deg, var(--gold-deep) 0%, var(--gold) 35%, #f5d76e 55%, var(--gold) 75%, var(--gold-deep) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fade-up 0.9s ease 0.25s both, gold-shimmer 4s linear 1.5s infinite;
+        }
+        @keyframes gold-shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
+        }
+
+        .ph-sub {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--cyan);
+            margin-top: 1rem;
+            animation: fade-up 0.9s ease 0.4s both;
+        }
+
+        /* Animated wave underline */
+        .ph-underline {
+            display: block; height: 5px;
+            width: clamp(180px, 35vw, 420px);
+            margin-top: 1.2rem;
+            position: relative; overflow: hidden;
+            animation: fade-up 0.9s ease 0.55s both;
+        }
+        .ph-underline::before {
+            content:''; position:absolute; inset:0;
+            background: var(--cyan); border-radius:3px;
+        }
+        .ph-underline::after {
+            content:''; position:absolute; top:0; bottom:0;
+            width:40%; left:-40%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent);
+            animation: wave-sweep 2s ease-in-out infinite;
+        }
+        @keyframes wave-sweep {
+            0%   { left:-40%; }
+            100% { left:130%; }
+        }
+
+        @keyframes fade-up {
+            from { opacity:0; transform:translateY(30px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* Bottom divider */
+        .ph-bottom-bar {
+            position: absolute; bottom:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), var(--gold), transparent);
+            opacity: 0.5;
+        }
+
+        /* ============================================================
+           SHARED SECTION BASE
+        ============================================================ */
+        .section { padding: 6.5rem 3rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .sec-eyebrow {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--gold);
+            display: flex; align-items: center; gap: 0.7rem;
+            margin-bottom: 0.65rem;
+        }
+        .sec-eyebrow::before {
+            content:''; width:24px; height:1.5px;
+            background: linear-gradient(90deg, var(--gold), var(--cyan));
+        }
+
+        .sec-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+            letter-spacing: 0.03em; text-transform: uppercase;
+            line-height: 1.05;
+            color: var(--white);
+        }
+        .sec-title .g {
+            background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sec-title .c { color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+
+        .sec-sub {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.97rem; font-weight: 300;
+            color: var(--grey-dim); max-width: 540px;
+            line-height: 1.85; margin-top: 0.75rem;
+        }
+
+        /* ============================================================
+           SERVICE OVERVIEW STRIP
+        ============================================================ */
+        .overview {
+            background: var(--dark-2);
+            border-top: 1px solid rgba(212,175,55,0.12);
+            border-bottom: 1px solid rgba(212,175,55,0.12);
+            padding: 2.5rem 3rem;
+            overflow: hidden;
+        }
+        .overview-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between;
+            align-items: center; gap: 1.5rem; flex-wrap: wrap;
+        }
+        .ov-item {
+            display: flex; align-items: center; gap: 0.85rem;
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid var(--gold);
+            transition: border-color 0.3s, transform 0.3s;
+            cursor: pointer;
+            text-decoration: none; color: inherit;
+        }
+        .ov-item:hover { border-color: var(--cyan); transform: translateX(4px); }
+        .ov-num {
+            font-family: 'Anton', sans-serif;
+            font-size: 2rem; color: rgba(212,175,55,0.2);
+            line-height: 1;
+        }
+        .ov-info { }
+        .ov-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--white);
+        }
+        .ov-desc {
+            font-size: 0.75rem; color: var(--grey-dim);
+            font-weight: 300; letter-spacing: 0.03em;
+        }
+
+        /* ============================================================
+           SERVICE DETAIL CARDS — alternating layout
+        ============================================================ */
+        #svc-detail { background: var(--black); }
+
+        .svc-detail-section {
+            padding: 5rem 3rem;
+            position: relative; overflow: hidden;
+        }
+        .svc-detail-section:nth-child(even) {
+            background: var(--dark-2);
+        }
+        .svc-detail-section:nth-child(odd) {
+            background: var(--black);
+        }
+
+        /* Top / bottom separators */
+        .svc-detail-section::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:1px;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
+        }
+
+        .svc-row {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 5rem; align-items: center;
+        }
+        /* Flip order on even */
+        .svc-detail-section:nth-child(even) .svc-row { direction: rtl; }
+        .svc-detail-section:nth-child(even) .svc-row > * { direction: ltr; }
+
+        /* Visual panel (left/right alternating) */
+        .svc-visual {
+            position: relative;
+        }
+
+        .svc-visual-box {
+            aspect-ratio: 4/3;
+            border-radius: 4px;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Each service has a distinct visual identity via CSS */
+        .sv-quick  { background: linear-gradient(135deg, #0d1a20 0%, #0a1520 60%, #0f2030 100%); }
+        .sv-valet  { background: linear-gradient(135deg, #1a1200 0%, #1c1400 60%, #100e00 100%); }
+        .sv-deep   { background: linear-gradient(135deg, #081818 0%, #051212 60%, #061a1a 100%); }
+        .sv-interior { background: linear-gradient(135deg, #12100a 0%, #1a1500 60%, #0e0c06 100%); }
+
+        /* Animated radial glow inside each visual */
+        .sv-quick::before {
+            content:'';position:absolute;inset:0;
+            background: radial-gradient(ellipse at 40% 50%, rgba(0,229,255,0.2) 0%, transparent 60%);
+            animation: sv-breathe 4s ease-in-out infinite alternate;
+        }
+        .sv-valet::before {
+            content:'';position:absolute;inset:0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(212,175,55,0.25) 0%, transparent 60%);
+            animation: sv-breathe 5s ease-in-out infinite alternate;
+        }
+        .sv-deep::before {
+            content:'';position:absolute;inset:0;
+            background: radial-gradient(ellipse at 50% 60%, rgba(0,229,255,0.15) 0%, rgba(0,139,153,0.1) 40%, transparent 70%);
+            animation: sv-breathe 4.5s ease-in-out infinite alternate;
+        }
+        .sv-interior::before {
+            content:'';position:absolute;inset:0;
+            background: radial-gradient(ellipse at 45% 50%, rgba(212,175,55,0.2) 0%, rgba(140,106,0,0.08) 45%, transparent 70%);
+            animation: sv-breathe 3.8s ease-in-out infinite alternate;
+        }
+        @keyframes sv-breathe {
+            from { opacity:0.6; transform:scale(0.95); }
+            to   { opacity:1;   transform:scale(1.05); }
+        }
+
+        .sv-icon {
+            font-size: clamp(5rem, 12vw, 9rem);
+            position: relative; z-index:1;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.5));
+            animation: icon-hover 3s ease-in-out infinite alternate;
+        }
+        @keyframes icon-hover {
+            from { transform: translateY(0) scale(1); }
+            to   { transform: translateY(-10px) scale(1.04); }
+        }
+
+        /* Corner label badge */
+        .sv-badge {
+            position: absolute; top:1.25rem; left:1.25rem;
+            background: var(--gold);
+            color: var(--black);
+            font-family: 'Anton', sans-serif;
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            padding: 0.3rem 0.85rem;
+        }
+        .sv-badge.cyan { background: var(--cyan); }
+
+        /* Decorative corner outline */
+        .svc-visual-box::after {
+            content:'';
+            position: absolute; inset:0;
+            border: 2px solid rgba(212,175,55,0.12);
+            border-radius:4px;
+            pointer-events:none;
+            transition: border-color 0.3s;
+        }
+        .svc-visual:hover .svc-visual-box::after { border-color: rgba(0,229,255,0.3); }
+
+        /* Floating stat badge on visual */
+        .sv-stat {
+            position: absolute; bottom:-1.2rem; right:-1.2rem;
+            background: var(--dark-3);
+            border: 1.5px solid var(--border-gold, rgba(212,175,55,0.3));
+            padding: 1.1rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
+        }
+        .svc-visual:hover .sv-stat { border-color: var(--gold); }
+        .sv-stat-num {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.8rem; color: var(--gold); line-height:1;
+        }
+        .sv-stat-lbl {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.65rem; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--grey-dim);
+            display: block; margin-top: 0.2rem;
+        }
+
+        /* Text side */
+        .svc-text { }
+        .svc-num-label {
+            font-family: 'Anton', sans-serif;
+            font-size: 5rem; letter-spacing: 0.02em;
+            color: rgba(212,175,55,0.06);
+            line-height: 1; margin-bottom: -1rem;
+        }
+
+        .svc-name {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+            letter-spacing: 0.03em; text-transform: uppercase;
+            line-height: 1;
+        }
+        .svc-name.gold-name {
+            background: linear-gradient(90deg, var(--gold-deep), var(--gold), #f5d76e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .svc-name.cyan-name { color: var(--cyan); }
+        .svc-name.white-name { color: var(--white); }
+
+        .svc-tagline-txt {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.88rem; font-weight: 600;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--cyan-dark); margin: 0.75rem 0 1.5rem;
+        }
+
+        .svc-desc {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.97rem; font-weight: 300;
+            color: var(--grey-dim); line-height: 1.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Feature list */
+        .feat-list {
+            list-style: none;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 0.6rem 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .feat-list li {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem; font-weight: 500;
+            color: var(--grey-dim);
+            display: flex; align-items: center; gap: 0.55rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(234,234,234,0.06);
+        }
+        .feat-list li .tick {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; color: var(--black); font-weight: 700;
+            flex-shrink: 0;
+        }
+        .feat-list li .tick.cyan-tick {
+            background: linear-gradient(135deg, var(--cyan-dark), var(--cyan));
+        }
+
+        /* CTA row */
+        .svc-cta-row {
+            display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+        }
+
+        .btn-svc-primary {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.05rem; letter-spacing: 0.1em; text-transform: uppercase;
+            background: var(--gold);
+            color: var(--black);
+            padding: 0.9rem 2.2rem;
+            border: none; cursor: pointer; text-decoration: none;
+            display: inline-block;
+            position: relative; overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-svc-primary::before {
+            content:'';
+            position:absolute; top:0; left:-80%; width:60%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.4s ease;
+        }
+        .btn-svc-primary:hover { transform:scale(1.05) translateY(-2px); box-shadow:0 8px 35px var(--gold-glow); }
+        .btn-svc-primary:hover::before { left:130%; }
+
+        .btn-svc-outline {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+            background: transparent;
+            color: var(--cyan);
+            padding: 0.9rem 2rem;
+            border: 2px solid rgba(0,229,255,0.35);
+            cursor: pointer; text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .btn-svc-outline:hover {
+            background: var(--cyan); color: var(--black);
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           PRICING SECTION
+        ============================================================ */
+        #pricing {
+            background: var(--dark-2);
+            padding: 6.5rem 3rem;
+            position: relative; overflow: hidden;
+        }
+        #pricing::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:5px;
+            background: repeating-linear-gradient(90deg,
+                var(--gold) 0, var(--gold) 40px,
+                var(--cyan-dark) 40px, var(--cyan-dark) 80px);
+        }
+
+        /* Floating background text */
+        #pricing::after {
+            content:'PRICE';
+            position:absolute; right:-2rem; top:50%;
+            transform:translateY(-50%);
+            font-family:'Anton',sans-serif; font-size:20vw;
+            color:rgba(212,175,55,0.025); line-height:1;
+            pointer-events:none; white-space:nowrap;
+        }
+
+        .pricing-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+
+        .pricing-header {
+            display:flex; justify-content:space-between; align-items:flex-end;
+            flex-wrap:wrap; gap:1.5rem; margin-bottom:4rem;
+        }
+        .pricing-note {
+            font-family:'Poppins',sans-serif; font-size:0.82rem;
+            color:var(--grey-dim); max-width:340px; line-height:1.7;
+        }
+        .pricing-note strong { color:var(--gold); }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 1.5px;
+        }
+
+        .price-card {
+            background: var(--dark-3);
+            padding: 2.75rem 2rem;
+            border: 1px solid rgba(212,175,55,0.1);
+            position: relative; overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.25,0.8,0.25,1),
+                        box-shadow 0.35s, border-color 0.35s;
+            cursor: default;
+        }
+        .price-card::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg, var(--gold), var(--cyan));
+            opacity:0; transform:scaleX(0); transform-origin:left;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .price-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 20px 55px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.1);
+            border-color: rgba(212,175,55,0.3);
+        }
+        .price-card:hover::before { opacity:1; transform:scaleX(1); }
+
+        .price-card.featured {
+            background: var(--gold-deep);
+            border-color: var(--gold);
+        }
+        .price-card.featured .price-amount { color: var(--gold); }
+        .price-card.featured .price-name  { color: var(--white); }
+
+        .price-tag {
+            position:absolute; top:1.25rem; right:1.25rem;
+            background:var(--cyan); color:var(--black);
+            font-family:'Anton',sans-serif; font-size:0.65rem; letter-spacing:0.15em;
+            text-transform:uppercase; padding:0.2rem 0.7rem;
+        }
+        .price-tag.gold-tag { background:var(--gold); }
+
+        .price-num {
+            font-family:'Anton',sans-serif;
+            font-size:4rem; color:rgba(212,175,55,0.08); line-height:1;
+            margin-bottom:-1rem;
+        }
+
+        .price-name {
+            font-family:'Anton',sans-serif;
+            font-size:1.6rem; letter-spacing:0.04em; text-transform:uppercase;
+            color:var(--white); line-height:1; margin-bottom:0.5rem;
+        }
+
+        .price-tagline {
+            font-family:'Oswald',sans-serif;
+            font-size:0.75rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase;
+            color:var(--cyan-dark); margin-bottom:1.5rem;
+        }
+
+        .price-amount {
+            font-family:'Anton',sans-serif;
+            font-size:2.8rem; letter-spacing:0.02em;
+            color:var(--gold); line-height:1;
+        }
+        .price-currency { font-size:1.4rem; vertical-align:super; }
+        .price-period {
+            font-family:'Oswald',sans-serif;
+            font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase;
+            color:var(--grey-dim); margin-top:0.2rem; display:block;
+        }
+
+        .price-divider {
+            width:100%; height:1px;
+            background: rgba(234,234,234,0.08);
+            margin:1.5rem 0;
+        }
+
+        .price-feats { list-style:none; display:flex; flex-direction:column; gap:0.55rem; }
+        .price-feats li {
+            font-family:'Poppins',sans-serif; font-size:0.82rem;
+            color:var(--grey-dim);
+            display:flex; align-items:center; gap:0.55rem;
+        }
+        .price-feats li::before { content:'◆'; color:var(--gold); font-size:0.45rem; flex-shrink:0; }
+        .price-feats li.dim { opacity:0.4; }
+        .price-feats li.dim::before { color:rgba(234,234,234,0.3); }
+
+        .price-cta {
+            display:block; width:100%;
+            margin-top:2rem;
+            padding:0.85rem;
+            font-family:'Anton',sans-serif; font-size:0.9rem;
+            letter-spacing:0.12em; text-transform:uppercase;
+            text-align:center; text-decoration:none;
+            background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+            color:var(--black); border:none; cursor:pointer;
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+        .price-cta:hover { transform:translateY(-2px); box-shadow:0 8px 30px var(--gold-glow); }
+
+        /* ============================================================
+           PROCESS / HOW IT WORKS
+        ============================================================ */
+        #process {
+            background: var(--black);
+            padding: 6.5rem 3rem;
+            position: relative; overflow: hidden;
+        }
+
+        /* Animated cyan horizontal flow line */
+        .process-flow-line {
+            position:absolute; top:50%; left:0; right:0; height:1px;
+            background: linear-gradient(90deg, transparent, var(--cyan-dark), var(--cyan), var(--cyan-dark), transparent);
+            transform:translateY(-50%);
+            opacity:0.15;
+        }
+
+        .process-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+
+        .process-header { text-align:center; margin-bottom:5rem; }
+
+        .steps-row {
+            display:grid; grid-template-columns:repeat(4,1fr);
+            gap:0; position:relative;
+        }
+
+        /* Connector lines between steps */
+        .steps-row::before {
+            content:'';
+            position:absolute; top:3.5rem; left:12.5%; right:12.5%; height:2px;
+            background: repeating-linear-gradient(90deg,
+                var(--gold) 0, var(--gold) 6px,
+                transparent 6px, transparent 14px);
+            opacity:0.3;
+        }
+
+        .step {
+            padding: 0 2rem 2.5rem;
+            text-align:center;
+            position:relative;
+            transition:transform 0.3s;
+        }
+        .step:hover { transform:translateY(-6px); }
+
+        .step-circle {
+            width:70px; height:70px; border-radius:50%;
+            margin:0 auto 1.5rem;
+            background:var(--dark-3);
+            border:2px solid rgba(212,175,55,0.2);
+            display:flex; align-items:center; justify-content:center;
+            position:relative;
+            transition:border-color 0.3s, box-shadow 0.3s;
+        }
+        .step:hover .step-circle {
+            border-color:var(--gold);
+            box-shadow:0 0 25px var(--gold-glow);
+        }
+
+        .step-num {
+            font-family:'Anton',sans-serif;
+            font-size:1.5rem; color:var(--gold); line-height:1;
+        }
+
+        /* Pulsing dot indicator */
+        .step-circle::after {
+            content:'';
+            position:absolute; bottom:-4px; right:-4px;
+            width:14px; height:14px; border-radius:50%;
+            background:var(--cyan);
+            border:2px solid var(--black);
+            animation:step-pulse 2s ease-in-out infinite;
+        }
+        .step:nth-child(2) .step-circle::after { animation-delay:0.5s; }
+        .step:nth-child(3) .step-circle::after { animation-delay:1s;   }
+        .step:nth-child(4) .step-circle::after { animation-delay:1.5s; }
+        @keyframes step-pulse {
+            0%,100% { transform:scale(1);   opacity:1; }
+            50%      { transform:scale(1.4); opacity:0.5; }
+        }
+
+        .step-title {
+            font-family:'Oswald',sans-serif;
+            font-size:1rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+            color:var(--white); margin-bottom:0.6rem;
+        }
+        .step-desc {
+            font-family:'Poppins',sans-serif;
+            font-size:0.84rem; color:var(--grey-dim); line-height:1.75;
+        }
+
+        /* ============================================================
+           WHY CHOOSE US — compact strip
+        ============================================================ */
+        #why-us {
+            background: var(--cyan-dark);
+            padding: 5rem 3rem;
+            position: relative; overflow:hidden;
+        }
+
+        /* Gold lines sliding across */
+        .why-gold-lines { position:absolute;inset:0;overflow:hidden;pointer-events:none; }
+        .wgl {
+            position:absolute; height:1px;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+            animation: wgl-run linear infinite;
+        }
+        .wgl:nth-child(1){width:180px;top:20%;animation-duration:3.5s;animation-delay:0s;left:-200px;}
+        .wgl:nth-child(2){width:250px;top:50%;animation-duration:4.5s;animation-delay:1s;left:-270px;}
+        .wgl:nth-child(3){width:120px;top:80%;animation-duration:3s;animation-delay:2s;left:-140px;}
+        @keyframes wgl-run {
+            from{transform:translateX(0);}
+            to{transform:translateX(120vw);}
+        }
+
+        .why-inner {
+            max-width:1200px; margin:0 auto;
+            display:grid; grid-template-columns:auto 1fr;
+            gap:5rem; align-items:center;
+            position:relative; z-index:1;
+        }
+
+        .why-heading {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(2.5rem,6vw,5rem);
+            letter-spacing:0.04em; text-transform:uppercase;
+            color:var(--black); line-height:1; white-space:nowrap;
+        }
+        .why-heading span { color:var(--gold); display:block; }
+
+        .why-items {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:1.25rem;
+        }
+
+        .why-item {
+            background:rgba(0,0,0,0.15);
+            border:1px solid rgba(0,0,0,0.2);
+            padding:1.5rem;
+            transition:background 0.3s, border-color 0.3s, transform 0.3s;
+        }
+        .why-item:hover { background:rgba(0,0,0,0.3); border-color:rgba(212,175,55,0.3); transform:translateY(-3px); }
+
+        .why-item h4 {
+            font-family:'Oswald',sans-serif;
+            font-size:0.9rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+            color:var(--black); margin-bottom:0.4rem;
+        }
+        .why-item p {
+            font-family:'Poppins',sans-serif;
+            font-size:0.82rem; color:rgba(0,0,0,0.6); line-height:1.65;
+        }
+        .why-item-num {
+            font-family:'Anton',sans-serif;
+            font-size:1.8rem; color:rgba(0,0,0,0.1); line-height:1;
+            margin-bottom:-0.25rem;
+        }
+
+        /* ============================================================
+           BOOKING CTA BANNER
+        ============================================================ */
+        #book-cta {
+            background: var(--black);
+            padding: 6rem 3rem;
+            position: relative; overflow:hidden;
+        }
+        #book-cta::before {
+            content:'';
+            position:absolute; inset:0;
+            background:radial-gradient(ellipse at 50% 50%, rgba(212,175,55,0.07) 0%, transparent 65%);
+        }
+
+        /* Animated border frame */
+        .cta-frame {
+            max-width:900px; margin:0 auto;
+            text-align:center;
+            border:2px solid rgba(212,175,55,0.2);
+            padding:5rem 3rem;
+            position:relative; z-index:1;
+            animation:frame-pulse 3s ease-in-out infinite;
+        }
+        @keyframes frame-pulse {
+            0%,100% { border-color:rgba(212,175,55,0.2); }
+            50%      { border-color:rgba(212,175,55,0.5); }
+        }
+
+        /* Corner accents */
+        .cta-frame::before,
+        .cta-frame::after {
+            content:''; position:absolute;
+            width:30px; height:30px;
+        }
+        .cta-frame::before {
+            top:-3px; right:-3px;
+            border-top:5px solid var(--cyan);
+            border-right:5px solid var(--cyan);
+        }
+        .cta-frame::after {
+            bottom:-3px; left:-3px;
+            border-bottom:5px solid var(--cyan);
+            border-left:5px solid var(--cyan);
+        }
+
+        .cta-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase;
+            color:var(--cyan); margin-bottom:1.5rem;
+        }
+
+        .cta-big {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(3rem,8vw,7rem);
+            letter-spacing:0.03em; text-transform:uppercase;
+            background: linear-gradient(90deg, var(--gold-deep), var(--gold), #f5d76e, var(--gold), var(--gold-deep));
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 3.5s linear infinite;
+            line-height:1; margin-bottom:1.25rem;
+        }
+
+        .cta-sub {
+            font-family:'Poppins',sans-serif;
+            font-size:1rem; font-weight:300; color:var(--grey-dim);
+            margin-bottom:3rem; line-height:1.75;
+        }
+        .cta-sub strong { color:var(--cyan); font-weight:600; }
+
+        .cta-btns {
+            display:flex; gap:1.25rem; justify-content:center; flex-wrap:wrap;
+        }
+
+        .btn-cta-main {
+            font-family:'Anton',sans-serif;
+            font-size:1.2rem; letter-spacing:0.12em; text-transform:uppercase;
+            background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+            color:var(--black); padding:1.1rem 3rem;
+            border:none; cursor:pointer; text-decoration:none; display:inline-block;
+            position:relative; overflow:hidden;
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-cta-main::before {
+            content:''; position:absolute; top:0; left:-80%; width:60%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+            transform:skewX(-20deg); transition:left 0.45s ease;
+        }
+        .btn-cta-main:hover { transform:scale(1.06) translateY(-3px); box-shadow:0 12px 45px var(--gold-glow); }
+        .btn-cta-main:hover::before { left:130%; }
+
+        .btn-cta-ghost {
+            font-family:'Oswald',sans-serif;
+            font-size:1rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+            background:transparent; color:var(--white);
+            padding:1.1rem 2.5rem;
+            border:2px solid rgba(234,234,234,0.2); cursor:pointer; text-decoration:none;
+            display:inline-block;
+            transition:background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+        }
+        .btn-cta-ghost:hover {
+            background:rgba(0,229,255,0.08); border-color:var(--cyan); color:var(--cyan);
+            transform:translateY(-2px);
+        }
+
+        /* ============================================================
+           TICKER
+        ============================================================ */
+        .ticker {
+            background: var(--gold);
+            padding:0.85rem 0; overflow:hidden; white-space:nowrap;
+        }
+        .ticker-inner {
+            display:inline-flex; gap:0;
+            animation:tick-go 22s linear infinite;
+        }
+        .t-item {
+            font-family:'Anton',sans-serif;
+            font-size:1.05rem; letter-spacing:0.18em; text-transform:uppercase;
+            color:var(--black); padding:0 2.5rem;
+        }
+        .t-div { color:var(--gold-deep); padding:0 0.5rem; font-family:'Anton',sans-serif; font-size:1rem; }
+        @keyframes tick-go {
+            from{transform:translateX(0);}
+            to{transform:translateX(-50%);}
+        }
+
+        /* ============================================================
+           FOOTER — exact match to index
+        ============================================================ */
+        footer {
+            background:var(--black);
+            border-top:3px solid var(--gold);
+            padding:5rem 3rem 2.5rem;
+        }
+        .footer-inner { max-width:1200px; margin:0 auto; }
+        .footer-top {
+            display:grid; grid-template-columns:2fr 1fr 1fr;
+            gap:4rem;
+            padding-bottom:4rem;
+            border-bottom:1px solid rgba(212,175,55,0.1);
+            margin-bottom:2.5rem;
+        }
+        .footer-brand-name {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(2rem,5vw,4rem); letter-spacing:0.06em; text-transform:uppercase;
+            color:var(--gold);
+            background:linear-gradient(90deg,var(--gold-deep) 0%,var(--gold) 30%,#f5d76e 50%,var(--gold) 70%,var(--gold-deep) 100%);
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 5s linear infinite;
+        }
+        .footer-slogan {
+            font-family:'Oswald',sans-serif;
+            font-size:0.95rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+            color:var(--cyan); position:relative; display:inline-block; margin-top:0.35rem;
+        }
+        .footer-slogan::after {
+            content:''; position:absolute; bottom:-5px; left:0;
+            width:40%; height:2px; background:var(--gold);
+            animation:gold-underline 2.8s ease-in-out infinite alternate;
+        }
+        @keyframes gold-underline {
+            from{left:0%;width:35%;}
+            to{left:40%;width:60%;}
+        }
+        .footer-brand p {
+            font-family:'Poppins',sans-serif; font-size:0.87rem;
+            color:rgba(234,234,234,0.35); line-height:1.8; margin-top:1.5rem; max-width:280px;
+        }
+        .footer-col h4 {
+            font-family:'Oswald',sans-serif; font-size:0.78rem; font-weight:700;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem;
+        }
+        .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
+        .footer-col ul a, .footer-col ul span {
+            font-family:'Poppins',sans-serif; font-size:0.87rem;
+            color:rgba(234,234,234,0.35); text-decoration:none; transition:color 0.2s; display:block;
+        }
+        .footer-col ul a:hover { color:var(--gold); }
+        .footer-bottom {
+            display:flex; justify-content:space-between; align-items:center;
+            flex-wrap:wrap; gap:1rem;
+        }
+        .footer-bottom p { font-family:'Poppins',sans-serif; font-size:0.77rem; color:rgba(234,234,234,0.2); }
+        .footer-bottom span { color:var(--gold); }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width:960px) {
+            nav { padding:0 1.5rem; }
+            .nav-links {
+                display:none; position:absolute; top:100%; left:0; right:0;
+                flex-direction:column; gap:0;
+                background:rgba(10,10,10,0.97);
+                border-bottom:2px solid var(--gold); padding:0.5rem 0 1.2rem;
+            }
+            .nav-links.open { display:flex; }
+            .nav-links li { border-bottom:1px solid rgba(212,175,55,0.06); }
+            .nav-links li:last-child { border-bottom:none; margin-top:0.5rem; }
+            .nav-links a { padding:0.9rem 1.5rem; border-bottom:none; display:block; }
+            .nav-links .nav-btn {
+                display:block; margin:0 1.5rem;
+                padding:0.8rem 1.5rem !important; text-align:center;
+                border-radius:3px;
+            }
+            .nav-toggle { display:flex; }
+            .section, .svc-detail-section, #pricing, #process, #why-us, #book-cta { padding:4rem 1.5rem; }
+            .ph-inner { padding:3rem 1.5rem; }
+            .overview { padding:2rem 1.5rem; }
+            .svc-row { grid-template-columns:1fr; gap:2.5rem; }
+            .svc-detail-section:nth-child(even) .svc-row { direction:ltr; }
+            .pricing-grid { grid-template-columns:1fr 1fr; }
+            .steps-row { grid-template-columns:1fr 1fr; }
+            .steps-row::before { display:none; }
+            .why-inner { grid-template-columns:1fr; gap:3rem; }
+            .why-heading { white-space:normal; }
+            .why-items { grid-template-columns:1fr; }
+            .footer-top { grid-template-columns:1fr; gap:2.5rem; }
+            .feat-list { grid-template-columns:1fr; }
+            .overview-inner { justify-content:flex-start; }
+        }
+
+        @media (max-width:600px) {
+            .pricing-grid { grid-template-columns:1fr; }
+            .steps-row { grid-template-columns:1fr; }
+            .cta-btns { flex-direction:column; align-items:center; }
+            .svc-cta-row { flex-direction:column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAV ===== -->
+    <nav id="navbar">
+        <a href="index.html" class="nav-brand">UMBILO CW</a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="stats.html">Stats</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="experience.html">Experience</a></li>
+            <li><a href="tel:0835959278" class="nav-btn">CALL NOW</a></li>
+        </ul>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- ===== PAGE HERO BANNER ===== -->
+    <div class="page-hero">
+        <div class="ph-grid"></div>
+        <div class="ph-glow"></div>
+        <div class="ph-lines">
+            <div class="ph-line"></div><div class="ph-line"></div><div class="ph-line"></div>
+        </div>
+        <div class="ph-mist">
+            <div class="ph-mp"></div><div class="ph-mp"></div><div class="ph-mp"></div>
+            <div class="ph-mp"></div><div class="ph-mp"></div><div class="ph-mp"></div>
+        </div>
+
+        <div class="ph-inner">
+            <div class="ph-breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                Services
+            </div>
+            <h1 class="ph-title">OUR<br>SERVICES</h1>
+            <p class="ph-sub">Precision Clean. Every Time.</p>
+            <span class="ph-underline"></span>
+        </div>
+        <div class="ph-bottom-bar"></div>
+    </div>
+
+    <!-- ===== SERVICE OVERVIEW STRIP ===== -->
+    <div class="overview">
+        <div class="overview-inner">
+            <a href="#svc-quick" class="ov-item sr sr-d1">
+                <div class="ov-num">01</div>
+                <div class="ov-info">
+                    <div class="ov-name">Quick Wash</div>
+                    <div class="ov-desc">Fast exterior clean</div>
+                </div>
+            </a>
+            <a href="#svc-valet" class="ov-item sr sr-d2">
+                <div class="ov-num">02</div>
+                <div class="ov-info">
+                    <div class="ov-name">Full Valet</div>
+                    <div class="ov-desc">Complete inside & out</div>
+                </div>
+            </a>
+            <a href="#svc-deep" class="ov-item sr sr-d3">
+                <div class="ov-num">03</div>
+                <div class="ov-info">
+                    <div class="ov-name">Deep Clean</div>
+                    <div class="ov-desc">Steam & shampoo treatment</div>
+                </div>
+            </a>
+            <a href="#svc-interior" class="ov-item sr sr-d4">
+                <div class="ov-num">04</div>
+                <div class="ov-info">
+                    <div class="ov-name">Interior Detail</div>
+                    <div class="ov-desc">Precision interior care</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== SERVICE DETAILS ===== -->
+    <div id="svc-detail">
+
+        <!-- 01 QUICK WASH -->
+        <div id="svc-quick" class="svc-detail-section">
+            <div class="svc-row">
+                <div class="svc-visual sr from-left">
+                    <div class="svc-visual-box sv-quick">
+                        <span class="sv-icon">💧</span>
+                        <span class="sv-badge cyan">POPULAR</span>
+                    </div>
+                    <div class="sv-stat">
+                        <div class="sv-stat-num">~30</div>
+                        <span class="sv-stat-lbl">Minutes</span>
+                    </div>
+                </div>
+                <div class="svc-text sr from-right">
+                    <div class="svc-num-label">01</div>
+                    <h2 class="svc-name cyan-name">QUICK WASH</h2>
+                    <div class="svc-tagline-txt">Fast. Clean. No Delays.</div>
+                    <p class="svc-desc">
+                        When you need to be back on the road — fast. Our Quick Wash delivers a thorough exterior clean with no corners cut. Professional foam, rinse, and dry in around 30 minutes. Same quality, compressed timeline.
+                    </p>
+                    <ul class="feat-list">
+                        <li><span class="tick cyan-tick">✓</span> Full body foam wash</li>
+                        <li><span class="tick cyan-tick">✓</span> Wheel & rim clean</li>
+                        <li><span class="tick cyan-tick">✓</span> Window & mirror wipe</li>
+                        <li><span class="tick cyan-tick">✓</span> Spot-free pressure rinse</li>
+                        <li><span class="tick cyan-tick">✓</span> Hand dry finish</li>
+                        <li><span class="tick cyan-tick">✓</span> Tyre shine spray</li>
+                    </ul>
+                    <div class="svc-cta-row">
+                        <a href="tel:0835959278" class="btn-svc-primary">BOOK THIS SERVICE</a>
+                        <a href="#pricing" class="btn-svc-outline">VIEW PRICING</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02 FULL VALET -->
+        <div id="svc-valet" class="svc-detail-section">
+            <div class="svc-row">
+                <div class="svc-visual sr from-right">
+                    <div class="svc-visual-box sv-valet">
+                        <span class="sv-icon">⭐</span>
+                        <span class="sv-badge gold-tag">PREMIUM</span>
+                    </div>
+                    <div class="sv-stat">
+                        <div class="sv-stat-num">~2h</div>
+                        <span class="sv-stat-lbl">Full Service</span>
+                    </div>
+                </div>
+                <div class="svc-text sr from-left">
+                    <div class="svc-num-label">02</div>
+                    <h2 class="svc-name gold-name">FULL VALET</h2>
+                    <div class="svc-tagline-txt">Top to Bottom. Inside Out.</div>
+                    <p class="svc-desc">
+                        The complete transformation. Every surface of your vehicle — exterior and interior — treated with precision and care. Your car walks out looking and smelling showroom new. We don't miss spots.
+                    </p>
+                    <ul class="feat-list">
+                        <li><span class="tick">✓</span> Full exterior wash & polish</li>
+                        <li><span class="tick">✓</span> Hand wax protection coat</li>
+                        <li><span class="tick">✓</span> Full interior vacuum & wipe</li>
+                        <li><span class="tick">✓</span> Seat & carpet shampoo</li>
+                        <li><span class="tick">✓</span> Dashboard & console detail</li>
+                        <li><span class="tick">✓</span> Tyre dress & rim polish</li>
+                        <li><span class="tick">✓</span> Glass treatment inside & out</li>
+                        <li><span class="tick">✓</span> Air freshener finish</li>
+                    </ul>
+                    <div class="svc-cta-row">
+                        <a href="tel:0835959278" class="btn-svc-primary">BOOK THIS SERVICE</a>
+                        <a href="#pricing" class="btn-svc-outline">VIEW PRICING</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03 DEEP CLEAN -->
+        <div id="svc-deep" class="svc-detail-section">
+            <div class="svc-row">
+                <div class="svc-visual sr from-left">
+                    <div class="svc-visual-box sv-deep">
+                        <span class="sv-icon">🌊</span>
+                        <span class="sv-badge cyan">INTENSIVE</span>
+                    </div>
+                    <div class="sv-stat">
+                        <div class="sv-stat-num">~3h</div>
+                        <span class="sv-stat-lbl">Deep Service</span>
+                    </div>
+                </div>
+                <div class="svc-text sr from-right">
+                    <div class="svc-num-label">03</div>
+                    <h2 class="svc-name white-name">DEEP CLEAN</h2>
+                    <div class="svc-tagline-txt">We Get Into Everything.</div>
+                    <p class="svc-desc">
+                        For vehicles that need more than a wash — they need a full reset. Steam extraction, carpet shampoo, deodorise, engine bay. This is the most thorough service we offer. Zero shortcuts, maximum result.
+                    </p>
+                    <ul class="feat-list">
+                        <li><span class="tick cyan-tick">✓</span> Full exterior foam & wax</li>
+                        <li><span class="tick cyan-tick">✓</span> Steam extraction clean</li>
+                        <li><span class="tick cyan-tick">✓</span> Carpet hot-water shampoo</li>
+                        <li><span class="tick cyan-tick">✓</span> Upholstery treatment</li>
+                        <li><span class="tick cyan-tick">✓</span> Engine bay clean & degrease</li>
+                        <li><span class="tick cyan-tick">✓</span> Leather conditioning</li>
+                        <li><span class="tick cyan-tick">✓</span> Odour elimination treatment</li>
+                        <li><span class="tick cyan-tick">✓</span> Full interior & exterior detail</li>
+                    </ul>
+                    <div class="svc-cta-row">
+                        <a href="tel:0835959278" class="btn-svc-primary">BOOK THIS SERVICE</a>
+                        <a href="#pricing" class="btn-svc-outline">VIEW PRICING</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04 INTERIOR DETAIL -->
+        <div id="svc-interior" class="svc-detail-section">
+            <div class="svc-row">
+                <div class="svc-visual sr from-right">
+                    <div class="svc-visual-box sv-interior">
+                        <span class="sv-icon">🪑</span>
+                        <span class="sv-badge gold-tag">DETAIL</span>
+                    </div>
+                    <div class="sv-stat">
+                        <div class="sv-stat-num">~90</div>
+                        <span class="sv-stat-lbl">Minutes</span>
+                    </div>
+                </div>
+                <div class="svc-text sr from-left">
+                    <div class="svc-num-label">04</div>
+                    <h2 class="svc-name gold-name">INTERIOR DETAIL</h2>
+                    <div class="svc-tagline-txt">Precision Interior Care.</div>
+                    <p class="svc-desc">
+                        Interior-only precision detailing. Every vent, every gap, every surface of your cabin returned to its best condition. Ideal for maintaining a clean interior between full valets or after heavy use.
+                    </p>
+                    <ul class="feat-list">
+                        <li><span class="tick">✓</span> Dashboard deep clean</li>
+                        <li><span class="tick">✓</span> Vent & gap detailing</li>
+                        <li><span class="tick">✓</span> Centre console clean</li>
+                        <li><span class="tick">✓</span> Door card wipe & polish</li>
+                        <li><span class="tick">✓</span> Seat clean & condition</li>
+                        <li><span class="tick">✓</span> Floor mat shampoo</li>
+                        <li><span class="tick">✓</span> Interior glass clean</li>
+                        <li><span class="tick">✓</span> Fragrance finish</li>
+                    </ul>
+                    <div class="svc-cta-row">
+                        <a href="tel:0835959278" class="btn-svc-primary">BOOK THIS SERVICE</a>
+                        <a href="#pricing" class="btn-svc-outline">VIEW PRICING</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- / svc-detail -->
+
+    <!-- ===== PRICING ===== -->
+    <section id="pricing">
+        <div class="pricing-inner">
+            <div class="pricing-header">
+                <div class="sr">
+                    <div class="sec-eyebrow">Transparent Pricing</div>
+                    <h2 class="sec-title">CHOOSE YOUR <span class="g">PACKAGE</span></h2>
+                </div>
+                <p class="pricing-note sr sr-d2">
+                    All prices are <strong>starting rates</strong> and may vary based on vehicle size and condition. Call us for a custom quote on larger vehicles or extra services.
+                </p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Quick Wash -->
+                <div class="price-card sr sr-d1">
+                    <div class="price-num">01</div>
+                    <div class="price-name">Quick Wash</div>
+                    <div class="price-tagline">Fast Exterior Clean</div>
+                    <div class="price-amount"><span class="price-currency">R</span>80</div>
+                    <span class="price-period">Starting from</span>
+                    <div class="price-divider"></div>
+                    <ul class="price-feats">
+                        <li>Foam exterior wash</li>
+                        <li>Wheel & rim clean</li>
+                        <li>Window wipe</li>
+                        <li>Spot-free dry</li>
+                        <li class="dim">Shampoo (add-on)</li>
+                        <li class="dim">Wax coat (add-on)</li>
+                    </ul>
+                    <a href="tel:0835959278" class="price-cta">CALL TO BOOK</a>
+                </div>
+
+                <!-- Interior Detail -->
+                <div class="price-card sr sr-d2">
+                    <span class="price-tag">INTERIOR</span>
+                    <div class="price-num">02</div>
+                    <div class="price-name">Interior Detail</div>
+                    <div class="price-tagline">Precision Inside Care</div>
+                    <div class="price-amount"><span class="price-currency">R</span>150</div>
+                    <span class="price-period">Starting from</span>
+                    <div class="price-divider"></div>
+                    <ul class="price-feats">
+                        <li>Dashboard detail</li>
+                        <li>Seat & carpet clean</li>
+                        <li>Vent & gap clean</li>
+                        <li>Interior glass</li>
+                        <li>Fragrance finish</li>
+                        <li class="dim">Leather condition (add-on)</li>
+                    </ul>
+                    <a href="tel:0835959278" class="price-cta">CALL TO BOOK</a>
+                </div>
+
+                <!-- Full Valet — Featured -->
+                <div class="price-card featured sr sr-d3">
+                    <span class="price-tag gold-tag">BEST VALUE</span>
+                    <div class="price-num">03</div>
+                    <div class="price-name">Full Valet</div>
+                    <div class="price-tagline">Complete Inside & Out</div>
+                    <div class="price-amount"><span class="price-currency">R</span>280</div>
+                    <span class="price-period">Starting from</span>
+                    <div class="price-divider"></div>
+                    <ul class="price-feats">
+                        <li>Full exterior + polish</li>
+                        <li>Hand wax coat</li>
+                        <li>Full interior clean</li>
+                        <li>Carpet shampoo</li>
+                        <li>Tyre dress & rim polish</li>
+                        <li>Air freshener finish</li>
+                    </ul>
+                    <a href="tel:0835959278" class="price-cta">CALL TO BOOK</a>
+                </div>
+
+                <!-- Deep Clean -->
+                <div class="price-card sr sr-d4">
+                    <span class="price-tag">INTENSIVE</span>
+                    <div class="price-num">04</div>
+                    <div class="price-name">Deep Clean</div>
+                    <div class="price-tagline">Full Reset Service</div>
+                    <div class="price-amount"><span class="price-currency">R</span>420</div>
+                    <span class="price-period">Starting from</span>
+                    <div class="price-divider"></div>
+                    <ul class="price-feats">
+                        <li>Everything in Full Valet</li>
+                        <li>Steam extraction</li>
+                        <li>Engine bay clean</li>
+                        <li>Odour elimination</li>
+                        <li>Leather conditioning</li>
+                        <li>Full interior & exterior</li>
+                    </ul>
+                    <a href="tel:0835959278" class="price-cta">CALL TO BOOK</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROCESS ===== -->
+    <section id="process">
+        <div class="process-flow-line"></div>
+        <div class="process-inner">
+            <div class="process-header sr">
+                <div class="sec-eyebrow" style="justify-content:center;">How It Works</div>
+                <h2 class="sec-title" style="text-align:center;">THE <span class="c">PROCESS</span></h2>
+                <p class="sec-sub" style="margin:0.75rem auto 0; text-align:center;">From arrival to collection — here's exactly what to expect when you bring your car to Umbilo Car Wash.</p>
+            </div>
+
+            <div class="steps-row">
+                <div class="step sr sr-d1">
+                    <div class="step-circle"><span class="step-num">01</span></div>
+                    <div class="step-title">ARRIVE & ASSESS</div>
+                    <p class="step-desc">Pull in, tell us what you need. We'll assess the vehicle and confirm the right service package.</p>
+                </div>
+                <div class="step sr sr-d2">
+                    <div class="step-circle"><span class="step-num">02</span></div>
+                    <div class="step-title">PREP & PROTECT</div>
+                    <p class="step-desc">We prep the vehicle, protect trim and surfaces before treatment begins. Your car is in safe hands.</p>
+                </div>
+                <div class="step sr sr-d3">
+                    <div class="step-circle"><span class="step-num">03</span></div>
+                    <div class="step-title">FULL SERVICE</div>
+                    <p class="step-desc">Your chosen package is executed with precision — foam, scrub, rinse, interior, polish. Every step, done right.</p>
+                </div>
+                <div class="step sr sr-d4">
+                    <div class="step-circle"><span class="step-num">04</span></div>
+                    <div class="step-title">FINAL CHECK</div>
+                    <p class="step-desc">We do a full walkround quality check before handing your keys back. If it's not right, we fix it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+    <section id="why-us">
+        <div class="why-gold-lines">
+            <div class="wgl"></div><div class="wgl"></div><div class="wgl"></div>
+        </div>
+        <div class="why-inner">
+            <div class="sr">
+                <div class="why-heading">WHY <span>UMBILO</span></div>
+            </div>
+            <div class="why-items">
+                <div class="why-item sr sr-d1">
+                    <div class="why-item-num">01</div>
+                    <h4>Precision Every Time</h4>
+                    <p>We treat every car the same — whether it's your first visit or your fiftieth. No cut corners, ever.</p>
+                </div>
+                <div class="why-item sr sr-d2">
+                    <div class="why-item-num">02</div>
+                    <h4>Trusted by 200+ Clients</h4>
+                    <p>Our repeat customer base speaks for itself. Once you try us, you'll come back.</p>
+                </div>
+                <div class="why-item sr sr-d3">
+                    <div class="why-item-num">03</div>
+                    <h4>Fast Turnaround</h4>
+                    <p>We respect your time. Every service is completed on schedule, no unnecessary delays.</p>
+                </div>
+                <div class="why-item sr sr-d4">
+                    <div class="why-item-num">04</div>
+                    <h4>Open Until 9PM Daily</h4>
+                    <p>Late finish at work? We've got you. We're open every day and don't close until 9PM.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BOOKING CTA ===== -->
+    <section id="book-cta">
+        <div class="cta-frame sr scale-in">
+            <div class="cta-label">Ready to Get Clean?</div>
+            <h2 class="cta-big">BOOK NOW</h2>
+            <p class="cta-sub">
+                Call us or visit us at <strong>99 Umbilo Rd, Durban</strong>.<br>
+                We're open daily and ready for you.
+            </p>
+            <div class="cta-btns">
+                <a href="tel:0835959278" class="btn-cta-main">📞 CALL 083 595 9278</a>
+                <a href="index.html#location" class="btn-cta-ghost">GET DIRECTIONS</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TICKER ===== -->
+    <div class="ticker">
+        <div class="ticker-inner">
+            <span class="t-item">UMBILO CAR WASH</span><span class="t-div">◆</span>
+            <span class="t-item">QUICK WASH</span><span class="t-div">◆</span>
+            <span class="t-item">FULL VALET</span><span class="t-div">◆</span>
+            <span class="t-item">DEEP CLEAN</span><span class="t-div">◆</span>
+            <span class="t-item">INTERIOR DETAIL</span><span class="t-div">◆</span>
+            <span class="t-item">CALL 083 595 9278</span><span class="t-div">◆</span>
+            <span class="t-item">99 UMBILO RD, DURBAN</span><span class="t-div">◆</span>
+            <span class="t-item">OPEN DAILY · CLOSES 9PM</span><span class="t-div">◆</span>
+            <!-- duplicate for seamless loop -->
+            <span class="t-item">UMBILO CAR WASH</span><span class="t-div">◆</span>
+            <span class="t-item">QUICK WASH</span><span class="t-div">◆</span>
+            <span class="t-item">FULL VALET</span><span class="t-div">◆</span>
+            <span class="t-item">DEEP CLEAN</span><span class="t-div">◆</span>
+            <span class="t-item">INTERIOR DETAIL</span><span class="t-div">◆</span>
+            <span class="t-item">CALL 083 595 9278</span><span class="t-div">◆</span>
+            <span class="t-item">99 UMBILO RD, DURBAN</span><span class="t-div">◆</span>
+            <span class="t-item">OPEN DAILY · CLOSES 9PM</span><span class="t-div">◆</span>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-name">UMBILO CAR WASH</div>
+                    <div class="footer-slogan">CLEAN CARS. CLEAN REPUTATION.</div>
+                    <p>Premium car wash services in the heart of Durban's Umbilo district. Gold standard care, street energy, every time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#svc-quick">Quick Wash</a></li>
+                        <li><a href="#svc-valet">Full Valet</a></li>
+                        <li><a href="#svc-deep">Deep Clean</a></li>
+                        <li><a href="#svc-interior">Interior Detail</a></li>
+                        <li><a href="#pricing">View Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:0835959278">083 595 9278</a></li>
+                        <li><span>99 Umbilo Rd</span></li>
+                        <li><span>Umbilo, Durban, 4001</span></li>
+                        <li><span>Open Daily · Closes 9PM</span></li>
+                        <li><a href="index.html">← Back to Home</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 <span>Umbilo Car Wash</span>. All rights reserved.</p>
+                <p>Umbilo · Durban · <span>Built Different.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JS ===== -->
+    <script>
+        // ─── NAV SCROLL ──────────────────────────────────────────────
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+
+        // ─── MOBILE MENU ─────────────────────────────────────────────
+        const navToggle = document.getElementById('nav-toggle');
+        const navLinks  = document.getElementById('nav-links');
+        navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+        navLinks.querySelectorAll('a').forEach(a => {
+            if (!a.classList.contains('nav-btn')) {
+                a.addEventListener('click', () => navLinks.classList.remove('open'));
+            }
+        });
+
+        // ─── SCROLL REVEAL ────────────────────────────────────────────
+        const srEls = document.querySelectorAll('.sr');
+        const srIO  = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('on'); srIO.unobserve(e.target); }
+            });
+        }, { threshold: 0.1 });
+        srEls.forEach(el => srIO.observe(el));
+
+        // ─── OVERVIEW SMOOTH SCROLL ───────────────────────────────────
+        document.querySelectorAll('.ov-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(item.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ─── SERVICE CARD MOUSE TILT (3D effect on hover) ────────────
+        document.querySelectorAll('.svc-visual-box').forEach(box => {
+            box.addEventListener('mousemove', (e) => {
+                const rect = box.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width  - 0.5;
+                const y = (e.clientY - rect.top)  / rect.height - 0.5;
+                box.style.transform = `perspective(600px) rotateY(${x * 12}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+            });
+            box.addEventListener('mouseleave', () => {
+                box.style.transform = '';
+            });
+        });
+    </script>
+
+</body>
+</html>

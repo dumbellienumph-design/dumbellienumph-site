@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats — UMBILO CAR WASH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           DESIGN TOKENS
+        ============================================================ */
+        :root {
+            --gold:       #D4AF37;
+            --gold-deep:  #8C6A00;
+            --gold-glow:  rgba(212,175,55,0.35);
+            --gold-faint: rgba(212,175,55,0.08);
+            --cyan:       #00E5FF;
+            --cyan-dark:  #008B99;
+            --cyan-glow:  rgba(0,229,255,0.3);
+            --cyan-faint: rgba(0,229,255,0.07);
+            --black:      #0A0A0A;
+            --dark-2:     #111111;
+            --dark-3:     #181818;
+            --dark-4:     #202020;
+            --grey:       #EAEAEA;
+            --grey-dim:   rgba(234,234,234,0.55);
+            --white:      #F8F8F8;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--black);
+            color: var(--grey);
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+        @keyframes gold-shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
+        }
+        @keyframes fade-up {
+            from { opacity:0; transform: translateY(30px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           SCROLL REVEAL
+        ============================================================ */
+        .sr {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .sr.from-left  { transform: translateX(-55px); }
+        .sr.from-right { transform: translateX(55px); }
+        .sr.scale-in   { transform: scale(0.92); }
+        .sr.on         { opacity: 1 !important; transform: none !important; }
+        .sr-d1 { transition-delay: 0.1s; }
+        .sr-d2 { transition-delay: 0.2s; }
+        .sr-d3 { transition-delay: 0.3s; }
+        .sr-d4 { transition-delay: 0.4s; }
+        .sr-d5 { transition-delay: 0.5s; }
+        .sr-d6 { transition-delay: 0.6s; }
+
+        /* ============================================================
+           NAV
+        ============================================================ */
+        nav {
+            position: fixed; top:0; left:0; right:0; z-index:999;
+            height: 66px;
+            background: rgba(10,10,10,0.92);
+            border-bottom: 2px solid rgba(212,175,55,0.25);
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            backdrop-filter: blur(16px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        nav.scrolled {
+            border-bottom-color: var(--gold);
+            box-shadow: 0 4px 40px rgba(212,175,55,0.2);
+        }
+        .nav-brand {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.5rem; letter-spacing: 0.1em;
+            text-decoration: none; color: var(--gold);
+            position: relative; display: inline-block;
+        }
+        .nav-brand::after {
+            content:''; position:absolute; bottom:-3px; left:0;
+            width:0; height:2px; background:var(--cyan);
+            transition: width 0.3s ease;
+        }
+        .nav-brand:hover::after { width: 100%; }
+        .nav-links {
+            display: flex; list-style: none; gap: 2rem; align-items: center;
+        }
+        .nav-links a {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.82rem; font-weight: 500; letter-spacing: 0.15em;
+            text-transform: uppercase; text-decoration: none;
+            color: var(--grey-dim); position: relative;
+            transition: color 0.2s;
+        }
+        .nav-links a::after {
+            content:''; position:absolute; bottom:-4px; left:0;
+            width:0; height:2px; background:var(--cyan);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--gold) !important; }
+        .nav-links a.active::after { width: 100%; background: var(--gold); }
+        .nav-btn {
+            border: 1.5px solid var(--gold) !important;
+            padding: 0.4rem 1.1rem !important;
+            border-radius: 3px;
+            color: var(--gold) !important;
+            transition: background 0.25s, color 0.25s !important;
+        }
+        .nav-btn:hover { background: var(--gold) !important; color: var(--black) !important; }
+        .nav-btn::after { display:none !important; }
+        .nav-toggle {
+            display:none; flex-direction:column; gap:5px;
+            background:none; border:none; cursor:pointer; padding:4px;
+        }
+        .nav-toggle span {
+            display:block; width:24px; height:2px;
+            background:var(--gold); transition:0.3s;
+        }
+
+        /* ============================================================
+           PAGE HERO
+        ============================================================ */
+        .page-hero {
+            position: relative;
+            height: 100vh; min-height: 580px;
+            display: flex; flex-direction:column;
+            align-items: center; justify-content: center;
+            overflow: hidden;
+            background: var(--black);
+        }
+        .ph-grid {
+            position:absolute; inset:0;
+            background-image:
+                linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+            background-size:60px 60px;
+        }
+        .ph-glow {
+            position:absolute;
+            top:40%; left:50%;
+            transform:translate(-50%,-50%);
+            width:600px; height:400px;
+            background:radial-gradient(ellipse at center,
+                rgba(212,175,55,0.06) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        /* Animated counting digits background */
+        .ph-digits {
+            position:absolute; inset:0;
+            overflow:hidden; pointer-events:none;
+        }
+        .ph-digit {
+            position:absolute;
+            font-family:'Anton',sans-serif;
+            color:rgba(212,175,55,0.04);
+            user-select:none;
+            animation:digit-fade linear infinite;
+        }
+        @keyframes digit-fade {
+            0%   { opacity:0; transform:translateY(20px); }
+            20%  { opacity:1; }
+            80%  { opacity:1; }
+            100% { opacity:0; transform:translateY(-20px); }
+        }
+        .ph-content {
+            position:relative; z-index:2;
+            text-align:center; padding:0 1.5rem;
+        }
+        .ph-eyebrow {
+            font-family:'Oswald',sans-serif;
+            font-size:0.78rem; font-weight:700; letter-spacing:0.35em;
+            text-transform:uppercase; color:var(--cyan);
+            margin-bottom:1.5rem;
+            animation: fade-up 0.7s 0.3s both;
+        }
+        .ph-heading {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(4.5rem,14vw,12rem);
+            letter-spacing:0.04em; line-height:0.88;
+            text-transform:uppercase;
+            background:linear-gradient(90deg,
+                var(--gold-deep) 0%, var(--gold) 25%,
+                #f5d76e 50%, var(--gold) 75%, var(--gold-deep) 100%);
+            background-size:200% auto;
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            animation:gold-shimmer 5s linear infinite, fade-up 0.8s 0.5s both;
+        }
+        .ph-subtitle {
+            font-family:'Oswald',sans-serif;
+            font-size:clamp(0.9rem,2vw,1.3rem);
+            font-weight:400; letter-spacing:0.12em; text-transform:uppercase;
+            color:var(--grey-dim); margin-top:1.5rem;
+            animation: fade-up 0.7s 0.8s both;
+        }
+        .ph-divider {
+            display:flex; justify-content:center; gap:6px; margin-top:2rem;
+            animation: fade-up 0.7s 1s both;
+        }
+        .ph-divider span {
+            display:block; height:2px; border-radius:1px;
+        }
+        .ph-scroll-hint {
+            position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+            display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+            animation: fade-up 0.7s 1.4s both;
+        }
+        .ph-scroll-hint span {
+            font-family:'Oswald',sans-serif;
+            font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase;
+            color:rgba(234,234,234,0.3);
+        }
+        .ph-scroll-line {
+            width:1px; height:50px;
+            background:linear-gradient(to bottom, var(--gold), transparent);
+            animation:scroll-ln 2s ease-in-out infinite;
+        }
+        @keyframes scroll-ln {
+            0%,100%{ opacity:0.3; transform:scaleY(1); }
+            50%    { opacity:1;   transform:scaleY(1.4) translateY(5px); }
+        }
+
+        /* ============================================================
+           SECTION COMMONS
+        ============================================================ */
+        .container { max-width:1200px; margin:0 auto; padding:0 3rem; }
+        .section-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.72rem; font-weight:700; letter-spacing:0.35em;
+            text-transform:uppercase; color:var(--cyan);
+            margin-bottom:0.8rem;
+        }
+        .section-title {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(2.4rem,6vw,5rem);
+            letter-spacing:0.04em; text-transform:uppercase;
+            line-height:1;
+        }
+        .section-title em {
+            font-style:normal;
+            background:linear-gradient(90deg,var(--gold-deep),var(--gold),#f5d76e,var(--gold-deep));
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 5s linear infinite;
+        }
+        .gold-bar {
+            width:50px; height:3px;
+            background:linear-gradient(90deg,var(--gold),var(--cyan));
+            margin:1.4rem 0 2.5rem;
+        }
+
+        /* ============================================================
+           HEADLINE NUMBERS — top 4 big stats
+        ============================================================ */
+        #headline-stats {
+            background:var(--cyan-dark);
+            padding:5rem 0;
+            position:relative; overflow:hidden;
+        }
+        .hstat-lines {
+            position:absolute; inset:0; pointer-events:none;
+        }
+        .hsl {
+            position:absolute; left:-20%; width:140%;
+            height:1px; background:rgba(212,175,55,0.12);
+            animation:hsl-move linear infinite;
+        }
+        @keyframes hsl-move {
+            from{ transform:translateX(-40px); }
+            to  { transform:translateX(40px); }
+        }
+        .hstat-grid {
+            display:grid; grid-template-columns:repeat(4,1fr);
+            gap:0; position:relative; z-index:2;
+        }
+        .hstat-item {
+            text-align:center; padding:2.5rem 1.5rem;
+            border-right:1px solid rgba(0,0,0,0.15);
+            position:relative;
+        }
+        .hstat-item:last-child { border-right:none; }
+        .hstat-item::before {
+            content:'';
+            position:absolute; top:0; left:50%; transform:translateX(-50%);
+            width:30px; height:3px; background:var(--gold);
+        }
+        .hstat-val {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(3rem,5vw,5.5rem);
+            color:var(--gold); line-height:1; letter-spacing:0.04em;
+        }
+        .hstat-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.7rem; font-weight:700; letter-spacing:0.2em;
+            text-transform:uppercase; color:rgba(0,0,0,0.55);
+            margin-top:0.5rem;
+        }
+
+        /* ============================================================
+           BAR CHARTS — service popularity
+        ============================================================ */
+        #service-stats {
+            background:var(--dark-2);
+            padding:8rem 0;
+            position:relative;
+        }
+        #service-stats::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold),transparent);
+        }
+        .service-stats-layout {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:6rem; align-items:center;
+        }
+        .bars-list {
+            display:flex; flex-direction:column; gap:2rem;
+        }
+        .bar-item { }
+        .bar-meta {
+            display:flex; justify-content:space-between; align-items:baseline;
+            margin-bottom:0.6rem;
+        }
+        .bar-name {
+            font-family:'Oswald',sans-serif;
+            font-size:0.82rem; font-weight:700; letter-spacing:0.12em;
+            text-transform:uppercase; color:var(--grey);
+        }
+        .bar-pct {
+            font-family:'Anton',sans-serif;
+            font-size:1.1rem; letter-spacing:0.05em;
+            color:var(--gold);
+        }
+        .bar-track {
+            height:6px; background:rgba(234,234,234,0.06); border-radius:3px;
+            overflow:hidden;
+        }
+        .bar-fill {
+            height:100%; border-radius:3px; width:0;
+            transition:width 1.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .bar-fill.gold  { background:linear-gradient(90deg,var(--gold-deep),var(--gold)); }
+        .bar-fill.cyan  { background:linear-gradient(90deg,var(--cyan-dark),var(--cyan)); }
+
+        .chart-visual {
+            position:relative; height:380px;
+            display:flex; align-items:flex-end;
+            gap:16px; justify-content:center;
+        }
+        .col-bar-wrap {
+            display:flex; flex-direction:column;
+            align-items:center; gap:0.7rem;
+            flex:1; max-width:70px;
+        }
+        .col-bar-val {
+            font-family:'Anton',sans-serif;
+            font-size:1rem; color:var(--gold); letter-spacing:0.04em;
+        }
+        .col-bar-track {
+            width:100%; position:relative;
+            display:flex; align-items:flex-end;
+        }
+        .col-bar {
+            width:100%; border-radius:4px 4px 0 0;
+            height:0; transition:height 1.6s cubic-bezier(0.16,1,0.3,1);
+        }
+        .col-bar-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.62rem; font-weight:700; letter-spacing:0.1em;
+            text-transform:uppercase; color:rgba(234,234,234,0.3);
+            text-align:center;
+        }
+        .chart-baseline {
+            position:absolute; bottom:50px; left:0; right:0;
+            height:1px; background:rgba(234,234,234,0.06);
+        }
+
+        /* ============================================================
+           RATING BREAKDOWN
+        ============================================================ */
+        #rating-stats {
+            background:var(--black);
+            padding:8rem 0;
+            position:relative;
+        }
+        #rating-stats::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+        }
+        .rating-layout {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:6rem; align-items:center;
+        }
+        .big-rating-display {
+            text-align:center;
+        }
+        .brd-num {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(7rem,15vw,12rem); line-height:1;
+            background:linear-gradient(90deg,var(--gold-deep),var(--gold),#f5d76e,var(--gold-deep));
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 5s linear infinite;
+        }
+        .brd-stars {
+            display:flex; justify-content:center; gap:8px;
+            font-size:2.2rem; margin:0.5rem 0;
+        }
+        .brd-stars span { color:var(--gold); }
+        .brd-stars .half { position:relative; }
+        .brd-sub {
+            font-family:'Oswald',sans-serif;
+            font-size:0.72rem; font-weight:700; letter-spacing:0.25em;
+            text-transform:uppercase; color:rgba(234,234,234,0.3);
+            margin-top:0.5rem;
+        }
+        .brd-ring-wrap {
+            position:relative; width:200px; height:200px; margin:2rem auto 0;
+        }
+        .brd-ring {
+            width:100%; height:100%; border-radius:50%;
+            background:conic-gradient(
+                var(--gold) 0% 84%,
+                rgba(212,175,55,0.1) 84% 100%
+            );
+            display:flex; align-items:center; justify-content:center;
+            position:relative;
+        }
+        .brd-ring::before {
+            content:'';
+            position:absolute; inset:16px;
+            border-radius:50%; background:var(--black);
+        }
+        .brd-ring-text {
+            position:relative; z-index:1;
+            font-family:'Anton',sans-serif;
+            font-size:1.5rem; color:var(--gold);
+        }
+        .star-breakdown { display:flex; flex-direction:column; gap:1rem; }
+        .sb-row {
+            display:flex; align-items:center; gap:1rem;
+        }
+        .sb-star {
+            font-family:'Oswald',sans-serif;
+            font-size:0.78rem; font-weight:700; letter-spacing:0.1em;
+            color:var(--grey-dim); width:40px; text-align:right;
+            flex-shrink:0;
+        }
+        .sb-track {
+            flex:1; height:8px; background:rgba(234,234,234,0.05);
+            border-radius:4px; overflow:hidden;
+        }
+        .sb-fill {
+            height:100%; border-radius:4px; width:0;
+            transition:width 1.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .sb-count {
+            font-family:'Anton',sans-serif;
+            font-size:0.9rem; color:rgba(234,234,234,0.3);
+            width:40px; flex-shrink:0;
+        }
+
+        /* ============================================================
+           MONTHLY TREND (sparkline-style)
+        ============================================================ */
+        #monthly-trend {
+            background:var(--dark-3);
+            padding:8rem 0;
+            position:relative;
+        }
+        #monthly-trend::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold),transparent);
+        }
+        .trend-layout {
+            display:grid; grid-template-columns:1fr 2fr;
+            gap:5rem; align-items:center;
+        }
+        .trend-info { }
+        .trend-highlights {
+            display:flex; flex-direction:column; gap:1.5rem;
+            margin-top:2.5rem;
+        }
+        .th-item {
+            display:flex; align-items:center; gap:1rem;
+            padding:1rem 1.5rem;
+            background:var(--dark-4);
+            border-left:3px solid var(--gold);
+        }
+        .th-num {
+            font-family:'Anton',sans-serif;
+            font-size:1.8rem; color:var(--gold); letter-spacing:0.04em;
+            line-height:1;
+        }
+        .th-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.72rem; font-weight:700; letter-spacing:0.15em;
+            text-transform:uppercase; color:rgba(234,234,234,0.4);
+        }
+        .trend-chart {
+            position:relative;
+        }
+        .trend-canvas-wrap {
+            position:relative;
+            height:280px;
+            background:var(--dark-4);
+            border:1px solid rgba(212,175,55,0.06);
+            padding:2rem 2rem 3rem;
+            overflow:hidden;
+        }
+        .trend-grid-lines {
+            position:absolute; inset:2rem 2rem 3rem;
+            display:flex; flex-direction:column; justify-content:space-between;
+        }
+        .tgl {
+            width:100%; height:1px;
+            background:rgba(234,234,234,0.04);
+        }
+        .trend-bars-row {
+            position:absolute; bottom:3rem; left:2rem; right:2rem;
+            display:flex; align-items:flex-end; gap:8px;
+            height:calc(100% - 5rem);
+        }
+        .trend-bar-col {
+            flex:1; display:flex; flex-direction:column;
+            align-items:center; justify-content:flex-end; gap:0.4rem;
+        }
+        .trend-bar {
+            width:100%; border-radius:2px 2px 0 0;
+            height:0; transition:height 1.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .trend-bar.gold-bar-item  { background:var(--gold); }
+        .trend-bar.cyan-bar-item  { background:var(--cyan); opacity:0.6; }
+        .trend-month {
+            font-family:'Oswald',sans-serif;
+            font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase;
+            color:rgba(234,234,234,0.25);
+        }
+        .trend-peak-label {
+            position:absolute; top:1.5rem; right:2rem;
+            font-family:'Oswald',sans-serif;
+            font-size:0.65rem; font-weight:700; letter-spacing:0.15em;
+            text-transform:uppercase; color:var(--cyan);
+        }
+
+        /* ============================================================
+           SATISFACTION METRICS
+        ============================================================ */
+        #satisfaction {
+            background:var(--black);
+            padding:8rem 0;
+            position:relative;
+        }
+        #satisfaction::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+        }
+        .sat-grid {
+            display:grid; grid-template-columns:repeat(3,1fr);
+            gap:2px; margin-top:4rem;
+        }
+        .sat-card {
+            background:var(--dark-2);
+            padding:3rem 2.5rem;
+            position:relative; overflow:hidden;
+            border:1px solid rgba(212,175,55,0.06);
+            transition:border-color 0.3s, box-shadow 0.3s;
+        }
+        .sat-card:hover {
+            border-color:rgba(212,175,55,0.25);
+            box-shadow:0 0 40px rgba(212,175,55,0.05);
+        }
+        .sat-card::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:3px;
+            background:linear-gradient(90deg,var(--gold),var(--cyan));
+            transform:scaleX(0);
+            transition:transform 0.4s ease;
+            transform-origin:left;
+        }
+        .sat-card:hover::before { transform:scaleX(1); }
+        .sat-circle {
+            position:relative; width:120px; height:120px;
+            margin:0 auto 2rem;
+        }
+        .sat-ring {
+            width:100%; height:100%; border-radius:50%;
+        }
+        .sat-ring-inner {
+            position:absolute; inset:12px;
+            border-radius:50%; background:var(--dark-2);
+            display:flex; align-items:center; justify-content:center;
+        }
+        .sat-pct {
+            font-family:'Anton',sans-serif;
+            font-size:1.4rem; color:var(--gold); letter-spacing:0.04em;
+        }
+        .sat-title {
+            font-family:'Oswald',sans-serif;
+            font-size:1rem; font-weight:700; letter-spacing:0.15em;
+            text-transform:uppercase; color:var(--grey);
+            text-align:center; margin-bottom:0.7rem;
+        }
+        .sat-desc {
+            font-family:'Poppins',sans-serif;
+            font-size:0.8rem; color:rgba(234,234,234,0.35);
+            text-align:center; line-height:1.7;
+        }
+
+        /* ============================================================
+           REPEAT CUSTOMER TIMELINE
+        ============================================================ */
+        #repeat-customers {
+            background:var(--cyan-dark);
+            padding:6rem 0;
+            position:relative; overflow:hidden;
+        }
+        .rc-lines {
+            position:absolute; inset:0; pointer-events:none;
+        }
+        .rc-line {
+            position:absolute; left:-10%; width:120%;
+            height:1px; background:rgba(212,175,55,0.12);
+            animation:hsl-move linear infinite;
+        }
+        .rc-header { text-align:center; margin-bottom:4rem; position:relative; z-index:2; }
+        .rc-header .section-title { color:var(--black); }
+        .rc-header .section-label { color:rgba(0,0,0,0.5); }
+        .rc-donut-row {
+            display:flex; justify-content:center; align-items:center;
+            gap:5rem; flex-wrap:wrap;
+            position:relative; z-index:2;
+        }
+        .rc-donut {
+            text-align:center;
+        }
+        .rc-donut-svg {
+            display:block; margin:0 auto;
+        }
+        .rc-donut-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.72rem; font-weight:700; letter-spacing:0.2em;
+            text-transform:uppercase; color:rgba(0,0,0,0.5);
+            margin-top:1rem;
+        }
+        .rc-donut-val {
+            font-family:'Anton',sans-serif;
+            font-size:1.4rem; color:var(--black); letter-spacing:0.05em;
+        }
+        .rc-divider { width:1px; height:120px; background:rgba(0,0,0,0.15); }
+
+        /* ============================================================
+           CTA STRIP
+        ============================================================ */
+        #cta-strip {
+            background:var(--black);
+            padding:8rem 0;
+            position:relative; overflow:hidden;
+        }
+        .cta-frame {
+            position:relative;
+            max-width:800px; margin:0 auto;
+            padding:5rem 4rem;
+            border:1px solid rgba(212,175,55,0.15);
+            text-align:center;
+        }
+        .cta-frame::before,
+        .cta-frame::after {
+            content:'';
+            position:absolute;
+            width:30px; height:30px;
+            border-color:var(--cyan); border-style:solid;
+        }
+        .cta-frame::before { top:-2px; left:-2px; border-width:3px 0 0 3px; }
+        .cta-frame::after  { bottom:-2px; right:-2px; border-width:0 3px 3px 0; }
+        .cta-frame .corner-tr,
+        .cta-frame .corner-bl {
+            position:absolute;
+            width:30px; height:30px;
+            border-color:var(--cyan); border-style:solid;
+        }
+        .cta-frame .corner-tr { top:-2px; right:-2px; border-width:3px 3px 0 0; }
+        .cta-frame .corner-bl { bottom:-2px; left:-2px; border-width:0 0 3px 3px; }
+        .cta-pulse {
+            position:absolute; inset:-1px;
+            border:1px solid transparent;
+            animation:cta-pulse 3s ease-in-out infinite;
+        }
+        @keyframes cta-pulse {
+            0%,100%{ border-color:rgba(212,175,55,0.08); }
+            50%    { border-color:rgba(212,175,55,0.4); box-shadow:0 0 40px rgba(212,175,55,0.1); }
+        }
+        .cta-label {
+            font-family:'Oswald',sans-serif;
+            font-size:0.72rem; font-weight:700; letter-spacing:0.4em;
+            text-transform:uppercase; color:var(--cyan);
+            margin-bottom:1.5rem;
+        }
+        .cta-heading {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(2.2rem,6vw,5rem);
+            letter-spacing:0.04em; text-transform:uppercase;
+            background:linear-gradient(90deg,var(--gold-deep),var(--gold),#f5d76e,var(--gold-deep));
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 4s linear infinite;
+            margin-bottom:2rem;
+        }
+        .cta-sub {
+            font-family:'Poppins',sans-serif;
+            font-size:0.92rem; color:rgba(234,234,234,0.45);
+            line-height:1.7; margin-bottom:2.5rem;
+        }
+        .cta-btns {
+            display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;
+        }
+        .btn-gold {
+            font-family:'Oswald',sans-serif;
+            font-size:0.82rem; font-weight:700; letter-spacing:0.2em;
+            text-transform:uppercase; text-decoration:none;
+            padding:0.9rem 2.2rem;
+            background:var(--gold); color:var(--black);
+            border:none; cursor:pointer;
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-gold:hover {
+            transform:scale(1.04);
+            box-shadow:0 0 28px var(--gold-glow);
+        }
+        .btn-outline {
+            font-family:'Oswald',sans-serif;
+            font-size:0.82rem; font-weight:700; letter-spacing:0.2em;
+            text-transform:uppercase; text-decoration:none;
+            padding:0.9rem 2.2rem;
+            background:transparent; color:var(--cyan);
+            border:1.5px solid var(--cyan); cursor:pointer;
+            transition:transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+        }
+        .btn-outline:hover {
+            background:var(--cyan); color:var(--black);
+            transform:scale(1.04); box-shadow:0 0 28px var(--cyan-glow);
+        }
+
+        /* ============================================================
+           TICKER
+        ============================================================ */
+        .ticker {
+            background:var(--gold); padding:0.85rem 0; overflow:hidden; white-space:nowrap;
+        }
+        .ticker-inner {
+            display:inline-flex; gap:0; animation:tick-go 22s linear infinite;
+        }
+        .t-item {
+            font-family:'Anton',sans-serif;
+            font-size:1.05rem; letter-spacing:0.18em; text-transform:uppercase;
+            color:var(--black); padding:0 2.5rem;
+        }
+        .t-div { color:var(--gold-deep); padding:0 0.5rem; font-family:'Anton',sans-serif; font-size:1rem; }
+        @keyframes tick-go { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        footer {
+            background:var(--black); border-top:3px solid var(--gold);
+            padding:5rem 3rem 2.5rem;
+        }
+        .footer-inner { max-width:1200px; margin:0 auto; }
+        .footer-top {
+            display:grid; grid-template-columns:2fr 1fr 1fr;
+            gap:4rem; padding-bottom:4rem;
+            border-bottom:1px solid rgba(212,175,55,0.1); margin-bottom:2.5rem;
+        }
+        .footer-brand-name {
+            font-family:'Anton',sans-serif;
+            font-size:clamp(2rem,5vw,4rem); letter-spacing:0.06em; text-transform:uppercase;
+            background:linear-gradient(90deg,var(--gold-deep) 0%,var(--gold) 30%,#f5d76e 50%,var(--gold) 70%,var(--gold-deep) 100%);
+            background-size:200% auto;
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:gold-shimmer 5s linear infinite;
+        }
+        .footer-slogan {
+            font-family:'Oswald',sans-serif;
+            font-size:0.95rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+            color:var(--cyan); position:relative; display:inline-block; margin-top:0.35rem;
+        }
+        .footer-slogan::after {
+            content:''; position:absolute; bottom:-5px; left:0;
+            width:40%; height:2px; background:var(--gold);
+            animation:gold-underline 2.8s ease-in-out infinite alternate;
+        }
+        @keyframes gold-underline { from{left:0%;width:35%;} to{left:40%;width:60%;} }
+        .footer-brand p {
+            font-family:'Poppins',sans-serif; font-size:0.87rem;
+            color:rgba(234,234,234,0.35); line-height:1.8; margin-top:1.5rem; max-width:280px;
+        }
+        .footer-col h4 {
+            font-family:'Oswald',sans-serif; font-size:0.78rem; font-weight:700;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem;
+        }
+        .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
+        .footer-col ul a, .footer-col ul span {
+            font-family:'Poppins',sans-serif; font-size:0.87rem;
+            color:rgba(234,234,234,0.35); text-decoration:none; transition:color 0.2s; display:block;
+        }
+        .footer-col ul a:hover { color:var(--gold); }
+        .footer-bottom {
+            display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+        }
+        .footer-bottom p { font-family:'Poppins',sans-serif; font-size:0.77rem; color:rgba(234,234,234,0.2); }
+        .footer-bottom span { color:var(--gold); }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width:960px) {
+            nav { padding:0 1.5rem; }
+            .nav-links {
+                display:none; position:absolute; top:100%; left:0; right:0;
+                flex-direction:column; gap:0;
+                background:rgba(10,10,10,0.98); backdrop-filter:blur(20px);
+                border-top:1px solid rgba(212,175,55,0.2); padding:0.5rem 0 1.2rem;
+            }
+            .nav-links.open { display:flex; }
+            .nav-links li { border-bottom:1px solid rgba(212,175,55,0.06); }
+            .nav-links li:last-child { border-bottom:none; margin-top:0.5rem; }
+            .nav-links a { padding:0.9rem 1.5rem; display:block; }
+            .nav-links .nav-btn {
+                display:block; margin:0 1.5rem;
+                padding:0.8rem 1.5rem !important; text-align:center;
+                border-radius:3px;
+            }
+            .nav-toggle { display:flex; }
+            .hstat-grid { grid-template-columns:repeat(2,1fr); }
+            .hstat-item { border-right:none; border-bottom:1px solid rgba(0,0,0,0.15); }
+            .hstat-item:nth-child(even) { }
+            .hstat-item:last-child { border-bottom:none; }
+            .service-stats-layout { grid-template-columns:1fr; gap:4rem; }
+            .rating-layout { grid-template-columns:1fr; gap:4rem; }
+            .trend-layout { grid-template-columns:1fr; gap:4rem; }
+            .sat-grid { grid-template-columns:1fr; }
+            .rc-divider { display:none; }
+            .cta-frame { padding:3rem 1.8rem; }
+            .footer-top { grid-template-columns:1fr; gap:2.5rem; }
+            .container { padding:0 1.5rem; }
+        }
+        @media (max-width:640px) {
+            .cta-btns { flex-direction:column; align-items:center; }
+            .chart-visual { gap:6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAV ===== -->
+    <nav id="navbar">
+        <a href="index.html" class="nav-brand">UMBILO CW</a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="stats.html" class="active">Stats</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="experience.html">Experience</a></li>
+            <li><a href="tel:0835959278" class="nav-btn">CALL NOW</a></li>
+        </ul>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+        <div class="ph-grid"></div>
+        <div class="ph-glow"></div>
+        <div class="ph-digits" id="ph-digits"></div>
+        <div class="ph-content">
+            <p class="ph-eyebrow">Umbilo Car Wash · Durban</p>
+            <h1 class="ph-heading">BY THE<br>NUMBERS</h1>
+            <p class="ph-subtitle">Transparency you can trust. Data that speaks.</p>
+            <div class="ph-divider">
+                <span style="width:50px;background:var(--gold);height:2px;display:block;border-radius:1px;"></span>
+                <span style="width:20px;background:var(--cyan);height:2px;display:block;border-radius:1px;"></span>
+                <span style="width:50px;background:var(--gold);height:2px;display:block;border-radius:1px;"></span>
+            </div>
+        </div>
+        <div class="ph-scroll-hint">
+            <span>Scroll</span>
+            <div class="ph-scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ===== 1. HEADLINE NUMBERS ===== -->
+    <section id="headline-stats">
+        <div class="hstat-lines">
+            <div class="hsl" style="top:30%;animation-duration:9s;"></div>
+            <div class="hsl" style="top:60%;animation-duration:13s;animation-delay:2s;animation-direction:reverse;"></div>
+        </div>
+        <div class="container">
+            <div class="hstat-grid">
+                <div class="hstat-item sr">
+                    <div class="hstat-val" data-target="2400" data-suffix="+">0+</div>
+                    <div class="hstat-label">Cars Washed</div>
+                </div>
+                <div class="hstat-item sr sr-d2">
+                    <div class="hstat-val" data-target="4.2" data-decimal="true" data-suffix="★">0★</div>
+                    <div class="hstat-label">Google Rating</div>
+                </div>
+                <div class="hstat-item sr sr-d3">
+                    <div class="hstat-val" data-target="8" data-suffix=" Yrs">0 Yrs</div>
+                    <div class="hstat-label">In Business</div>
+                </div>
+                <div class="hstat-item sr sr-d4">
+                    <div class="hstat-val" data-target="200" data-suffix="+">0+</div>
+                    <div class="hstat-label">Reviews</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 2. SERVICE POPULARITY ===== -->
+    <section id="service-stats">
+        <div class="container">
+            <div class="service-stats-layout">
+                <div>
+                    <p class="section-label sr">Most Booked</p>
+                    <h2 class="section-title sr sr-d1">SERVICE<br><em>POPULARITY</em></h2>
+                    <div class="gold-bar sr sr-d2"></div>
+                    <div class="bars-list">
+                        <div class="bar-item sr sr-d2">
+                            <div class="bar-meta">
+                                <span class="bar-name">Full Valet</span>
+                                <span class="bar-pct">42%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill gold" data-width="42"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item sr sr-d3">
+                            <div class="bar-meta">
+                                <span class="bar-name">Quick Wash</span>
+                                <span class="bar-pct">31%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill cyan" data-width="31"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item sr sr-d4">
+                            <div class="bar-meta">
+                                <span class="bar-name">Interior Detail</span>
+                                <span class="bar-pct">17%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill gold" data-width="17"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item sr sr-d5">
+                            <div class="bar-meta">
+                                <span class="bar-name">Deep Clean</span>
+                                <span class="bar-pct">10%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill cyan" data-width="10"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-visual sr sr-d2" id="service-chart">
+                    <div class="chart-baseline"></div>
+                    <div class="col-bar-wrap">
+                        <div class="col-bar-val">42%</div>
+                        <div class="col-bar-track" style="height:240px;">
+                            <div class="col-bar gold-bar-item" data-h="240"></div>
+                        </div>
+                        <div class="col-bar-label">Valet</div>
+                    </div>
+                    <div class="col-bar-wrap">
+                        <div class="col-bar-val">31%</div>
+                        <div class="col-bar-track" style="height:240px;">
+                            <div class="col-bar cyan-bar-item" data-h="177"></div>
+                        </div>
+                        <div class="col-bar-label">Quick</div>
+                    </div>
+                    <div class="col-bar-wrap">
+                        <div class="col-bar-val">17%</div>
+                        <div class="col-bar-track" style="height:240px;">
+                            <div class="col-bar gold-bar-item" data-h="97"></div>
+                        </div>
+                        <div class="col-bar-label">Interior</div>
+                    </div>
+                    <div class="col-bar-wrap">
+                        <div class="col-bar-val">10%</div>
+                        <div class="col-bar-track" style="height:240px;">
+                            <div class="col-bar cyan-bar-item" data-h="57"></div>
+                        </div>
+                        <div class="col-bar-label">Deep</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. RATING BREAKDOWN ===== -->
+    <section id="rating-stats">
+        <div class="container">
+            <div class="rating-layout">
+                <div class="big-rating-display sr">
+                    <div class="brd-num" data-target="4.2" data-decimal="true">4.2</div>
+                    <div class="brd-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span>
+                        <span class="half" style="color:var(--gold);opacity:0.5;">★</span>
+                    </div>
+                    <p class="brd-sub">Out of 5 · 200+ reviews</p>
+                    <div class="brd-ring-wrap">
+                        <div class="brd-ring">
+                            <div class="brd-ring-text">84%</div>
+                        </div>
+                    </div>
+                    <p style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(234,234,234,0.3);margin-top:0.8rem;">of customers rate 4 stars or above</p>
+                    <!-- 4.2/5 = 84% -->
+
+                </div>
+
+                <div>
+                    <p class="section-label sr">Rating Distribution</p>
+                    <h2 class="section-title sr sr-d1">STAR<br><em>BREAKDOWN</em></h2>
+                    <div class="gold-bar sr sr-d2"></div>
+                    <div class="star-breakdown sr sr-d3">
+                        <div class="sb-row">
+                            <span class="sb-star">5 ★</span>
+                            <div class="sb-track">
+                                <div class="sb-fill" data-width="62" style="background:var(--gold);"></div>
+                            </div>
+                            <span class="sb-count">62%</span>
+                        </div>
+                        <div class="sb-row">
+                            <span class="sb-star">4 ★</span>
+                            <div class="sb-track">
+                                <div class="sb-fill" data-width="26" style="background:var(--gold);opacity:0.7;"></div>
+                            </div>
+                            <span class="sb-count">26%</span>
+                        </div>
+                        <div class="sb-row">
+                            <span class="sb-star">3 ★</span>
+                            <div class="sb-track">
+                                <div class="sb-fill" data-width="7" style="background:var(--gold);opacity:0.4;"></div>
+                            </div>
+                            <span class="sb-count">7%</span>
+                        </div>
+                        <div class="sb-row">
+                            <span class="sb-star">2 ★</span>
+                            <div class="sb-track">
+                                <div class="sb-fill" data-width="3" style="background:rgba(212,175,55,0.3);"></div>
+                            </div>
+                            <span class="sb-count">3%</span>
+                        </div>
+                        <div class="sb-row">
+                            <span class="sb-star">1 ★</span>
+                            <div class="sb-track">
+                                <div class="sb-fill" data-width="2" style="background:rgba(212,175,55,0.15);"></div>
+                            </div>
+                            <span class="sb-count">2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 4. MONTHLY TREND ===== -->
+    <section id="monthly-trend">
+        <div class="container">
+            <div class="trend-layout">
+                <div>
+                    <p class="section-label sr">Busiest Periods</p>
+                    <h2 class="section-title sr sr-d1">MONTHLY<br><em>TREND</em></h2>
+                    <div class="gold-bar sr sr-d2"></div>
+                    <div class="trend-highlights sr sr-d3">
+                        <div class="th-item">
+                            <div>
+                                <div class="th-num">Dec / Jan</div>
+                                <div class="th-label">Peak Season</div>
+                            </div>
+                        </div>
+                        <div class="th-item" style="border-left-color:var(--cyan);">
+                            <div>
+                                <div class="th-num" style="color:var(--cyan);">Sat &amp; Sun</div>
+                                <div class="th-label">Busiest Days</div>
+                            </div>
+                        </div>
+                        <div class="th-item">
+                            <div>
+                                <div class="th-num">9AM – 12PM</div>
+                                <div class="th-label">Peak Hours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trend-chart sr sr-d2">
+                    <div class="trend-canvas-wrap">
+                        <div class="trend-peak-label">↑ Peak: Dec</div>
+                        <div class="trend-grid-lines">
+                            <div class="tgl"></div><div class="tgl"></div>
+                            <div class="tgl"></div><div class="tgl"></div>
+                        </div>
+                        <div class="trend-bars-row" id="trend-bars">
+                            <!-- JS filled -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 5. SATISFACTION METRICS ===== -->
+    <section id="satisfaction">
+        <div class="container">
+            <div style="text-align:center;margin-bottom:0;">
+                <p class="section-label sr">What Customers Value</p>
+                <h2 class="section-title sr sr-d1">SATISFACTION<br><em>METRICS</em></h2>
+                <div class="gold-bar sr sr-d2" style="margin:1.4rem auto 0;"></div>
+            </div>
+            <div class="sat-grid">
+                <div class="sat-card sr sr-d1">
+                    <div class="sat-circle">
+                        <svg class="sat-ring-svg" viewBox="0 0 120 120" width="120" height="120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(212,175,55,0.08)" stroke-width="10"/>
+                            <circle cx="60" cy="60" r="50" fill="none"
+                                stroke="var(--gold)" stroke-width="10"
+                                stroke-dasharray="314" stroke-dashoffset="314"
+                                stroke-linecap="round" transform="rotate(-90 60 60)"
+                                class="sat-ring-fill" data-offset="28" style="transition:stroke-dashoffset 1.4s ease;"/>
+                        </svg>
+                        <div class="sat-ring-inner"><span class="sat-pct">91%</span></div>
+                    </div>
+                    <div class="sat-title">Would Return</div>
+                    <p class="sat-desc">9 in 10 customers say they'll choose Umbilo Car Wash for their next visit.</p>
+                </div>
+                <div class="sat-card sr sr-d2">
+                    <div class="sat-circle">
+                        <svg viewBox="0 0 120 120" width="120" height="120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(0,229,255,0.08)" stroke-width="10"/>
+                            <circle cx="60" cy="60" r="50" fill="none"
+                                stroke="var(--cyan)" stroke-width="10"
+                                stroke-dasharray="314" stroke-dashoffset="314"
+                                stroke-linecap="round" transform="rotate(-90 60 60)"
+                                class="sat-ring-fill" data-offset="63" style="transition:stroke-dashoffset 1.4s ease;"/>
+                        </svg>
+                        <div class="sat-ring-inner"><span class="sat-pct" style="color:var(--cyan);">80%</span></div>
+                    </div>
+                    <div class="sat-title">Recommended</div>
+                    <p class="sat-desc">4 in 5 customers have recommended us to friends or family in Durban.</p>
+                </div>
+                <div class="sat-card sr sr-d3">
+                    <div class="sat-circle">
+                        <svg viewBox="0 0 120 120" width="120" height="120">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(212,175,55,0.08)" stroke-width="10"/>
+                            <circle cx="60" cy="60" r="50" fill="none"
+                                stroke="var(--gold)" stroke-width="10"
+                                stroke-dasharray="314" stroke-dashoffset="314"
+                                stroke-linecap="round" transform="rotate(-90 60 60)"
+                                class="sat-ring-fill" data-offset="44" style="transition:stroke-dashoffset 1.4s ease;"/>
+                        </svg>
+                        <div class="sat-ring-inner"><span class="sat-pct">86%</span></div>
+                    </div>
+                    <div class="sat-title">Rated Value</div>
+                    <p class="sat-desc">Customers who said our pricing is fair or excellent for the quality delivered.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 6. REPEAT CUSTOMERS ===== -->
+    <section id="repeat-customers">
+        <div class="rc-lines">
+            <div class="rc-line" style="top:30%;animation-duration:10s;"></div>
+            <div class="rc-line" style="top:65%;animation-duration:14s;animation-delay:2s;animation-direction:reverse;"></div>
+        </div>
+        <div class="container">
+            <div class="rc-header">
+                <p class="section-label sr">Loyalty Snapshot</p>
+                <h2 class="section-title sr sr-d1" style="color:var(--black);">CUSTOMER<br>LOYALTY</h2>
+            </div>
+            <div class="rc-donut-row sr sr-d2">
+                <div class="rc-donut">
+                    <svg class="rc-donut-svg" viewBox="0 0 140 140" width="140" height="140">
+                        <circle cx="70" cy="70" r="55" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="18"/>
+                        <circle cx="70" cy="70" r="55" fill="none"
+                            stroke="#0A0A0A" stroke-width="18"
+                            stroke-dasharray="346" stroke-dashoffset="346"
+                            stroke-linecap="round" transform="rotate(-90 70 70)"
+                            class="rc-ring-fill" data-offset="104"
+                            style="transition:stroke-dashoffset 1.6s ease;"/>
+                    </svg>
+                    <div class="rc-donut-val">70%</div>
+                    <div class="rc-donut-label">Repeat Customers</div>
+                </div>
+                <div class="rc-divider"></div>
+                <div class="rc-donut">
+                    <svg class="rc-donut-svg" viewBox="0 0 140 140" width="140" height="140">
+                        <circle cx="70" cy="70" r="55" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="18"/>
+                        <circle cx="70" cy="70" r="55" fill="none"
+                            stroke="#0A0A0A" stroke-width="18"
+                            stroke-dasharray="346" stroke-dashoffset="346"
+                            stroke-linecap="round" transform="rotate(-90 70 70)"
+                            class="rc-ring-fill" data-offset="208"
+                            style="transition:stroke-dashoffset 1.6s ease;"/>
+                    </svg>
+                    <div class="rc-donut-val">40%</div>
+                    <div class="rc-donut-label">Visit Weekly</div>
+                </div>
+                <div class="rc-divider"></div>
+                <div class="rc-donut">
+                    <svg class="rc-donut-svg" viewBox="0 0 140 140" width="140" height="140">
+                        <circle cx="70" cy="70" r="55" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="18"/>
+                        <circle cx="70" cy="70" r="55" fill="none"
+                            stroke="#0A0A0A" stroke-width="18"
+                            stroke-dasharray="346" stroke-dashoffset="346"
+                            stroke-linecap="round" transform="rotate(-90 70 70)"
+                            class="rc-ring-fill" data-offset="35"
+                            style="transition:stroke-dashoffset 1.6s ease;"/>
+                    </svg>
+                    <div class="rc-donut-val">90%</div>
+                    <div class="rc-donut-label">Return Within 30 Days</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 7. CTA ===== -->
+    <section id="cta-strip">
+        <div class="container">
+            <div class="cta-frame sr">
+                <div class="cta-pulse"></div>
+                <div class="corner-tr"></div>
+                <div class="corner-bl"></div>
+                <p class="cta-label">Join the numbers</p>
+                <h2 class="cta-heading">BECOME A<br>STATISTIC</h2>
+                <p class="cta-sub">
+                    2,400+ cars washed. Your turn.<br>
+                    Roll up to 99 Umbilo Rd — no appointment needed.
+                </p>
+                <div class="cta-btns">
+                    <a href="services.html" class="btn-gold">View Services</a>
+                    <a href="tel:0835959278" class="btn-outline">Call 083 595 9278</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TICKER ===== -->
+    <div class="ticker">
+        <div class="ticker-inner">
+            <span class="t-item">UMBILO CAR WASH</span><span class="t-div">◆</span>
+            <span class="t-item">4.2 STARS</span><span class="t-div">◆</span>
+            <span class="t-item">2,400+ CARS WASHED</span><span class="t-div">◆</span>
+            <span class="t-item">8 YEARS IN UMBILO</span><span class="t-div">◆</span>
+            <span class="t-item">100% HAND FINISH</span><span class="t-div">◆</span>
+            <span class="t-item">CALL 083 595 9278</span><span class="t-div">◆</span>
+            <span class="t-item">99 UMBILO RD, DURBAN</span><span class="t-div">◆</span>
+            <span class="t-item">OPEN DAILY · CLOSES 9PM</span><span class="t-div">◆</span>
+            <!-- duplicate -->
+            <span class="t-item">UMBILO CAR WASH</span><span class="t-div">◆</span>
+            <span class="t-item">4.2 STARS</span><span class="t-div">◆</span>
+            <span class="t-item">2,400+ CARS WASHED</span><span class="t-div">◆</span>
+            <span class="t-item">8 YEARS IN UMBILO</span><span class="t-div">◆</span>
+            <span class="t-item">100% HAND FINISH</span><span class="t-div">◆</span>
+            <span class="t-item">CALL 083 595 9278</span><span class="t-div">◆</span>
+            <span class="t-item">99 UMBILO RD, DURBAN</span><span class="t-div">◆</span>
+            <span class="t-item">OPEN DAILY · CLOSES 9PM</span><span class="t-div">◆</span>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-name">UMBILO CAR WASH</div>
+                    <div class="footer-slogan">CLEAN CARS. CLEAN REPUTATION.</div>
+                    <p>Premium car wash services in the heart of Durban's Umbilo district. Gold standard care, street energy, every time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Stats</h4>
+                    <ul>
+                        <li><a href="#headline-stats">Key Numbers</a></li>
+                        <li><a href="#service-stats">Service Popularity</a></li>
+                        <li><a href="#rating-stats">Rating Breakdown</a></li>
+                        <li><a href="#monthly-trend">Monthly Trend</a></li>
+                        <li><a href="#satisfaction">Satisfaction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:0835959278">083 595 9278</a></li>
+                        <li><span>99 Umbilo Rd</span></li>
+                        <li><span>Umbilo, Durban, 4001</span></li>
+                        <li><span>Open Daily · Closes 9PM</span></li>
+                        <li><a href="index.html">← Back to Home</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 <span>Umbilo Car Wash</span>. All rights reserved.</p>
+                <p>Umbilo · Durban · <span>Built Different.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JS ===== -->
+    <script>
+        // ─── NAV SCROLL ──────────────────────────────────────────────
+        const navbar  = document.getElementById('navbar');
+        const navTog  = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-links');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        });
+        navTog.addEventListener('click', () => navMenu.classList.toggle('open'));
+        document.addEventListener('click', e => {
+            if (!navbar.contains(e.target)) navMenu.classList.remove('open');
+        });
+
+        // ─── HERO DIGIT RAIN ─────────────────────────────────────────
+        const digitsEl = document.getElementById('ph-digits');
+        const nums = ['2400', '4.2', '84%', '8', '91', '200', '70%', '100%', '42', '31'];
+        nums.forEach((n, i) => {
+            const d = document.createElement('div');
+            d.className = 'ph-digit';
+            d.textContent = n;
+            d.style.cssText = `
+                left:${5 + (i * 9.5)}%;
+                top:${10 + Math.random() * 60}%;
+                font-size:${3 + Math.random() * 5}rem;
+                animation-duration:${4 + Math.random() * 6}s;
+                animation-delay:${Math.random() * 5}s;
+            `;
+            digitsEl.appendChild(d);
+        });
+
+        // ─── SCROLL REVEAL ────────────────────────────────────────────
+        const srEls = document.querySelectorAll('.sr');
+        const srObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('on');
+                    srObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        srEls.forEach(el => srObs.observe(el));
+
+        // ─── COUNT-UP ─────────────────────────────────────────────────
+        function countUp(el) {
+            const target  = parseFloat(el.dataset.target);
+            const suffix  = el.dataset.suffix || '';
+            const decimal = el.dataset.decimal === 'true';
+            const fps = 60;
+            const inc = target / fps;
+            let cur = 0, frame = 0;
+            const run = () => {
+                frame++;
+                cur = Math.min(cur + inc, target);
+                el.textContent = (decimal ? cur.toFixed(1) : Math.floor(cur)) + suffix;
+                if (frame < fps) requestAnimationFrame(run);
+                else el.textContent = target + suffix;
+            };
+            requestAnimationFrame(run);
+        }
+        const statObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { countUp(e.target); statObs.unobserve(e.target); }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
+
+        // ─── HORIZONTAL BAR ANIMATION ────────────────────────────────
+        const barObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('.bar-fill').forEach(f => {
+                        f.style.width = f.dataset.width + '%';
+                    });
+                    e.target.querySelectorAll('.sb-fill').forEach(f => {
+                        f.style.width = f.dataset.width + '%';
+                    });
+                    barObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('#service-stats, #rating-stats').forEach(s => barObs.observe(s));
+
+        // ─── COLUMN CHART ANIMATION ───────────────────────────────────
+        const colObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('.col-bar').forEach((b, i) => {
+                        setTimeout(() => {
+                            b.style.height = b.dataset.h + 'px';
+                        }, i * 120);
+                    });
+                    colObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        const chartEl = document.getElementById('service-chart');
+        if (chartEl) colObs.observe(chartEl);
+
+        // ─── MONTHLY TREND BARS ───────────────────────────────────────
+        const months = [
+            { m:'Jan', h:75, peak:true  },
+            { m:'Feb', h:55, peak:false },
+            { m:'Mar', h:60, peak:false },
+            { m:'Apr', h:50, peak:false },
+            { m:'May', h:48, peak:false },
+            { m:'Jun', h:40, peak:false },
+            { m:'Jul', h:42, peak:false },
+            { m:'Aug', h:50, peak:false },
+            { m:'Sep', h:55, peak:false },
+            { m:'Oct', h:62, peak:false },
+            { m:'Nov', h:70, peak:false },
+            { m:'Dec', h:95, peak:true  },
+        ];
+        const trendBarsEl = document.getElementById('trend-bars');
+        months.forEach(d => {
+            const wrap = document.createElement('div');
+            wrap.className = 'trend-bar-col';
+            const bar = document.createElement('div');
+            bar.className = 'trend-bar ' + (d.peak ? 'gold-bar-item' : 'cyan-bar-item');
+            bar.dataset.h = d.h;
+            bar.style.cssText = `height:0;max-height:${d.h}%;width:100%;`;
+            const label = document.createElement('div');
+            label.className = 'trend-month';
+            label.textContent = d.m;
+            wrap.appendChild(bar);
+            wrap.appendChild(label);
+            trendBarsEl.appendChild(wrap);
+        });
+        const trendObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('.trend-bar').forEach((b, i) => {
+                        setTimeout(() => {
+                            b.style.transition = 'height 1s cubic-bezier(0.16,1,0.3,1)';
+                            b.style.height = b.dataset.h + '%';
+                        }, i * 80);
+                    });
+                    trendObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        trendObs.observe(document.querySelector('.trend-canvas-wrap'));
+
+        // ─── SAT RING FILLS ───────────────────────────────────────────
+        // stroke-dashoffset: 314 = full circle (circumference for r=50)
+        // offset stored as "remaining offset" = 314 * (1 - pct)
+        const satRings = { 91: 28, 80: 63, 86: 44 };
+        const ringObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('.sat-ring-fill').forEach(r => {
+                        r.style.strokeDashoffset = r.dataset.offset;
+                    });
+                    ringObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.sat-card').forEach(c => ringObs.observe(c));
+
+        // ─── DONUT RING FILLS ─────────────────────────────────────────
+        // circumference for r=55: 2*pi*55 ≈ 346
+        const rcRingObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('.rc-ring-fill').forEach(r => {
+                        r.style.transition = 'stroke-dashoffset 1.6s ease';
+                        r.style.strokeDashoffset = r.dataset.offset;
+                    });
+                    rcRingObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        rcRingObs.observe(document.getElementById('repeat-customers'));
+
+        // ─── SMOOTH ANCHOR SCROLL ─────────────────────────────────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) { e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior:'smooth' }); }
+            });
+        });
+    </script>
+</body>
+</html>
