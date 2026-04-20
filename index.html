@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UMPH Studio — Full-stack AI Agency</title>
+    <title>UMPH STUDIO — AI-Powered Growth</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -187,6 +187,86 @@
             line-height: 1.5;
         }
 
+        /* Case Study / Advantage Section */
+        .advantage {
+            background: #fff;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .comparison-card {
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .comparison-card.automated {
+            background: var(--secondary-bg);
+            border: 1px solid var(--accent);
+        }
+
+        .comparison-card h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comparison-card.automated li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Pricing */
+        .pricing {
+            background-color: var(--secondary-bg);
+        }
+
+        .price-card {
+            max-width: 400px;
+            margin: 60px auto 0;
+            background: #fff;
+            padding: 60px 40px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .price-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .price-card .amount {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .price-card .amount span {
+            font-size: 24px;
+            color: var(--muted);
+        }
+
         /* Work */
         .work-grid {
             display: grid;
@@ -228,15 +308,6 @@
             display: block;
         }
 
-        .work-card h3 {
-            margin-bottom: 8px;
-        }
-
-        .work-card p {
-            color: var(--muted);
-            font-size: 16px;
-        }
-
         /* Contact */
         .contact {
             background-color: var(--secondary-bg);
@@ -247,10 +318,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 80px;
             width: 100%;
-        }
-
-        .contact-text h2 {
-            margin-bottom: 24px;
         }
 
         .contact-form {
@@ -272,35 +339,16 @@
             width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; transition: border-color 0.2s;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--accent);
-        }
-
         .submit-btn {
             width: 100%; background: var(--text); color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
         }
-
-        .submit-btn:hover { opacity: 0.9; }
-
-        /* Footer */
-        footer { padding: 60px 22px; border-top: 1px solid var(--border); }
-        .footer-content { max-width: 1024px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
-        .footer-links { display: flex; gap: 20px; justify-content: flex-end; }
-        .footer-links a { text-decoration: none; color: var(--muted); font-size: 14px; }
-        .copyright { font-size: 14px; color: var(--muted); text-align: center; }
-
-        /* Animations */
-        .reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* Mobile */
         @media (max-width: 768px) {
             h1 { font-size: 48px; }
             h2 { font-size: 36px; }
-            .services-grid { grid-template-columns: 1fr; }
+            .services-grid, .comparison-grid { grid-template-columns: 1fr; }
             .contact-content { grid-template-columns: 1fr; gap: 40px; }
-            .footer-content { grid-template-columns: 1fr; gap: 20px; text-align: center; }
-            .footer-links { justify-content: center; }
             .hero { height: auto; padding: 160px 22px; }
         }
     </style>
@@ -312,6 +360,7 @@
             <a href="#" class="logo">UMPH STUDIO</a>
             <div class="nav-links">
                 <a href="#services">Services</a>
+                <a href="#advantage">Advantage</a>
                 <a href="#work">Work</a>
                 <a href="#contact">Contact</a>
             </div>
@@ -321,36 +370,82 @@
     <main>
         <section class="hero">
             <h1 class="reveal">We build fast.<br>We ship faster.</h1>
-            <p class="subtext reveal">Websites, games, and automation — powered by AI.</p>
+            <p class="subtext reveal">Custom AI engines and high-performance digital products.</p>
             <div class="reveal">
-                <a href="#contact" class="btn">Start a project</a>
+                <a href="#contact" class="btn">Book a Free AI Audit</a>
             </div>
         </section>
 
         <section id="services" class="services">
             <div class="container">
                 <h2 class="reveal">Our capabilities.</h2>
-                <div class="services-grid" id="services-container">
+                <div class="services-grid">
                     <div class="service-card reveal">
                         <span class="service-num">01</span>
-                        <h3>Website Building</h3>
-                        <p>We build high-performance websites for businesses that demand precision and results.</p>
+                        <h3>AI Lead Gen Engine</h3>
+                        <p>Automated lead discovery and personalized outreach pipelines that work 24/7 to fill your calendar.</p>
                     </div>
                     <div class="service-card reveal">
                         <span class="service-num">02</span>
-                        <h3>Games & UI Components</h3>
-                        <p>Immersive browser-based games and interactive UI components built with modern technology.</p>
+                        <h3>Website Building</h3>
+                        <p>High-end, performance-focused websites designed for businesses that demand precision.</p>
                     </div>
                     <div class="service-card reveal">
                         <span class="service-num">03</span>
-                        <h3>AI Automation</h3>
-                        <p>Custom AI solutions to automate your workflow and scale your operations effortlessly.</p>
+                        <h3>AI Content Systems</h3>
+                        <p>Automated content pipelines that generate, refine, and schedule your social presence effortlessly.</p>
                     </div>
                     <div class="service-card reveal">
                         <span class="service-num">04</span>
-                        <h3>Social Media</h3>
-                        <p>Data-driven social media strategies designed to grow your brand and capture attention.</p>
+                        <h3>Games & UI</h3>
+                        <p>Immersive browser-based 3D experiences and cutting-edge interactive components.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="advantage" class="advantage">
+            <div class="container">
+                <h2 class="reveal">The Automation Advantage.</h2>
+                <p class="subtext reveal">Stop doing manual work. Start scaling.</p>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card reveal">
+                        <h4>Manual Process</h4>
+                        <ul>
+                            <li>10 Leads found per hour</li>
+                            <li>Generic, cold outreach</li>
+                            <li>Inconsistent follow-ups</li>
+                            <li>High human error rate</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card automated reveal">
+                        <h4>UMPH AI Engine</h4>
+                        <ul>
+                            <li>200+ Leads enriched per hour</li>
+                            <li>AI-Personalized messaging</li>
+                            <li>Automated multi-channel follow-up</li>
+                            <li>Zero maintenance required</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <h2 class="reveal">One Package. Zero Friction.</h2>
+                <div class="price-card reveal">
+                    <h3>AI Lead Gen Engine Setup</h3>
+                    <p class="muted">Complete automated system built for you.</p>
+                    <div class="amount">R1,500 <span>one-time</span></div>
+                    <ul class="muted" style="list-style:none; margin-bottom:30px; text-align:left;">
+                        <li style="margin-bottom:10px;">✓ Custom outreach workflow</li>
+                        <li style="margin-bottom:10px;">✓ Lead source integration</li>
+                        <li style="margin-bottom:10px;">✓ AI personalization layer</li>
+                        <li style="margin-bottom:10px;">✓ 15-min training session</li>
+                    </ul>
+                    <a href="#contact" class="btn" style="width:100%; display:block;">Get Started Now</a>
                 </div>
             </div>
         </section>
@@ -358,14 +453,14 @@
         <section id="work">
             <div class="container">
                 <h2 class="reveal">Selected work.</h2>
-                <div class="work-grid" id="work-container">
+                <div class="work-grid">
                     <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/umbilo-carwash/index.html" class="work-card reveal" target="_blank">
                         <div class="work-img" style="background: linear-gradient(135deg, #D4AF37, #0A0A0A);">
                             <div style="color: #D4AF37; font-family: 'Anton', sans-serif; font-size: 24px;">ELITE CW</div>
                         </div>
                         <span class="work-label">Automotive / Premium</span>
                         <h3>Elite Car Wash</h3>
-                        <p>A high-octane, "Street Power" digital experience for a premier car care service.</p>
+                        <p>A high-octane digital experience for a premier car care service.</p>
                     </a>
                     <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/ww2-game/index.html" class="work-card reveal" target="_blank">
                         <div class="work-img" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
@@ -384,7 +479,7 @@
                 <div class="contact-content">
                     <div class="contact-text reveal">
                         <h2>Let's talk.</h2>
-                        <p class="subtext">Have a project in mind? We'd love to hear from you. Based in South Africa, shipping globally.</p>
+                        <p class="subtext">Book your free AI Audit. Based in South Africa, shipping globally.</p>
                     </div>
                     <div class="contact-form reveal">
                         <form action="https://formspree.io/f/YOUR_ID" method="POST">
@@ -397,17 +492,17 @@
                                 <input type="email" name="email" placeholder="email@example.com" required>
                             </div>
                             <div class="form-group">
-                                <label>SERVICE</label>
+                                <label>INTERESTED IN</label>
                                 <select name="service">
+                                    <option value="audit">Free AI Audit</option>
+                                    <option value="leadgen">AI Lead Gen Engine</option>
+                                    <option value="content">AI Content System</option>
                                     <option value="web">Website Building</option>
-                                    <option value="games">Games & UI</option>
-                                    <option value="ai">AI Automation</option>
-                                    <option value="social">Social Media</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>MESSAGE</label>
-                                <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+                                <textarea name="message" rows="4" placeholder="Tell us about your business..." required></textarea>
                             </div>
                             <button type="submit" class="submit-btn">Send Message</button>
                         </form>
@@ -418,12 +513,12 @@
     </main>
 
     <footer>
-        <div class="footer-content">
+        <div class="footer-content" style="max-width:1024px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding: 60px 22px;">
             <a href="#" class="logo">UMPH STUDIO</a>
-            <p class="copyright">© 2026 UMPH Studio</p>
-            <div class="footer-links">
-                <a href="#">GitHub</a>
-                <a href="#">Instagram</a>
+            <p class="muted" style="font-size:14px;">© 2026 UMPH Studio</p>
+            <div style="display:flex; gap:20px;">
+                <a href="#" class="muted" style="text-decoration:none; font-size:14px;">GitHub</a>
+                <a href="#" class="muted" style="text-decoration:none; font-size:14px;">Instagram</a>
             </div>
         </div>
     </footer>
@@ -438,11 +533,7 @@
             }
         });
 
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -450,7 +541,6 @@
                 }
             });
         }, observerOptions);
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
