@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dumbellienumph — Full-stack AI Agency</title>
+    <title>UMPH Studio — Full-stack AI Agency</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -69,10 +69,11 @@
 
         .logo {
             font-size: 19px;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
             color: var(--text);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
         }
 
         .nav-links {
@@ -152,7 +153,7 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 24px;
             margin-top: 60px;
         }
@@ -264,21 +265,11 @@
 
         .form-group label {
             display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--muted);
+            font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--muted);
         }
 
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; transition: border-color 0.2s;
         }
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
@@ -286,65 +277,21 @@
         }
 
         .submit-btn {
-            width: 100%;
-            background: var(--text);
-            color: #fff;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            width: 100%; background: var(--text); color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
         }
 
-        .submit-btn:hover {
-            opacity: 0.9;
-        }
+        .submit-btn:hover { opacity: 0.9; }
 
         /* Footer */
-        footer {
-            padding: 60px 22px;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-content {
-            max-width: 1024px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            justify-content: flex-end;
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .copyright {
-            font-size: 14px;
-            color: var(--muted);
-            text-align: center;
-        }
+        footer { padding: 60px 22px; border-top: 1px solid var(--border); }
+        .footer-content { max-width: 1024px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+        .footer-links { display: flex; gap: 20px; justify-content: flex-end; }
+        .footer-links a { text-decoration: none; color: var(--muted); font-size: 14px; }
+        .copyright { font-size: 14px; color: var(--muted); text-align: center; }
 
         /* Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: var(--transition);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* Mobile */
         @media (max-width: 768px) {
@@ -362,7 +309,7 @@
 
     <nav id="navbar">
         <div class="nav-content">
-            <a href="#" class="logo">dumbellienumph</a>
+            <a href="#" class="logo">UMPH STUDIO</a>
             <div class="nav-links">
                 <a href="#services">Services</a>
                 <a href="#work">Work</a>
@@ -374,7 +321,7 @@
     <main>
         <section class="hero">
             <h1 class="reveal">We build fast.<br>We ship faster.</h1>
-            <p class="subtext reveal">Websites, content, and automation — powered by AI.</p>
+            <p class="subtext reveal">Websites, games, and automation — powered by AI.</p>
             <div class="reveal">
                 <a href="#contact" class="btn">Start a project</a>
             </div>
@@ -387,7 +334,22 @@
                     <div class="service-card reveal">
                         <span class="service-num">01</span>
                         <h3>Website Building</h3>
-                        <p>High-end, performance-focused websites designed to convert. From landing pages to full-scale digital platforms.</p>
+                        <p>We build high-performance websites for businesses that demand precision and results.</p>
+                    </div>
+                    <div class="service-card reveal">
+                        <span class="service-num">02</span>
+                        <h3>Games & UI Components</h3>
+                        <p>Immersive browser-based games and interactive UI components built with modern technology.</p>
+                    </div>
+                    <div class="service-card reveal">
+                        <span class="service-num">03</span>
+                        <h3>AI Automation</h3>
+                        <p>Custom AI solutions to automate your workflow and scale your operations effortlessly.</p>
+                    </div>
+                    <div class="service-card reveal">
+                        <span class="service-num">04</span>
+                        <h3>Social Media</h3>
+                        <p>Data-driven social media strategies designed to grow your brand and capture attention.</p>
                     </div>
                 </div>
             </div>
@@ -397,13 +359,21 @@
             <div class="container">
                 <h2 class="reveal">Selected work.</h2>
                 <div class="work-grid" id="work-container">
-                    <a href="./umbilo-carwash/index.html" class="work-card reveal" target="_blank">
+                    <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/umbilo-carwash/index.html" class="work-card reveal" target="_blank">
                         <div class="work-img" style="background: linear-gradient(135deg, #D4AF37, #0A0A0A);">
                             <div style="color: #D4AF37; font-family: 'Anton', sans-serif; font-size: 24px;">ELITE CW</div>
                         </div>
                         <span class="work-label">Automotive / Premium</span>
                         <h3>Elite Car Wash</h3>
                         <p>A high-octane, "Street Power" digital experience for a premier car care service.</p>
+                    </a>
+                    <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/ww2-game/index.html" class="work-card reveal" target="_blank">
+                        <div class="work-img" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+                            <div style="color: #fff; font-family: 'Anton', sans-serif; font-size: 24px;">WW2 SIM</div>
+                        </div>
+                        <span class="work-label">Interactive / Games</span>
+                        <h3>WW2 Combat Sim</h3>
+                        <p>Browser-based 3D simulation powered by modern web technologies.</p>
                     </a>
                 </div>
             </div>
@@ -429,9 +399,10 @@
                             <div class="form-group">
                                 <label>SERVICE</label>
                                 <select name="service">
-                                    <option value="web">Web Development</option>
-                                    <option value="content">Content & Video</option>
+                                    <option value="web">Website Building</option>
+                                    <option value="games">Games & UI</option>
                                     <option value="ai">AI Automation</option>
+                                    <option value="social">Social Media</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -448,8 +419,8 @@
 
     <footer>
         <div class="footer-content">
-            <a href="#" class="logo">dumbellienumph</a>
-            <p class="copyright">© 2026 dumbellienumph</p>
+            <a href="#" class="logo">UMPH STUDIO</a>
+            <p class="copyright">© 2026 UMPH Studio</p>
             <div class="footer-links">
                 <a href="#">GitHub</a>
                 <a href="#">Instagram</a>
@@ -458,7 +429,6 @@
     </footer>
 
     <script>
-        // Scroll Border for Nav
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 20) {
@@ -468,7 +438,6 @@
             }
         });
 
-        // Intersection Observer for Reveal
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
