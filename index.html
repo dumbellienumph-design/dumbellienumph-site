@@ -3,545 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UMPH STUDIO — AI-Powered Growth</title>
+    <title>FieldAI — High-Performance AI Studio</title>
+    
+    <!-- Core UI Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #1d1d1f;
-            --secondary-bg: #f5f5f7;
-            --accent: #0071e3;
-            --muted: #6e6e73;
-            --border: #d2d2d7;
-            --nav-height: 52px;
-            --transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #000000;
+            --accent: #00ff88;
+            --purple: #7c3aed;
+            --text: #ffffff;
+            --muted: #666666;
+            --border: #111111;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        /* Essential Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; cursor: none !important; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Nav */
-        nav {
+        /* --- THE DIGITAL BACKGROUND --- */
+        #bg-canvas {
             position: fixed;
-            top: 0;
-            width: 100%;
-            height: var(--nav-height);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: saturate(180%) blur(20px);
-            z-index: 1000;
-            transition: border-bottom 0.3s ease;
-            display: flex;
-            align-items: center;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: #000;
         }
 
-        nav.scrolled {
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        #cursor {
+            position: fixed; width: 10px; height: 10px; background: var(--accent);
+            border-radius: 50%; z-index: 10001; pointer-events: none;
+            mix-blend-mode: difference; transition: transform 0.2s var(--ease);
+        }
+
+        /* Spotlight reveal */
+        #spotlight {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 999;
+            background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%), rgba(0, 255, 136, 0.04), transparent 100%);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 90px;
+            z-index: 1000; display: flex; align-items: center;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
+            transition: all 0.5s var(--ease);
         }
 
-        .nav-content {
-            width: 100%;
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 0 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Bebas Neue'; font-size: 2.2rem; text-decoration: none; color: #fff; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { text-decoration: none; color: #fff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; opacity: 0.4; transition: 0.3s; }
+        .nav-links a:hover { opacity: 1; color: var(--accent); }
 
-        .logo {
-            font-size: 19px;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--text);
-            letter-spacing: -0.04em;
-            text-transform: uppercase;
-        }
+        /* --- TYPOGRAPHY --- */
+        h1 { font-family: 'Bebas Neue'; font-size: clamp(80px, 15vw, 200px); line-height: 0.82; text-transform: uppercase; margin-bottom: 30px; letter-spacing: -2px; }
+        h2 { font-family: 'Bebas Neue'; font-size: clamp(60px, 10vw, 130px); line-height: 0.9; margin-bottom: 80px; text-transform: uppercase; }
+        h3 { font-family: 'Bebas Neue'; font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 1px; }
 
-        .nav-links {
-            display: flex;
-            gap: 24px;
-        }
+        .word-reveal { overflow: hidden; display: inline-block; vertical-align: bottom; }
+        .word-reveal span { display: inline-block; transform: translateY(105%); }
 
-        .nav-links a {
-            font-size: 12px;
-            text-decoration: none;
-            color: var(--text);
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
+        /* --- SECTIONS --- */
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        section { padding: 180px 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
-        .nav-links a:hover {
-            opacity: 1;
-        }
+        /* --- HERO --- */
+        .hero { height: 100vh; text-align: left; }
+        .hero p { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 200; color: var(--muted); max-width: 800px; margin-bottom: 60px; }
 
-        /* Typography */
-        h1 { font-size: 80px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
-        h2 { font-size: 48px; font-weight: 600; letter-spacing: -0.01em; }
-        h3 { font-size: 24px; font-weight: 600; }
-        p.subtext { font-size: 24px; color: var(--muted); font-weight: 400; }
+        /* --- BUTTONS --- */
+        .btn { padding: 24px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.4s var(--ease); display: inline-block; border-radius: 0; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2); }
+        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; margin-left: 20px; }
+        .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* Sections */
-        section {
-            padding: 120px 22px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        /* --- GRID COMPONENTS --- */
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .card { background: #080808; padding: 100px 60px; border: 1px solid var(--border); transition: 0.5s var(--ease); position: relative; }
+        .card:hover { border-color: var(--accent); transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .card p { color: var(--muted); font-size: 1.3rem; font-weight: 200; }
+        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
+        .card:hover::before { transform: scaleX(1); }
 
-        .container {
-            width: 100%;
-            max-width: 1024px;
-            margin: 0 auto;
-        }
+        /* --- WORK SECTION --- */
+        .work-list { display: flex; flex-direction: column; gap: 150px; }
+        .work-item { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; text-decoration: none; color: #fff; }
+        .work-img { aspect-ratio: 16/9; background: #111; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 6rem; color: #151515; transition: 0.8s var(--ease); overflow: hidden; }
+        .work-item:hover .work-img { color: var(--accent); transform: scale(1.02); border-color: var(--accent); }
+        .work-info h3 { font-size: 5rem; line-height: 0.9; }
+        .work-tag { color: var(--accent); font-weight: 700; letter-spacing: 3px; font-size: 12px; margin-bottom: 20px; display: block; }
 
-        /* Hero */
-        .hero {
-            height: 100vh;
-            justify-content: center;
-            text-align: center;
-            padding-top: var(--nav-height);
-        }
+        /* --- FOOTER --- */
+        footer { padding: 150px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .footer-logo { font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 2px; }
 
-        .hero h1 {
-            margin-bottom: 16px;
-        }
-
-        .hero p {
-            margin-bottom: 40px;
-            max-width: 600px;
-        }
-
-        .btn {
-            background: var(--accent);
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 980px;
-            text-decoration: none;
-            font-size: 17px;
-            font-weight: 400;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .btn:hover {
-            background: #0077ed;
-            transform: scale(1.02);
-        }
-
-        /* Services */
-        .services {
-            background-color: var(--secondary-bg);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            margin-top: 60px;
-        }
-
-        .service-card {
-            background: #fff;
-            padding: 48px 32px;
-            border-radius: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .service-num {
-            display: block;
-            font-size: 14px;
-            color: var(--muted);
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .service-card h3 {
-            margin-bottom: 12px;
-        }
-
-        .service-card p {
-            font-size: 16px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        /* Case Study / Advantage Section */
-        .advantage {
-            background: #fff;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-top: 60px;
-        }
-
-        .comparison-card {
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .comparison-card.automated {
-            background: var(--secondary-bg);
-            border: 1px solid var(--accent);
-        }
-
-        .comparison-card h4 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-            color: var(--muted);
-        }
-
-        .comparison-card ul {
-            list-style: none;
-        }
-
-        .comparison-card li {
-            margin-bottom: 12px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .comparison-card.automated li::before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* Pricing */
-        .pricing {
-            background-color: var(--secondary-bg);
-        }
-
-        .price-card {
-            max-width: 400px;
-            margin: 60px auto 0;
-            background: #fff;
-            padding: 60px 40px;
-            border-radius: 24px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-
-        .price-card h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .price-card .amount {
-            font-size: 64px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .price-card .amount span {
-            font-size: 24px;
-            color: var(--muted);
-        }
-
-        /* Work */
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
-            width: 100%;
-        }
-
-        .work-card {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .work-img {
-            width: 100%;
-            aspect-ratio: 16/10;
-            background: var(--secondary-bg);
-            border-radius: 20px;
-            margin-bottom: 24px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .work-card:hover .work-img {
-            transform: scale(0.98);
-        }
-
-        .work-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        /* Contact */
-        .contact {
-            background-color: var(--secondary-bg);
-        }
-
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            width: 100%;
-        }
-
-        .contact-form {
-            background: #fff;
-            padding: 40px;
-            border-radius: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--muted);
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; transition: border-color 0.2s;
-        }
-
-        .submit-btn {
-            width: 100%; background: var(--text); color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            h1 { font-size: 48px; }
-            h2 { font-size: 36px; }
-            .services-grid, .comparison-grid { grid-template-columns: 1fr; }
-            .contact-content { grid-template-columns: 1fr; gap: 40px; }
-            .hero { height: auto; padding: 160px 22px; }
+        @media (max-width: 1024px) {
+            .services-grid, .work-item { grid-template-columns: 1fr; gap: 40px; }
+            h1 { font-size: 20vw; }
+            nav .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <nav id="navbar">
+    <div id="cursor"></div>
+    <div id="spotlight"></div>
+    <div class="grain"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <nav>
         <div class="nav-content">
-            <a href="#" class="logo">UMPH STUDIO</a>
+            <a href="#" class="logo">FieldAI</a>
             <div class="nav-links">
-                <a href="#services">Services</a>
-                <a href="#advantage">Advantage</a>
-                <a href="#work">Work</a>
+                <a href="#services">Capabilities</a>
+                <a href="#work">Showcase</a>
                 <a href="#contact">Contact</a>
             </div>
         </div>
     </nav>
 
     <main>
+        <!-- HERO -->
         <section class="hero">
-            <h1 class="reveal">We build fast.<br>We ship faster.</h1>
-            <p class="subtext reveal">Custom AI engines and high-performance digital products.</p>
-            <div class="reveal">
-                <a href="#contact" class="btn">Book a Free AI Audit</a>
+            <div class="container">
+                <p style="color: var(--accent); letter-spacing: 8px; font-size: 11px; font-weight: 700; margin-bottom: 40px;">STRATEGIC AI · SOUTH AFRICA</p>
+                <h1>
+                    <div class="word-reveal"><span>WE BUILD FAST.</span></div><br>
+                    <div class="word-reveal"><span>WE SHIP FASTER.</span></div>
+                </h1>
+                <p>Engineering high-performance AI automation and digital infrastructure for global businesses that scale.</p>
+                <div class="hero-btns">
+                    <a href="#contact" class="btn btn-primary">Start Transmission</a>
+                    <a href="#work" class="btn btn-outline">Explore Work</a>
+                </div>
             </div>
         </section>
 
-        <section id="services" class="services">
+        <!-- SERVICES -->
+        <section id="services">
             <div class="container">
-                <h2 class="reveal">Our capabilities.</h2>
+                <h2>CORE<br>CAPABILITIES.</h2>
                 <div class="services-grid">
-                    <div class="service-card reveal">
-                        <span class="service-num">01</span>
-                        <h3>AI Lead Gen Engine</h3>
-                        <p>Automated lead discovery and personalized outreach pipelines that work 24/7 to fill your calendar.</p>
+                    <div class="card reveal">
+                        <span style="color: var(--accent); font-weight: 900; margin-bottom: 30px; display: block;">01</span>
+                        <h3>AI LEAD GEN</h3>
+                        <p>Proprietary discovery engines and context-aware LLM outreach that scales your sales calendar 24/7.</p>
                     </div>
-                    <div class="service-card reveal">
-                        <span class="service-num">02</span>
-                        <h3>Website Building</h3>
-                        <p>High-end, performance-focused websites designed for businesses that demand precision.</p>
+                    <div class="card reveal">
+                        <span style="color: var(--accent); font-weight: 900; margin-bottom: 30px; display: block;">02</span>
+                        <h3>INFRASTRUCTURE</h3>
+                        <p>Zero-bloat web systems designed for extreme speed and global scalability. Custom code, 100/100 performance.</p>
                     </div>
-                    <div class="service-card reveal">
-                        <span class="service-num">03</span>
-                        <h3>AI Content Systems</h3>
-                        <p>Automated content pipelines that generate, refine, and schedule your social presence effortlessly.</p>
+                    <div class="card reveal">
+                        <span style="color: var(--accent); font-weight: 900; margin-bottom: 30px; display: block;">03</span>
+                        <h3>CONTENT AUTOMATION</h3>
+                        <p>End-to-end AI pipelines that generate, schedule, and refine brand presence across all social platforms.</p>
                     </div>
-                    <div class="service-card reveal">
-                        <span class="service-num">04</span>
-                        <h3>Games & UI</h3>
-                        <p>Immersive browser-based 3D experiences and cutting-edge interactive components.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="advantage" class="advantage">
-            <div class="container">
-                <h2 class="reveal">The Automation Advantage.</h2>
-                <p class="subtext reveal">Stop doing manual work. Start scaling.</p>
-                
-                <div class="comparison-grid">
-                    <div class="comparison-card reveal">
-                        <h4>Manual Process</h4>
-                        <ul>
-                            <li>10 Leads found per hour</li>
-                            <li>Generic, cold outreach</li>
-                            <li>Inconsistent follow-ups</li>
-                            <li>High human error rate</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-card automated reveal">
-                        <h4>UMPH AI Engine</h4>
-                        <ul>
-                            <li>200+ Leads enriched per hour</li>
-                            <li>AI-Personalized messaging</li>
-                            <li>Automated multi-channel follow-up</li>
-                            <li>Zero maintenance required</li>
-                        </ul>
+                    <div class="card reveal">
+                        <span style="color: var(--accent); font-weight: 900; margin-bottom: 30px; display: block;">04</span>
+                        <h3>AUTOFLOW OPS</h3>
+                        <p>Specialized WhatsApp automation for automotive groups and sales teams. 60-second response. Total autonomy.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="pricing" class="pricing">
-            <div class="container">
-                <h2 class="reveal">One Package. Zero Friction.</h2>
-                <div class="price-card reveal">
-                    <h3>AI Lead Gen Engine Setup</h3>
-                    <p class="muted">Complete automated system built for you.</p>
-                    <div class="amount">R1,500 <span>one-time</span></div>
-                    <ul class="muted" style="list-style:none; margin-bottom:30px; text-align:left;">
-                        <li style="margin-bottom:10px;">✓ Custom outreach workflow</li>
-                        <li style="margin-bottom:10px;">✓ Lead source integration</li>
-                        <li style="margin-bottom:10px;">✓ AI personalization layer</li>
-                        <li style="margin-bottom:10px;">✓ 15-min training session</li>
-                    </ul>
-                    <a href="#contact" class="btn" style="width:100%; display:block;">Get Started Now</a>
-                </div>
-            </div>
-        </section>
-
+        <!-- WORK -->
         <section id="work">
             <div class="container">
-                <h2 class="reveal">Selected work.</h2>
-                <div class="work-grid">
-                    <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/umbilo-carwash/index.html" class="work-card reveal" target="_blank">
-                        <div class="work-img" style="background: linear-gradient(135deg, #D4AF37, #0A0A0A);">
-                            <div style="color: #D4AF37; font-family: 'Anton', sans-serif; font-size: 24px;">ELITE CW</div>
+                <h2>SELECTED<br>SHOWCASE.</h2>
+                <div class="work-list">
+                    <a href="umbilo-carwash/index.html" class="work-item reveal">
+                        <div class="work-img">ELITE CW</div>
+                        <div class="work-info">
+                            <span class="work-tag">AUTOMOTIVE / INFRASTRUCTURE</span>
+                            <h3>Elite Car Wash</h3>
+                            <p style="color: var(--muted); font-size: 1.3rem;">Premium automotive branding and high-octane digital infrastructure built for conversion.</p>
                         </div>
-                        <span class="work-label">Automotive / Premium</span>
-                        <h3>Elite Car Wash</h3>
-                        <p>A high-octane digital experience for a premier car care service.</p>
                     </a>
-                    <a href="https://dumbellienumph-design.github.io/dumbellienumph-site/ww2-game/index.html" class="work-card reveal" target="_blank">
-                        <div class="work-img" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
-                            <div style="color: #fff; font-family: 'Anton', sans-serif; font-size: 24px;">WW2 SIM</div>
+                    <a href="ww2-game/index.html" class="work-item reveal">
+                        <div class="work-img">WW2 SIM</div>
+                        <div class="work-info">
+                            <span class="work-tag">INTERACTIVE / 3D ENGINE</span>
+                            <h3>WW2 Combat Sim</h3>
+                            <p style="color: var(--muted); font-size: 1.3rem;">Advanced browser-based 3D engine and physics simulation. Pushing web performance boundaries.</p>
                         </div>
-                        <span class="work-label">Interactive / Games</span>
-                        <h3>WW2 Combat Sim</h3>
-                        <p>Browser-based 3D simulation powered by modern web technologies.</p>
                     </a>
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="contact">
+        <!-- CONTACT -->
+        <section id="contact">
             <div class="container">
-                <div class="contact-content">
-                    <div class="contact-text reveal">
-                        <h2>Let's talk.</h2>
-                        <p class="subtext">Book your free AI Audit. Based in South Africa, shipping globally.</p>
-                    </div>
-                    <div class="contact-form reveal">
-                        <form action="https://formspree.io/f/YOUR_ID" method="POST">
-                            <div class="form-group">
-                                <label>NAME</label>
-                                <input type="text" name="name" placeholder="Your name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>EMAIL</label>
-                                <input type="email" name="email" placeholder="email@example.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label>INTERESTED IN</label>
-                                <select name="service">
-                                    <option value="audit">Free AI Audit</option>
-                                    <option value="leadgen">AI Lead Gen Engine</option>
-                                    <option value="content">AI Content System</option>
-                                    <option value="web">Website Building</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>MESSAGE</label>
-                                <textarea name="message" rows="4" placeholder="Tell us about your business..." required></textarea>
-                            </div>
-                            <button type="submit" class="submit-btn">Send Message</button>
-                        </form>
-                    </div>
+                <div style="max-width: 800px; background: #080808; padding: 120px 80px; border: 1px solid var(--border);" class="reveal">
+                    <p style="color: var(--accent); letter-spacing: 6px; font-size: 11px; font-weight: 700; margin-bottom: 30px;">INITIALIZE TRANSMISSION</p>
+                    <h2>LET'S BUILD<br>THE FUTURE.</h2>
+                    <form action="https://formspree.io/f/xwpbqdnl" method="POST" style="margin-top: 80px;">
+                        <div style="margin-bottom: 50px;">
+                            <input type="text" name="name" placeholder="YOUR NAME" required style="width: 100%; padding: 25px 0; background: transparent; border: none; border-bottom: 1px solid var(--border); color: #fff; font-size: 1.8rem; outline: none; font-family: inherit;">
+                        </div>
+                        <div style="margin-bottom: 50px;">
+                            <input type="email" name="email" placeholder="YOUR EMAIL" required style="width: 100%; padding: 25px 0; background: transparent; border: none; border-bottom: 1px solid var(--border); color: #fff; font-size: 1.8rem; outline: none; font-family: inherit;">
+                        </div>
+                        <div style="margin-bottom: 80px;">
+                            <textarea name="message" placeholder="THE CHALLENGE..." required style="width: 100%; padding: 25px 0; background: transparent; border: none; border-bottom: 1px solid var(--border); color: #fff; font-size: 1.8rem; outline: none; font-family: inherit; height: 120px; resize: none;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border: none; width: 100%;">Deploy Engine</button>
+                    </form>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="footer-content" style="max-width:1024px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding: 60px 22px;">
-            <a href="#" class="logo">UMPH STUDIO</a>
-            <p class="muted" style="font-size:14px;">© 2026 UMPH Studio</p>
-            <div style="display:flex; gap:20px;">
-                <a href="#" class="muted" style="text-decoration:none; font-size:14px;">GitHub</a>
-                <a href="#" class="muted" style="text-decoration:none; font-size:14px;">Instagram</a>
-            </div>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0;">
+            <div class="footer-logo">FieldAI</div>
+            <p style="color: var(--muted); font-size: 12px; letter-spacing: 3px;">© 2026 FIELDAI · STRATEGIC GROWTH · SOUTH AFRICA</p>
         </div>
     </footer>
 
     <script>
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 20) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
+        // --- LENIS SMOOTH SCROLL ---
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
 
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+        // --- THE DIGITAL PARTICLE ENGINE ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const count = 120;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 200;
+                this.speed = 1.2 + Math.random() * 2.2;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#00ff88' : '#7c3aed';
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < -50) this.init();
+            }
+            draw() {
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < count; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x; const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 130) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist / 130) * 0.08})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
                 }
             });
-        }, observerOptions);
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- GSAP PREMIUM INTERACTIVES ---
+        gsap.registerPlugin(ScrollTrigger);
+        const cursor = document.getElementById('cursor');
+        window.addEventListener("mousemove", e => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.2 });
+            document.body.style.setProperty('--x', `${e.clientX}px`);
+            document.body.style.setProperty('--y', `${e.clientY}px`);
+        });
+
+        // Entrance
+        window.addEventListener('load', () => {
+            gsap.to(".word-reveal span", { y: 0, duration: 1.2, stagger: 0.1, ease: "expo.out" });
+            gsap.from(".hero p, .hero-btns", { y: 30, opacity: 0, duration: 1, delay: 0.8, ease: "power3.out" });
+        });
+
+        // Reveal logic
+        gsap.utils.toArray(".reveal").forEach(el => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 50, duration: 1.2, ease: "power3.out" });
+        });
+
+        // Magnetic Logic
+        document.querySelectorAll('.btn, .work-item').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+                gsap.to(cursor, { scale: 8 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+                gsap.to(cursor, { scale: 1 });
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) nav.style.background = "rgba(0,0,0,0.9)";
+            else nav.style.background = "rgba(0,0,0,0.7)";
+        });
     </script>
 </body>
 </html>
