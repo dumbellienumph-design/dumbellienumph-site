@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FieldAI — High-Performance AI Studio</title>
     
-    <!-- Core UI Dependencies -->
+    <!-- Engine Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -19,12 +19,12 @@
             --accent: #00ff88;
             --purple: #7c3aed;
             --text: #ffffff;
-            --muted: #666666;
+            --muted: #444444;
             --border: #111111;
             --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* Essential Reset */
+        /* --- STABILITY RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; cursor: none !important; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -37,36 +37,32 @@
             overflow-x: hidden;
         }
 
-        /* --- THE DIGITAL BACKGROUND --- */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            background: #000;
+        /* --- THE TECH STACK BACKGROUND --- */
+        #world-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; opacity: 0.6; }
+        
+        #neural-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0;
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
         }
 
         .grain {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10000;
-            pointer-events: none;
-            opacity: 0.05;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
+            pointer-events: none; opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
         #cursor {
             position: fixed; width: 10px; height: 10px; background: var(--accent);
             border-radius: 50%; z-index: 10001; pointer-events: none;
-            mix-blend-mode: difference; transition: transform 0.2s var(--ease);
+            mix-blend-mode: difference;
         }
 
-        /* Spotlight reveal */
         #spotlight {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: 999;
-            background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%), rgba(0, 255, 136, 0.04), transparent 100%);
+            background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%), rgba(0, 255, 136, 0.05), transparent 100%);
         }
 
         /* --- NAVIGATION --- */
@@ -75,7 +71,6 @@
             z-index: 1000; display: flex; align-items: center;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            transition: all 0.5s var(--ease);
         }
 
         .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
@@ -87,12 +82,11 @@
         /* --- TYPOGRAPHY --- */
         h1 { font-family: 'Bebas Neue'; font-size: clamp(80px, 15vw, 200px); line-height: 0.82; text-transform: uppercase; margin-bottom: 30px; letter-spacing: -2px; }
         h2 { font-family: 'Bebas Neue'; font-size: clamp(60px, 10vw, 130px); line-height: 0.9; margin-bottom: 80px; text-transform: uppercase; }
-        h3 { font-family: 'Bebas Neue'; font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 1px; }
+        
+        .reveal-container { overflow: hidden; display: block; }
+        .word-reveal { display: inline-block; transform: translateY(105%); }
 
-        .word-reveal { overflow: hidden; display: inline-block; vertical-align: bottom; }
-        .word-reveal span { display: inline-block; transform: translateY(105%); }
-
-        /* --- SECTIONS --- */
+        /* --- LAYOUT --- */
         .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
         section { padding: 180px 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
@@ -100,32 +94,29 @@
         .hero { height: 100vh; text-align: left; }
         .hero p { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 200; color: var(--muted); max-width: 800px; margin-bottom: 60px; }
 
-        /* --- BUTTONS --- */
-        .btn { padding: 24px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.4s var(--ease); display: inline-block; border-radius: 0; }
+        .btn { padding: 24px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.4s var(--ease); display: inline-block; border-radius: 0; position: relative; }
         .btn-primary { background: var(--accent); color: #000; }
-        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2); }
+        .btn-primary:hover { transform: translateY(-5px) skewX(-10deg); box-shadow: 20px 20px 0 rgba(0, 255, 136, 0.1); }
         .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; margin-left: 20px; }
         .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* --- GRID COMPONENTS --- */
+        /* --- COMPONENTS --- */
         .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
-        .card { background: #080808; padding: 100px 60px; border: 1px solid var(--border); transition: 0.5s var(--ease); position: relative; }
-        .card:hover { border-color: var(--accent); transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .card { background: #080808; padding: 100px 60px; border: 1px solid var(--border); transition: 0.5s var(--ease); }
+        .card:hover { border-color: var(--accent); transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,255,136,0.1); }
+        .card h3 { font-family: 'Bebas Neue'; font-size: 3.5rem; margin-bottom: 20px; }
         .card p { color: var(--muted); font-size: 1.3rem; font-weight: 200; }
-        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
-        .card:hover::before { transform: scaleX(1); }
 
         /* --- WORK SECTION --- */
         .work-list { display: flex; flex-direction: column; gap: 150px; }
         .work-item { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; text-decoration: none; color: #fff; }
-        .work-img { aspect-ratio: 16/9; background: #111; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 6rem; color: #151515; transition: 0.8s var(--ease); overflow: hidden; }
+        .work-img { aspect-ratio: 16/9; background: #050505; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 6rem; color: #111; transition: 0.8s var(--ease); overflow: hidden; position: relative; }
         .work-item:hover .work-img { color: var(--accent); transform: scale(1.02); border-color: var(--accent); }
-        .work-info h3 { font-size: 5rem; line-height: 0.9; }
+        .work-info h3 { font-size: 5rem; line-height: 0.9; margin-bottom: 20px; }
         .work-tag { color: var(--accent); font-weight: 700; letter-spacing: 3px; font-size: 12px; margin-bottom: 20px; display: block; }
 
         /* --- FOOTER --- */
         footer { padding: 150px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .footer-logo { font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 2px; }
 
         @media (max-width: 1024px) {
             .services-grid, .work-item { grid-template-columns: 1fr; gap: 40px; }
@@ -139,14 +130,15 @@
     <div id="cursor"></div>
     <div id="spotlight"></div>
     <div class="grain"></div>
-    <canvas id="bg-canvas"></canvas>
+    <div id="neural-grid"></div>
+    <canvas id="world-canvas"></canvas>
 
     <nav>
         <div class="nav-content">
             <a href="#" class="logo">FieldAI</a>
             <div class="nav-links">
                 <a href="#services">Capabilities</a>
-                <a href="#work">Showcase</a>
+                <a href="#work">Case Studies</a>
                 <a href="#contact">Contact</a>
             </div>
         </div>
@@ -157,14 +149,12 @@
         <section class="hero">
             <div class="container">
                 <p style="color: var(--accent); letter-spacing: 8px; font-size: 11px; font-weight: 700; margin-bottom: 40px;">STRATEGIC AI · SOUTH AFRICA</p>
-                <h1>
-                    <div class="word-reveal"><span>WE BUILD FAST.</span></div><br>
-                    <div class="word-reveal"><span>WE SHIP FASTER.</span></div>
-                </h1>
-                <p>Engineering high-performance AI automation and digital infrastructure for global businesses that scale.</p>
+                <div class="reveal-container"><h1>WE BUILD FAST.</h1></div>
+                <div class="reveal-container"><h1 style="color: var(--accent);">WE SHIP FASTER.</h1></div>
+                <p>Engineering high-performance AI automation and autonomous digital infrastructure for global businesses that scale.</p>
                 <div class="hero-btns">
-                    <a href="#contact" class="btn btn-primary">Start Transmission</a>
-                    <a href="#work" class="btn btn-outline">Explore Work</a>
+                    <a href="#contact" class="btn btn-primary">Initialize Audit</a>
+                    <a href="#work" class="btn btn-outline">View Projects</a>
                 </div>
             </div>
         </section>
@@ -227,7 +217,6 @@
         <section id="contact">
             <div class="container">
                 <div style="max-width: 800px; background: #080808; padding: 120px 80px; border: 1px solid var(--border);" class="reveal">
-                    <p style="color: var(--accent); letter-spacing: 6px; font-size: 11px; font-weight: 700; margin-bottom: 30px;">INITIALIZE TRANSMISSION</p>
                     <h2>LET'S BUILD<br>THE FUTURE.</h2>
                     <form action="https://formspree.io/f/xwpbqdnl" method="POST" style="margin-top: 80px;">
                         <div style="margin-bottom: 50px;">
@@ -248,19 +237,21 @@
 
     <footer>
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0;">
-            <div class="footer-logo">FieldAI</div>
-            <p style="color: var(--muted); font-size: 12px; letter-spacing: 3px;">© 2026 FIELDAI · STRATEGIC GROWTH · SOUTH AFRICA</p>
+            <div class="logo">FieldAI</div>
+            <p style="color: var(--muted); font-size: 12px; letter-spacing: 3px;">© 2026 FIELDAI · SOUTH AFRICA</p>
         </div>
     </footer>
 
     <script>
-        // --- LENIS SMOOTH SCROLL ---
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // --- LENIS ENGINE ---
         const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // --- THE DIGITAL PARTICLE ENGINE ---
-        const canvas = document.getElementById('bg-canvas');
+        // --- WORLD SPACE PARTICLES ---
+        const canvas = document.getElementById('world-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         const count = 120;
@@ -277,7 +268,7 @@
             init() {
                 this.x = Math.random() * canvas.width;
                 this.y = canvas.height + Math.random() * 200;
-                this.speed = 1.2 + Math.random() * 2.2;
+                this.speed = 1.2 + Math.random() * 2.5;
                 this.size = Math.random() * 2 + 1;
                 this.color = Math.random() > 0.5 ? '#00ff88' : '#7c3aed';
                 this.opacity = Math.random() * 0.4 + 0.1;
@@ -289,7 +280,9 @@
             draw() {
                 ctx.globalAlpha = this.opacity;
                 ctx.fillStyle = this.color;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
@@ -314,8 +307,7 @@
         }
         animate();
 
-        // --- GSAP PREMIUM INTERACTIVES ---
-        gsap.registerPlugin(ScrollTrigger);
+        // --- PREMIUM INTERACTIVES ---
         const cursor = document.getElementById('cursor');
         window.addEventListener("mousemove", e => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.2 });
@@ -323,30 +315,29 @@
             document.body.style.setProperty('--y', `${e.clientY}px`);
         });
 
+        // Magnetic Logic
+        document.querySelectorAll('.btn, .work-item, a').forEach(el => {
+            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 8 }));
+            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1 }));
+            el.addEventListener('mousemove', (e) => {
+                if(el.classList.contains('btn')) {
+                    const rect = el.getBoundingClientRect();
+                    gsap.to(el, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 });
+                }
+            });
+            if(el.classList.contains('btn')) {
+                el.addEventListener('mouseleave', () => gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }));
+            }
+        });
+
         // Entrance
         window.addEventListener('load', () => {
-            gsap.to(".word-reveal span", { y: 0, duration: 1.2, stagger: 0.1, ease: "expo.out" });
+            gsap.to(".word-reveal", { y: 0, duration: 1.2, stagger: 0.1, ease: "expo.out" });
             gsap.from(".hero p, .hero-btns", { y: 30, opacity: 0, duration: 1, delay: 0.8, ease: "power3.out" });
         });
 
-        // Reveal logic
         gsap.utils.toArray(".reveal").forEach(el => {
             gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 50, duration: 1.2, ease: "power3.out" });
-        });
-
-        // Magnetic Logic
-        document.querySelectorAll('.btn, .work-item').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
-                gsap.to(cursor, { scale: 8 });
-            });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-                gsap.to(cursor, { scale: 1 });
-            });
         });
 
         window.addEventListener('scroll', () => {
