@@ -3,169 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — Strategic AI Systems & Automation</title>
+    <title>FieldAI — Kinetic AI Engineering</title>
     
-    <!-- Premium Fonts -->
+    <!-- Heavy-Duty Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@200;400;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #050505;
+            --bg: #000000;
             --accent: #c8ff00;
-            --accent-soft: rgba(200, 255, 0, 0.1);
             --text: #ffffff;
-            --muted: #a1a1a6;
-            --border: rgba(255, 255, 255, 0.08);
-            --card: rgba(20, 20, 20, 0.6);
-            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --muted: #444444;
+            --border: #111111;
+            --ease: cubic-bezier(0.9, 0, 0.1, 1);
         }
 
-        /* --- FOUNDATION --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; font-weight: 300; }
+        /* --- THE CORE SHELL --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; cursor: none !important; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.1; overflow-x: hidden; }
 
-        /* --- BACKGROUND LAYER --- */
-        .grid-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            background-image: radial-gradient(var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
-            pointer-events: none; opacity: 0.5;
-        }
+        /* --- ATMOSPHERIC LAYERS --- */
+        #world-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.8; }
+        #cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; }
+        .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.08; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        #spotlight { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%), rgba(200, 255, 0, 0.05), transparent 100%); }
 
         /* --- NAVIGATION --- */
-        nav {
-            position: fixed; top: 0; width: 100%; height: 80px;
-            z-index: 1000; display: flex; align-items: center;
-            background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Syne'; font-size: 1.4rem; font-weight: 800; text-decoration: none; color: #fff; letter-spacing: -1px; }
+        nav { position: fixed; top: 0; width: 100%; height: 100px; z-index: 1000; display: flex; align-items: center; padding: 0 5vw; transition: 0.5s var(--ease); }
+        nav.scrolled { height: 80px; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+        .nav-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Syne'; font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff; letter-spacing: -1px; }
         .nav-links { display: flex; gap: 40px; }
-        .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: 0.3s var(--ease); }
-        .nav-links a:hover { color: #fff; }
-        .nav-cta { padding: 10px 24px; background: var(--accent); color: #000; border-radius: 100px; font-weight: 700; font-size: 13px; text-decoration: none; transition: 0.3s; }
-        .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-soft); }
+        .nav-links a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #fff; opacity: 0.3; transition: 0.3s; }
+        .nav-links a:hover { opacity: 1; color: var(--accent); }
 
-        /* --- HERO --- */
-        .hero {
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; position: relative; padding: 0 20px; z-index: 1;
-        }
-        .hero-glow {
-            position: absolute; width: 800px; height: 500px; background: radial-gradient(circle, rgba(200, 255, 0, 0.05), transparent 70%);
-            z-index: -1; pointer-events: none; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
-        h1 { font-family: 'Syne'; font-size: clamp(45px, 8vw, 105px); font-weight: 800; line-height: 0.85; margin-bottom: 30px; max-width: 1400px; letter-spacing: -3px; }
-        .stroke { -webkit-text-stroke: 1px rgba(255,255,255,0.4); color: transparent; }
-        .subheadline { color: var(--muted); font-size: clamp(18px, 1.8vw, 22px); max-width: 700px; margin-bottom: 60px; font-weight: 400; }
-        .hero-btns { display: flex; gap: 20px; }
-        
-        .btn { padding: 20px 45px; font-family: 'Syne'; font-weight: 800; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-block; font-size: 14px; letter-spacing: 1px; }
-        .btn-p { background: var(--accent); color: #000; }
-        .btn-s { border: 1px solid var(--border); color: #fff; background: rgba(255,255,255,0.03); }
-        .btn-p:hover { transform: translateY(-5px); box-shadow: 0 20px 40px var(--accent-soft); }
-        .btn-s:hover { background: rgba(255,255,255,0.08); border-color: #fff; }
-
-        /* --- MARQUEE --- */
-        .marquee-wrap { width: 100%; overflow: hidden; background: #000; padding: 25px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-top: 120px; }
-        .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; }
-        .marquee span { font-family: 'Syne'; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--muted); padding: 0 60px; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* --- KINETIC TYPOGRAPHY --- */
+        .reveal-container { overflow: hidden; display: block; }
+        .word { display: inline-block; transform: translateY(105%); }
+        h1 { font-family: 'Syne'; font-size: clamp(60px, 15vw, 200px); text-transform: uppercase; letter-spacing: -5px; line-height: 0.8; }
+        h2 { font-family: 'Syne'; font-size: clamp(40px, 10vw, 140px); text-transform: uppercase; line-height: 0.82; margin-bottom: 60px; letter-spacing: -3px; }
+        .stroke { -webkit-text-stroke: 1px rgba(255,255,255,0.2); color: transparent; }
 
         /* --- SECTIONS --- */
-        section { position: relative; z-index: 1; padding: 160px 40px; max-width: 1400px; margin: 0 auto; }
-        h2 { font-family: 'Syne'; font-size: clamp(36px, 6vw, 68px); font-weight: 800; margin-bottom: 80px; letter-spacing: -3px; line-height: 0.9; }
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        section { padding: 20vh 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
-        /* --- SERVICES --- */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .s-card { background: var(--card); border: 1px solid var(--border); padding: 80px 60px; backdrop-filter: blur(10px); transition: 0.6s var(--ease); }
-        .s-card:hover { border-color: var(--accent); background: rgba(200, 255, 0, 0.02); transform: translateY(-10px); }
-        .s-tag { color: var(--accent); font-family: 'Syne'; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; display: block; }
-        .s-card h3 { font-family: 'Syne'; font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; }
-        .s-card p { color: var(--muted); font-size: 18px; line-height: 1.6; }
+        /* --- HERO --- */
+        .hero { height: 100vh; }
+        .hero p { font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 200; color: var(--muted); max-width: 800px; margin: 60px 0; line-height: 1.4; letter-spacing: -0.02em; }
+        .hero-btns { display: flex; gap: 20px; }
 
-        /* --- PROCESS --- */
-        .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-top: 60px; border: 1px solid var(--border); }
-        .p-item { background: var(--bg); padding: 60px 40px; transition: 0.3s; }
-        .p-item:hover { background: #080808; }
-        .p-num { font-family: 'Syne'; font-size: 12px; font-weight: 800; color: var(--accent); margin-bottom: 30px; display: block; }
-        .p-item h4 { font-family: 'Syne'; font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
-        .p-item p { color: var(--muted); font-size: 15px; font-weight: 400; }
+        .btn { padding: 28px 60px; font-family: 'Syne'; font-size: 1.8rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.5s var(--ease); display: inline-block; border-radius: 0; border: 1px solid transparent; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { transform: translateY(-10px) rotate(-2deg); box-shadow: 30px 30px 0 rgba(200, 255, 0, 0.1); }
+        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+        .btn-outline:hover { border-color: #fff; background: #fff; color: #000; }
 
-        /* --- RESULTS --- */
-        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-        .stat-box { padding: 120px 40px; border: 1px solid var(--border); text-align: center; transition: 0.4s; }
-        .stat-box:hover { background: rgba(255,255,255,0.02); }
-        .stat-val { font-family: 'Syne'; font-size: clamp(70px, 10vw, 140px); font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -5px; }
-        .stat-label { color: var(--muted); text-transform: uppercase; letter-spacing: 4px; font-size: 11px; font-weight: 700; margin-top: 30px; display: block; }
+        /* --- CAPABILITIES GRID --- */
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); }
+        .service-card { background: #000; padding: 120px 80px; transition: 0.6s var(--ease); position: relative; }
+        .service-card:hover { background: #020202; }
+        .service-card:hover h3 { color: var(--accent); transform: translateX(20px); }
+        .service-card h3 { font-family: 'Syne'; font-size: 4rem; margin-bottom: 30px; transition: 0.4s var(--ease); }
+        .service-card p { color: var(--muted); font-size: 1.3rem; font-weight: 200; line-height: 1.6; }
 
-        /* --- CASE STUDIES --- */
-        .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .work-card { text-decoration: none; color: #fff; border: 1px solid var(--border); transition: 0.5s var(--ease); overflow: hidden; }
-        .work-img { height: 400px; background: #080808; display: flex; align-items: center; justify-content: center; font-family: 'Syne'; font-size: 5rem; color: #111; transition: 0.8s var(--ease); font-weight: 800; letter-spacing: -2px; }
-        .work-card:hover .work-img { color: var(--accent); transform: scale(1.05); }
-        .work-content { padding: 40px; background: #000; border-top: 1px solid var(--border); }
-        .work-content h4 { font-family: 'Syne'; font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
-        .work-content p { color: var(--muted); font-size: 16px; font-weight: 400; }
+        /* --- RESULTS (PRESTIGIOUS) --- */
+        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); }
+        .stat-box { padding: 120px 60px; border: 1px solid var(--border); text-align: left; }
+        .stat-val { font-family: 'Syne'; font-size: clamp(80px, 12vw, 180px); color: var(--accent); line-height: 0.8; letter-spacing: -10px; }
+        .stat-label { color: var(--muted); text-transform: uppercase; letter-spacing: 5px; font-size: 12px; font-weight: 900; margin-top: 40px; display: block; }
 
-        /* --- CTA --- */
-        .cta-box { text-align: center; padding: 250px 5vw; background: radial-gradient(circle at 50% 100%, var(--accent-soft), transparent 70%); }
-        .cta-box h2 { max-width: 1000px; margin: 0 auto 60px; font-size: clamp(40px, 8vw, 110px); letter-spacing: -4px; }
+        /* --- SHOWCASE --- */
+        .work-list { display: flex; flex-direction: column; gap: 15vh; }
+        .work-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 100px; text-decoration: none; color: #fff; }
+        .work-img { aspect-ratio: 16/9; background: #030303; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Syne'; font-size: 6rem; color: #080808; transition: 1s var(--ease); overflow: hidden; position: relative; }
+        .work-item:hover .work-img { color: var(--accent); transform: scale(1.02); border-color: var(--accent); }
+        .work-item:hover .work-img::after { opacity: 1; transform: translateY(0); }
+        .work-img::after { content: "DEPLOY ENGINE"; position: absolute; bottom: 40px; font-family: 'Syne'; font-size: 1rem; color: var(--accent); letter-spacing: 4px; opacity: 0; transform: translateY(20px); transition: 0.5s var(--ease); }
+        .work-info h3 { font-family: 'Syne'; font-size: 6rem; line-height: 0.8; margin-bottom: 20px; }
+        .work-tag { color: var(--accent); font-weight: 900; font-size: 11px; letter-spacing: 5px; margin-bottom: 20px; display: block; }
 
-        footer { padding: 80px 40px; border-top: 1px solid var(--border); }
-        .footer-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .f-brand { font-family: 'Syne'; font-weight: 800; font-size: 1.2rem; }
-        .f-copy { color: var(--muted); font-size: 12px; letter-spacing: 1px; }
+        /* --- CONTACT --- */
+        .contact-box { max-width: 1000px; background: #020202; padding: 120px 100px; border: 1px solid var(--border); }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 100px; }
+        .input-group { border-bottom: 1px solid var(--border); margin-bottom: 60px; transition: 0.4s; }
+        .input-group:focus-within { border-color: var(--accent); }
+        .input-group label { font-size: 10px; font-weight: 900; color: var(--muted); letter-spacing: 5px; display: block; margin-bottom: 20px; }
+        input, textarea { width: 100%; background: transparent; border: none; color: #fff; font-family: 'Inter'; font-size: 2.2rem; padding-bottom: 20px; outline: none; font-weight: 100; }
 
-        /* --- REVEAL ANIMATION --- */
-        [data-reveal] { opacity: 0; transform: translateY(40px); transition: 1.2s var(--ease); }
-        [data-reveal].active { opacity: 1; transform: translateY(0); }
+        footer { padding: 150px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+        .f-logo { font-family: 'Syne'; font-size: 6rem; line-height: 0.8; letter-spacing: -4px; }
 
         @media (max-width: 1024px) {
-            .grid-2, .process-grid, .results-grid, .work-grid { grid-template-columns: 1fr; }
-            .p-item { border-right: none; border-bottom: 1px solid var(--border); }
-            h1 { font-size: 18vw; letter-spacing: -2px; }
-            .nav-links { display: none; }
-            section { padding: 100px 20px; }
+            h1 { font-size: 24vw; }
+            .services-grid, .results-grid, .work-item, .field-row { grid-template-columns: 1fr; }
+            .service-card, .stat-box, .contact-box { padding: 60px 40px; }
+            nav .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="grid-bg"></div>
+    <div id="cursor"></div>
+    <div class="grain"></div>
+    <div id="spotlight"></div>
+    <canvas id="world-canvas"></canvas>
 
-    <nav>
+    <nav id="navbar">
         <div class="nav-content">
             <a href="#" class="logo">FieldAI</a>
             <div class="nav-links">
                 <a href="#services">Capabilities</a>
-                <a href="#process">Pipeline</a>
                 <a href="#results">Performance</a>
-                <a href="#work">Labs</a>
+                <a href="#work">Showcase</a>
+                <a href="#contact">Contact</a>
             </div>
-            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Start Build</a>
         </div>
     </nav>
 
     <main>
         <!-- HERO -->
         <section class="hero">
-            <div class="hero-glow"></div>
-            <h1 data-reveal>Engineering systems that <span class="stroke">replace</span> manual work.</h1>
-            <p class="subheadline data-reveal">Deploy high-performance autonomous agents and digital infrastructure designed for global scale.</p>
-            <div class="hero-btns" data-reveal>
-                <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Audit</a>
-                <a href="#work" class="btn btn-s">Explore Showcase</a>
-            </div>
-            
-            <div class="marquee-wrap">
-                <div class="marquee">
-                    <span>AI AGENTS · WORKFLOW AUTOMATION · STRATEGIC INFRASTRUCTURE · CUSTOM LLMS · RECEPTIONIST AUTONOMY · TIKTOK PIPELINES · AI AGENTS · WORKFLOW AUTOMATION · STRATEGIC INFRASTRUCTURE · CUSTOM LLMS · RECEPTIONIST AUTONOMY · TIKTOK PIPELINES · </span>
+            <div class="container">
+                <p style="color: var(--accent); letter-spacing: 12px; font-size: 11px; font-weight: 900; margin-bottom: 40px;">KINETIC AI ENGINEERING</p>
+                <div class="reveal-container"><h1 class="word">WE BUILD FAST.</h1></div>
+                <div class="reveal-container"><h1 class="word stroke">WE SHIP FASTER.</h1></div>
+                <p class="hero-p" style="opacity:0; transform: translateY(40px);">Deploying high-performance autonomous agents and digital infrastructure for global businesses that scale.</p>
+                <div class="hero-btns" style="opacity:0; transform: translateY(40px);">
+                    <a href="#contact" class="btn btn-primary">Initialize Audit</a>
+                    <a href="#work" class="btn btn-outline" style="margin-left: 30px;">View Case Studies</a>
                 </div>
             </div>
         </section>
@@ -173,139 +146,216 @@
         <!-- CAPABILITIES -->
         <section id="services">
             <div class="container">
-                <h2 data-reveal>Core<br>Capabilities.</h2>
-                <div class="grid-2">
-                    <div class="s-card" data-reveal>
-                        <span class="s-tag">01 / AUTONOMY</span>
-                        <h3>Autonomous Agents</h3>
-                        <p>End-to-end business logic execution. We build agents that qualify leads, synchronize data, and manage complex cross-platform tasks 24/7.</p>
+                <div class="reveal-container"><h2>OUR</h2></div>
+                <div class="reveal-container"><h2>CAPABILITIES.</h2></div>
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 11px; letter-spacing: 6px; display:block; margin-bottom: 40px;">01 / SALES</span>
+                        <h3>AI LEAD GEN</h3>
+                        <p>Proprietary discovery engines and context-aware LLM outreach that scales your sales calendar 24/7 without human intervention.</p>
                     </div>
-                    <div class="s-card" data-reveal>
-                        <span class="s-tag">02 / INFRASTRUCTURE</span>
-                        <h3>Digital Architecture</h3>
-                        <p>High-velocity web infrastructure built with zero framework bloat. Engineered for 100/100 performance and aggressive SEO scalability.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 11px; letter-spacing: 6px; display:block; margin-bottom: 40px;">02 / PRODUCT</span>
+                        <h3>INFRASTRUCTURE</h3>
+                        <p>Zero-bloat web systems designed for extreme speed and global scalability. Custom vanilla code, 100/100 performance scores.</p>
                     </div>
-                    <div class="s-card" data-reveal>
-                        <span class="s-tag">03 / PIPELINES</span>
-                        <h3>Content Automation</h3>
-                        <p>Full-stack social media automation. AI-driven scripting, generation, and distribution pipelines across TikTok, Instagram, and YouTube.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 11px; letter-spacing: 6px; display:block; margin-bottom: 40px;">03 / CONTENT</span>
+                        <h3>CONTENT ENGINES</h3>
+                        <p>End-to-end AI pipelines that generate, schedule, and refine brand presence across all social platforms autonomously.</p>
                     </div>
-                    <div class="s-card" data-reveal>
-                        <span class="s-tag">04 / INTERFACE</span>
-                        <h3>High-End UI/UX</h3>
-                        <p>Interactive 3D experiences and technical showreels designed to convert high-intent users through superior digital aesthetics.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 11px; letter-spacing: 6px; display:block; margin-bottom: 40px;">04 / OPS</span>
+                        <h3>AUTOFLOW OPS</h3>
+                        <p>Specialized WhatsApp automation for automotive groups and sales teams. 60-second response latency. Total autonomy.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- PROCESS -->
-        <section id="process">
-            <h2 data-reveal>The Pipeline.</h2>
-            <div class="process-grid">
-                <div class="p-item" data-reveal>
-                    <span class="p-num">01</span>
-                    <h4>Audit Call</h4>
-                    <p>Identification of manual bottlenecks and automation ROI potential.</p>
-                </div>
-                <div class="p-item" data-reveal>
-                    <span class="p-num">02</span>
-                    <h4>Build Sprint</h4>
-                    <p>Rapid engineering phase. V1 digital system shipped within 14 days.</p>
-                </div>
-                <div class="p-item" data-reveal>
-                    <span class="p-num">03</span>
-                    <h4>Deployment</h4>
-                    <p>Live integration with your stack and LLM behavior stress-testing.</p>
-                </div>
-                <div class="p-item" data-reveal>
-                    <span class="p-num">04</span>
-                    <h4>Optimization</h4>
-                    <p>Continuous performance scaling and proprietary agent monitoring.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- RESULTS -->
+        <!-- PERFORMANCE -->
         <section id="results">
-            <h2 data-reveal>System<br>Performance.</h2>
-            <div class="results-grid">
-                <div class="stat-box" data-reveal>
-                    <span class="stat-val">12×</span>
-                    <span class="stat-label">Output Acceleration</span>
-                </div>
-                <div class="stat-box" data-reveal>
-                    <span class="stat-num stat-val">80%</span>
-                    <span class="stat-label">Tasks Automated</span>
-                </div>
-                <div class="stat-box" data-reveal>
-                    <span class="stat-val">14D</span>
-                    <span class="stat-label">Avg. Deployment</span>
-                </div>
-                <div class="stat-box" data-reveal>
-                    <span class="stat-val">40+</span>
-                    <span class="stat-label">Global Partners</span>
+            <div class="container">
+                <div class="reveal-container"><h2>ENGINE</h2></div>
+                <div class="reveal-container"><h2>PERFORMANCE.</h2></div>
+                <div class="results-grid">
+                    <div class="stat-box reveal">
+                        <span class="stat-val">12X</span>
+                        <span class="stat-label">Output Acceleration</span>
+                    </div>
+                    <div class="stat-box reveal">
+                        <span class="stat-val">80%</span>
+                        <span class="stat-label">Tasks Automated</span>
+                    </div>
+                    <div class="stat-box reveal">
+                        <span class="stat-val">14D</span>
+                        <span class="stat-label">Avg Deployment</span>
+                    </div>
+                    <div class="stat-box reveal">
+                        <span class="stat-val">40+</span>
+                        <span class="stat-label">Global Partners</span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- SHOWCASE -->
         <section id="work">
-            <h2 data-reveal>Showcase.</h2>
-            <div class="work-grid">
-                <a href="ww2-game/index.html" class="work-card" data-reveal>
-                    <div class="work-img">WW2 SIM</div>
-                    <div class="work-content">
-                        <h4>WW2 Combat Sim</h4>
-                        <p>Interactive browser-based 3D physics simulation engine.</p>
-                    </div>
-                </a>
-                <a href="umbilo-carwash/index.html" class="work-card" data-reveal>
-                    <div class="work-img">ELITE CW</div>
-                    <div class="work-content">
-                        <h4>Elite Car Wash</h4>
-                        <p>High-octane digital branding and high-performance web structure.</p>
-                    </div>
-                </a>
+            <div class="container">
+                <div class="reveal-container"><h2>SELECTED</h2></div>
+                <div class="reveal-container"><h2>CASE STUDIES.</h2></div>
+                <div class="work-list">
+                    <a href="umbilo-carwash/index.html" class="work-item reveal">
+                        <div class="work-img"><span>ELITE CW</span></div>
+                        <div class="work-info">
+                            <span class="work-tag">AUTOMOTIVE / UX</span>
+                            <h3>ELITE CAR WASH</h3>
+                            <p>High-octane digital infrastructure and premium branding engineered for high-conversion automotive services.</p>
+                        </div>
+                    </a>
+                    <a href="ww2-game/index.html" class="work-item reveal">
+                        <div class="work-img"><span>COMBAT SIM</span></div>
+                        <div class="work-info">
+                            <span class="work-tag">INTERACTIVE / 3D</span>
+                            <h3>WW2 COMBAT SIM</h3>
+                            <p>Advanced browser-based 3D simulation engine. Pushing the absolute limits of web performance and physics.</p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
-        <!-- FINAL CTA -->
-        <section class="cta-box">
-            <h2 data-reveal>Scale your <span style="color: var(--accent);">autonomy.</span></h2>
-            <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p" data-reveal>Initialize Deployment</a>
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="container">
+                <div class="contact-box reveal">
+                    <div class="reveal-container"><h2>LET'S</h2></div>
+                    <div class="reveal-container"><h2 style="color: var(--accent);">TRANSMIT.</h2></div>
+                    <form action="https://formspree.io/f/xwpbqdnl" method="POST">
+                        <div class="field-row">
+                            <div class="input-group">
+                                <label>IDENTIFIER</label>
+                                <input type="text" name="name" placeholder="YOUR NAME" required>
+                            </div>
+                            <div class="input-group">
+                                <label>CHANNEL</label>
+                                <input type="email" name="email" placeholder="YOUR EMAIL" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>THE CHALLENGE</label>
+                            <textarea name="message" placeholder="DESCRIBE THE BOTTLENECK..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; border: none; cursor: pointer;">Deploy Engine</button>
+                    </form>
+                </div>
+            </div>
         </section>
     </main>
 
     <footer>
-        <div class="footer-content">
-            <div class="f-brand">FieldAI</div>
-            <p class="f-copy">© 2026 FIELDAI · STRATEGIC AI OPERATIONS · SOUTH AFRICA</p>
-            <div class="f-links">
-                <a href="#">GITHUB</a>
-                <a href="#">INSTAGRAM</a>
-            </div>
+        <div class="f-logo">FieldAI</div>
+        <div style="text-align: right;">
+            <p style="color:var(--muted); font-size: 11px; letter-spacing: 5px; margin-bottom: 10px;">JOHANNESBURG, SA · GLOBAL SHIPPING</p>
+            <p style="color:var(--muted); font-size: 11px; letter-spacing: 5px;">© 2026 FIELDAI · STRATEGIC GROWTH</p>
         </div>
     </footer>
 
     <script>
-        // --- REVEAL OBSERVER ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
+        gsap.registerPlugin(ScrollTrigger);
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
 
-        document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+        // --- WORLD SPACE ENGINE 3.0 ---
+        class GlobalParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('world-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = []; this.count = 120;
+                this.resize(); window.addEventListener('resize', () => this.resize());
+                this.init();
+            }
+            resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.docH = document.documentElement.scrollHeight; }
+            init() { for (let i=0; i<this.count; i++) this.particles.push(this.createParticle(Math.random()*this.docH)); this.animate(); }
+            createParticle(y = null) {
+                const isStream = Math.random() > 0.8;
+                return {
+                    y: y !== null ? y : this.docH + 100,
+                    startX: Math.random()*this.canvas.width,
+                    speed: 2 + Math.random()*4,
+                    size: isStream ? 1.5 : Math.random()*2+1,
+                    color: Math.random() > 0.5 ? '#c8ff00' : '#000', // Kinetic Green on Black
+                    isStream, laneOffset: (Math.random()-0.5)*500, points: [], lastSwitch: 0
+                };
+            }
+            animate() {
+                this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+                const scrollY = window.scrollY;
+                this.particles.forEach(p => {
+                    p.y -= p.speed;
+                    if(p.y < 0) Object.assign(p, this.createParticle());
+                    if(p.isStream && Math.random() > 0.98 && (performance.now() - p.lastSwitch > 1000)) { p.laneOffset += (Math.random()-0.5)*200; p.lastSwitch = performance.now(); }
+                    const progress = 1 - (p.y / this.docH);
+                    const curX = (p.startX + p.laneOffset) + (this.canvas.width/2 - (p.startX + p.laneOffset)) * progress;
+                    const sY = p.y - scrollY;
+                    if(sY > -100 && sY < this.canvas.height + 100) {
+                        this.ctx.globalAlpha = Math.sin(progress * Math.PI);
+                        this.ctx.fillStyle = p.color === '#000' ? '#111' : p.color; // Soften black particles
+                        if(p.isStream) {
+                            p.points.push({x: curX, y: sY}); if(p.points.length > 25) p.points.shift();
+                            this.ctx.strokeStyle = p.color === '#000' ? '#222' : p.color; this.ctx.lineWidth = 1; this.ctx.beginPath();
+                            p.points.forEach((pt, i) => i === 0 ? this.ctx.moveTo(pt.x, pt.y) : this.ctx.lineTo(pt.x, pt.y));
+                            this.ctx.stroke();
+                        } else {
+                            this.ctx.beginPath(); this.ctx.arc(curX, sY, p.size, 0, Math.PI*2); this.ctx.fill();
+                        }
+                    }
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        new GlobalParticleSystem();
 
-        // Initial Load reveal
+        // --- PREMIUM INTERACTIVES ---
+        const cursor = document.getElementById('cursor');
+        window.addEventListener("mousemove", e => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            document.body.style.setProperty('--x', `${e.clientX}px`);
+            document.body.style.setProperty('--y', `${e.clientY}px`);
+        });
+
+        document.querySelectorAll('.btn, .work-item, .service-card, .stat-box, a').forEach(el => {
+            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 12, background: 'rgba(200, 255, 0, 0.2)' }));
+            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, background: '#c8ff00' }));
+            if(el.classList.contains('btn')) {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    gsap.to(el, { x: (e.clientX - rect.left - rect.width/2)*0.4, y: (e.clientY - rect.top - rect.height/2)*0.4, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => gsap.to(el, { x:0, y:0, duration: 0.5, ease: "elastic.out(1,0.3)" }));
+            }
+        });
+
+        // Entrance Timeline
         window.addEventListener('load', () => {
-            const heroReveals = document.querySelectorAll('.hero [data-reveal]');
-            heroReveals.forEach((el, i) => {
-                setTimeout(() => el.classList.add('active'), 150 * i);
-            });
+            const tl = gsap.timeline();
+            tl.to(".word", { y: 0, duration: 1.5, stagger: 0.1, ease: "expo.out" })
+              .to(".hero-p, .hero-btns", { opacity: 1, y: 0, duration: 1.2 }, "-=0.8");
+        });
+
+        gsap.utils.toArray(".reveal-container").forEach(el => {
+            const word = el.querySelector('.word');
+            if(word) gsap.to(word, { scrollTrigger: { trigger: el, start: "top 95%" }, y: 0, duration: 1.4, ease: "expo.out" });
+        });
+
+        gsap.utils.toArray(".reveal").forEach(el => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 0, y: 80, duration: 1.5, ease: "power4.out" });
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) document.getElementById('navbar').classList.add('scrolled');
+            else document.getElementById('navbar').classList.remove('scrolled');
         });
     </script>
 </body>
