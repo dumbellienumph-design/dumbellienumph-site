@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — Kinetic AI Studio</title>
+    <title>Web Infrastructure — FieldAI</title>
     
     <!-- Engine Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -31,7 +31,7 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.2; overflow-x: hidden; }
 
         /* --- BACKGROUND LAYERS --- */
-        #main-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        #main-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.6; }
         #intro-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1002; pointer-events: none; }
         
         .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.07; 
@@ -41,19 +41,19 @@
         #cursor { position: fixed; width: 8px; height: 8px; background: #fff; border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; transition: transform 0.3s var(--ease); }
         #spotlight { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; background: radial-gradient(circle 250px at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.05), transparent 100%); }
 
-        /* --- NAVIGATION (MINIMAL LUXURY) --- */
+        /* --- NAVIGATION --- */
         nav { position: fixed; top: 0; width: 100%; height: 120px; z-index: 1000; display: flex; align-items: center; padding: 0 5vw; transition: 0.5s var(--ease); }
         nav.scrolled { height: 80px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
         .nav-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: 'Bebas Neue'; font-size: 2.5rem; letter-spacing: 4px; text-decoration: none; color: #fff; }
         .nav-links { display: flex; gap: 50px; }
         .nav-links a { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; text-decoration: none; color: #fff; opacity: 0.3; transition: 0.4s; }
-        .nav-links a:hover { opacity: 1; color: var(--accent); }
+        .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
 
         /* --- TYPOGRAPHY ENGINE --- */
         .reveal-container { overflow: hidden; display: block; }
         .word { display: inline-block; transform: translateY(110%); }
-        h1 { font-family: 'Bebas Neue'; font-size: 16vw; text-transform: uppercase; letter-spacing: -4px; line-height: 0.8; }
+        h1 { font-family: 'Bebas Neue'; font-size: 14vw; text-transform: uppercase; letter-spacing: -3px; line-height: 0.8; }
         h2 { font-family: 'Bebas Neue'; font-size: 10vw; text-transform: uppercase; line-height: 0.85; margin-bottom: 40px; }
         
         /* --- LAYOUT --- */
@@ -63,48 +63,32 @@
         /* --- HERO --- */
         .hero { height: 100vh; justify-content: center; }
         .hero p { font-size: clamp(1.2rem, 2.5vw, 2rem); color: var(--muted); max-width: 800px; margin: 60px 0; font-weight: 200; line-height: 1.4; }
-        .hero-btns { display: flex; gap: 30px; }
 
-        .btn { padding: 28px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; text-decoration: none; text-transform: uppercase; transition: 0.5s var(--ease); position: relative; border: 1px solid transparent; }
+        .btn { padding: 28px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; text-decoration: none; text-transform: uppercase; transition: 0.5s var(--ease); display: inline-block; border-radius: 0; position: relative; border: 1px solid transparent; text-align: center; }
         .btn-primary { background: var(--accent); color: #000; }
         .btn-primary:hover { transform: translateY(-10px) rotate(-2deg); box-shadow: 30px 30px 0 rgba(0, 255, 136, 0.05); }
-        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; }
-        .btn-outline:hover { border-color: #fff; background: #fff; color: #000; }
 
-        /* --- CASE STUDIES (EDITORIAL) --- */
-        .work-grid { display: flex; flex-direction: column; gap: 20vh; margin-top: 100px; }
-        .work-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 100px; text-decoration: none; color: #fff; }
-        .work-img-box { aspect-ratio: 16/10; background: #050505; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .work-img-box span { font-family: 'Bebas Neue'; font-size: 8rem; color: #0a0a0a; transition: 1s var(--ease); z-index: 1; }
-        .work-item:hover .work-img-box span { transform: scale(1.2) translateY(-20px); color: var(--accent); }
-        .work-info h3 { font-family: 'Bebas Neue'; font-size: 6rem; line-height: 0.8; margin-bottom: 20px; }
-        .work-info p { font-size: 1.4rem; color: var(--muted); font-weight: 300; max-width: 400px; }
-
-        /* --- CAPABILITIES GRID --- */
+        /* --- EDITORIAL GRIDS --- */
         .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); }
         .service-card { background: #000; padding: 120px 80px; transition: 0.6s var(--ease); }
         .service-card:hover { background: #030303; }
         .service-card h4 { font-family: 'Bebas Neue'; font-size: 4rem; margin-bottom: 20px; color: #fff; }
         .service-card p { color: var(--muted); font-size: 1.4rem; font-weight: 200; line-height: 1.5; }
-        .service-card:hover h4 { color: var(--accent); transform: translateX(20px); transition: 0.4s var(--ease); }
 
-        /* --- CONTACT SECTION --- */
-        .contact-box { max-width: 1000px; background: #030303; padding: 120px 100px; border: 1px solid var(--border); position: relative; }
-        .contact-box h2 { font-size: 8vw; }
-        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 80px; }
-        .input-group { margin-bottom: 60px; border-bottom: 1px solid var(--border); transition: 0.4s; }
-        .input-group:focus-within { border-color: var(--accent); }
-        .input-group label { font-size: 10px; font-weight: 900; color: var(--muted); letter-spacing: 3px; display: block; margin-bottom: 20px; }
-        input, textarea { width: 100%; background: transparent; border: none; color: #fff; font-family: 'Inter'; font-size: 2rem; padding-bottom: 20px; outline: none; font-weight: 100; }
+        .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 80px; }
+        .work-card { text-decoration: none; color: #fff; border: 1px solid var(--border); overflow: hidden; aspect-ratio: 16/11; position: relative; }
+        .work-img { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; font-family: 'Bebas Neue'; font-size: 50px; color: #1a1a1a; transition: all 0.8s var(--ease); }
+        .work-card:hover .work-img { transform: scale(1.1); color: var(--accent); }
+        .work-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); transform: translateY(20px); transition: transform 0.5s var(--ease); }
+        .work-card:hover .work-info { transform: translateY(0); }
 
         footer { padding: 120px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
         .footer-logo { font-family: 'Bebas Neue'; font-size: 5rem; line-height: 0.8; letter-spacing: -2px; }
 
         @media (max-width: 1024px) {
             h1 { font-size: 22vw; }
-            .work-item, .services-grid, .field-row { grid-template-columns: 1fr; gap: 40px; }
+            .services-grid, .work-grid { grid-template-columns: 1fr; gap: 40px; }
             .service-card { padding: 60px 40px; }
-            .contact-box { padding: 60px 40px; }
             nav .nav-links { display: none; }
         }
     </style>
@@ -121,9 +105,11 @@
         <div class="nav-content">
             <a href="index.html" class="logo">FieldAI</a>
             <div class="nav-links">
-                <a href="#services">Capabilities</a>
-                <a href="#work">Case Studies</a>
-                <a href="#contact">Contact</a>
+                <a href="whatsapp-automation.html">WhatsApp</a>
+                <a href="reception-automation.html">Reception</a>
+                <a href="web-building.html" class="active">Web</a>
+                <a href="autoflow.html">AutoFlow</a>
+                <a href="contact.html">Contact</a>
             </div>
         </div>
     </nav>
@@ -132,96 +118,66 @@
         <!-- HERO -->
         <section class="hero">
             <div class="container">
-                <p style="color: var(--accent); letter-spacing: 10px; font-size: 12px; font-weight: 900; margin-bottom: 40px;">BEYOND AUTOMATION</p>
-                <div class="reveal-container"><h1 class="word">WE BUILD FAST.</h1></div>
-                <div class="reveal-container"><h1 class="word" style="color: var(--accent);">WE SHIP FASTER.</h1></div>
-                <p class="hero-p" style="opacity:0; transform: translateY(30px);">Strategic AI engineering and autonomous digital infrastructure for global businesses that scale.</p>
+                <p style="color: var(--accent); letter-spacing: 10px; font-size: 12px; font-weight: 900; margin-bottom: 40px;">ENGINEERING & DESIGN</p>
+                <div class="reveal-container"><h1 class="word">SITES THAT</h1></div>
+                <div class="reveal-container"><h1 class="word" style="color: var(--accent);">CONVERT.</h1></div>
+                <p class="hero-p" style="opacity:0; transform: translateY(30px);">High-speed, custom-coded digital infrastructure designed for maximum SEO impact and AI integration.</p>
                 <div class="hero-btns" style="opacity:0; transform: translateY(30px);">
-                    <a href="#contact" class="btn btn-primary">Initialize Transmission</a>
-                    <a href="#work" class="btn btn-outline">Explore Case Studies</a>
+                    <a href="contact.html" class="btn btn-primary">Initialize Build</a>
                 </div>
             </div>
         </section>
 
-        <!-- SERVICES -->
+        <!-- PRINCIPLES -->
         <section id="services">
             <div class="container">
-                <div class="reveal-container"><h2>OUR</h2></div>
-                <div class="reveal-container"><h2>CAPABILITIES.</h2></div>
+                <div class="reveal-container"><h2>CORE</h2></div>
+                <div class="reveal-container"><h2>PRINCIPLES.</h2></div>
                 <div class="services-grid">
-                    <div class="service-card">
-                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">01 / SALES</span>
-                        <h4>AI LEAD GEN</h4>
-                        <p>Proprietary discovery engines and context-aware LLM outreach that fills your calendar 24/7 without manual input.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">01 / CODE</span>
+                        <h4>ZERO FRAMEWORK</h4>
+                        <p>We write clean, efficient vanilla code. No heavy themes or slow plugins. Guaranteed 100/100 performance scores across all devices.</p>
                     </div>
-                    <div class="service-card">
-                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">02 / PRODUCT</span>
-                        <h4>INFRASTRUCTURE</h4>
-                        <p>Zero-bloat web systems designed for extreme speed and global scalability. Custom vanilla code, 100/100 performance.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">02 / INTELLIGENCE</span>
+                        <h4>AI INTEGRATED</h4>
+                        <p>Built-in AI functionality from smart semantic search to autonomous customer support bots, native to your site architecture.</p>
                     </div>
-                    <div class="service-card">
-                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">03 / SOCIAL</span>
-                        <h4>CONTENT ENGINES</h4>
-                        <p>End-to-end AI pipelines that generate, schedule, and refine brand presence across all social platforms autonomously.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">03 / REACH</span>
+                        <h4>SEO OPTIMIZED</h4>
+                        <p>Technical SEO is baked into the foundation. Semantic HTML and extreme speed ensure your business ranks above competitors.</p>
                     </div>
-                    <div class="service-card">
-                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">04 / OPS</span>
-                        <h4>AUTOFLOW OPS</h4>
-                        <p>Specialized WhatsApp automation for automotive groups and sales teams. 60-second response. Total autonomy.</p>
+                    <div class="service-card reveal">
+                        <span style="color:var(--accent); font-weight:900; font-size: 12px; letter-spacing: 5px; display:block; margin-bottom: 30px;">04 / UX</span>
+                        <h4>CONVERSION FOCUSED</h4>
+                        <p>Every element is designed to drive the user toward a specific action. We build tools that generate revenue, not just traffic.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- WORK (THE HOOK) -->
+        <!-- SHOWCASE -->
         <section id="work">
             <div class="container">
-                <div class="reveal-container"><h2>SELECTED</h2></div>
-                <div class="reveal-container"><h2>CASE STUDIES.</h2></div>
-                <div class="work-list">
-                    <a href="umbilo-carwash/index.html" class="work-item">
-                        <div class="work-img-box"><span>ELITE CW</span></div>
+                <div class="reveal-container"><h2>PROVEN</h2></div>
+                <div class="reveal-container"><h2>BUILDS.</h2></div>
+                <div class="work-grid">
+                    <a href="umbilo-carwash/index.html" class="work-card reveal">
+                        <div class="work-img">ELITE CW</div>
                         <div class="work-info">
-                            <span class="work-tag">AUTOMOTIVE / UX</span>
-                            <h3>ELITE CAR WASH</h3>
-                            <p>High-octane digital infrastructure and premium branding engineered for high-conversion automotive services.</p>
+                            <span style="color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 2px;">AUTOMOTIVE</span>
+                            <h3>Elite Car Wash</h3>
                         </div>
                     </a>
-                    <a href="ww2-game/index.html" class="work-item">
-                        <div class="work-img-box"><span>COMBAT SIM</span></div>
+                    <a href="ww2-game/index.html" class="work-card reveal">
+                        <div class="work-img">WW2 SIM</div>
                         <div class="work-info">
-                            <span class="work-tag">INTERACTIVE / 3D</span>
-                            <h3>WW2 COMBAT SIM</h3>
-                            <p>Advanced browser-based 3D simulation engine. Pushing the absolute limits of web-based interaction and physics.</p>
+                            <span style="color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 2px;">INTERACTIVE</span>
+                            <h3>WW2 Combat Sim</h3>
                         </div>
                     </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact">
-            <div class="container">
-                <div class="contact-box">
-                    <div class="reveal-container"><h2>LET'S</h2></div>
-                    <div class="reveal-container"><h2>TRANSMIT.</h2></div>
-                    <form action="https://formspree.io/f/xwpbqdnl" method="POST">
-                        <div class="field-row">
-                            <div class="input-group">
-                                <label>IDENTIFIER</label>
-                                <input type="text" name="name" placeholder="YOUR NAME" required>
-                            </div>
-                            <div class="input-group">
-                                <label>CHANNEL</label>
-                                <input type="email" name="email" placeholder="YOUR EMAIL" required>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <label>OBJECTIVE</label>
-                            <textarea name="message" placeholder="TELL US ABOUT THE CHALLENGE..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; border: none; cursor: pointer;">Initialize Deployment</button>
-                    </form>
                 </div>
             </div>
         </section>
@@ -237,13 +193,10 @@
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
-        
-        // --- LENIS ENGINE ---
         const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // --- CYBER CONVERGENCE INTRO ---
         class CyberConvergence {
             constructor() {
                 this.canvas = document.getElementById('intro-canvas');
@@ -285,7 +238,6 @@
             }
         }
 
-        // --- WORLD SPACE ENGINE ---
         class GlobalParticleSystem {
             constructor() {
                 this.canvas = document.getElementById('main-canvas');
@@ -342,7 +294,6 @@
             gsap.to("#intro-canvas", { opacity: 0, duration: 2, delay: 2 });
         });
 
-        // --- PREMIUM INTERACTIVES ---
         const cursor = document.getElementById('cursor');
         window.addEventListener("mousemove", e => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15 });
@@ -350,7 +301,7 @@
             document.body.style.setProperty('--y', `${e.clientY}px`);
         });
 
-        document.querySelectorAll('.btn, .work-item, a').forEach(el => {
+        document.querySelectorAll('.btn, .service-card, .work-card, a').forEach(el => {
             el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 10 }));
             el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1 }));
             if(el.classList.contains('btn')) {
@@ -364,9 +315,11 @@
 
         gsap.utils.toArray(".reveal-container").forEach(el => {
             const word = el.querySelector('.word');
-            if(word) {
-                gsap.to(word, { scrollTrigger: { trigger: el, start: "top 90%" }, y: 0, duration: 1.2, ease: "expo.out" });
-            }
+            if(word) gsap.to(word, { scrollTrigger: { trigger: el, start: "top 90%" }, y: 0, duration: 1.2, ease: "expo.out" });
+        });
+
+        gsap.utils.toArray(".reveal").forEach(el => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 50, duration: 1.2, ease: "power3.out" });
         });
 
         window.addEventListener('scroll', () => {
