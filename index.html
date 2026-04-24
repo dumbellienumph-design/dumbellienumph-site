@@ -11,15 +11,16 @@
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400&family=Inter:wght@200;300;400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg: #050505;
+            --bg-deep: #020202;
             --surface: #0a0a0a;
-            --border: rgba(0, 229, 255, 0.08);
-            --accent: #00e5ff;
-            --accent-glow: rgba(0, 229, 255, 0.15);
+            --border: rgba(200, 255, 0, 0.08);
+            --accent: #c8ff00;
+            --accent-soft: rgba(200, 255, 0, 0.15);
             --text: #ffffff;
             --muted: #555555;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -29,61 +30,62 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.5; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.5; cursor: crosshair; }
 
         /* --- ATMOSPHERIC LAYERS --- */
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.4; }
-        .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.6; }
+        .premium-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(circle at 50% 50%, #080808, #020202); }
+        .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
         #cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; }
 
         /* --- NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; height: 90px;
             z-index: 1000; display: flex; align-items: center;
-            background: rgba(5, 5, 5, 0.6); backdrop-filter: blur(24px);
+            background: rgba(2, 2, 2, 0.4); backdrop-filter: blur(24px);
             border-bottom: 1px solid transparent; transition: 0.4s;
         }
-        nav.scrolled { height: 70px; border-color: var(--border); background: rgba(5, 5, 5, 0.9); }
+        nav.scrolled { height: 70px; border-color: var(--border); background: rgba(2, 2, 2, 0.9); }
         .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 50px; display: flex; justify-content: space-between; align-items: center; }
         .logo-wrap { text-decoration: none; color: #fff; display: flex; flex-direction: column; }
-        .logo { font-family: 'Bebas Neue'; font-size: 2rem; letter-spacing: 2px; line-height: 1; }
-        .logo-tag { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+        .logo { font-family: 'Bebas Neue'; font-size: 2.2rem; letter-spacing: 2px; line-height: 1; }
+        .logo-tag { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); letter-spacing: 4px; text-transform: uppercase; margin-top: 4px; }
         .nav-links { display: flex; gap: 50px; }
-        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; font-weight: 700; opacity: 0.4; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; position: relative; padding: 10px 0; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; font-weight: 700; opacity: 0.4; transition: 0.3s; text-transform: uppercase; letter-spacing: 3px; position: relative; padding: 10px 0; }
         .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
         .nav-links a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--accent); transition: 0.4s var(--ease); }
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-        .nav-cta { padding: 12px 28px; background: var(--accent); color: #000; border-radius: 100px; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.4s; border: 1px solid var(--accent); }
-        .nav-cta:hover { background: transparent; color: var(--accent); box-shadow: 0 0 30px var(--accent-glow); }
+        .nav-cta { padding: 12px 28px; background: var(--accent); color: #000; border-radius: 100px; text-decoration: none; font-size: 12px; font-weight: 900; transition: 0.4s; border: 1px solid var(--accent); }
+        .nav-cta:hover { background: transparent; color: var(--accent); box-shadow: 0 0 30px var(--accent-soft); }
 
         /* --- HERO --- */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 7vw; z-index: 2; }
-        .status-badge { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--accent); margin-bottom: 30px; letter-spacing: 6px; display: block; }
+        .status-badge { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--accent); margin-bottom: 30px; letter-spacing: 8px; display: block; }
         h1 { font-family: 'Bebas Neue'; font-size: clamp(60px, 15vw, 180px); line-height: 0.85; letter-spacing: -2px; margin-bottom: 40px; overflow: hidden; }
         .mask-span { display: block; transform: translateY(110%); }
-        .hero p { max-width: 600px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; font-weight: 200; line-height: 1.6; }
+        .hero p { max-width: 650px; font-size: 1.4rem; color: var(--muted); margin-bottom: 60px; font-weight: 200; line-height: 1.6; }
         .hero-btns { display: flex; gap: 30px; }
         
         .magnetic-wrap { display: inline-block; }
         .btn { padding: 24px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-block; letter-spacing: 2px; }
         .btn-p { background: #fff; color: #000; }
         .btn-s { border: 1px solid var(--border); color: #fff; }
-        .btn-p:hover { background: var(--accent); color: #000; transform: translateY(-5px); box-shadow: 0 20px 40px var(--accent-glow); }
+        .btn-p:hover { background: var(--accent); color: #000; transform: translateY(-5px); box-shadow: 0 20px 40px var(--accent-soft); }
         .btn-s:hover { border-color: var(--accent); background: rgba(255,255,255,0.02); }
 
         /* --- SECTIONS --- */
         section { padding: 180px 7vw; max-width: 1600px; margin: 0 auto; position: relative; z-index: 2; }
-        .sec-label { font-family: 'JetBrains Mono'; color: var(--muted); margin-bottom: 40px; display: block; font-size: 10px; letter-spacing: 4px; }
-        h2 { font-family: 'Bebas Neue'; font-size: clamp(40px, 10vw, 100px); margin-bottom: 100px; line-height: 1; letter-spacing: -1px; }
+        .sec-label { font-family: 'JetBrains Mono'; color: var(--muted); margin-bottom: 40px; display: block; font-size: 10px; letter-spacing: 6px; }
+        h2 { font-family: 'Bebas Neue'; font-size: clamp(40px, 10vw, 100px); margin-bottom: 100px; line-height: 0.9; letter-spacing: -1px; }
 
-        /* --- SERVICE CARDS (GLOW) --- */
+        /* --- SERVICE CARDS --- */
         .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .s-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 80px 60px; transition: 0.5s var(--ease); position: relative; overflow: hidden; border-radius: 4px; }
-        .s-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(0, 229, 255, 0.15), transparent 60%); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
+        .s-card { background: #080808; border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 80px 60px; transition: 0.5s var(--ease); position: relative; overflow: hidden; border-radius: 4px; }
+        .s-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(200, 255, 0, 0.12), transparent 60%); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
         .s-card:hover::before { opacity: 1; }
-        .s-card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .s-tag { font-family: 'JetBrains Mono'; color: var(--accent); margin-bottom: 40px; display: block; font-size: 11px; }
-        .s-card h3 { font-family: 'Bebas Neue'; font-size: 4rem; margin-bottom: 25px; letter-spacing: 1px; }
+        .s-card:hover { transform: translateY(-10px); border-color: var(--accent); background: #0c0c0c; }
+        .s-tag { font-family: 'JetBrains Mono'; color: var(--accent); margin-bottom: 40px; display: block; font-size: 11px; letter-spacing: 2px; }
+        .s-card h3 { font-family: 'Bebas Neue'; font-size: 4.5rem; margin-bottom: 25px; letter-spacing: 1px; }
         .s-card p { color: var(--muted); font-size: 18px; font-weight: 200; line-height: 1.6; }
 
         /* --- STATS --- */
@@ -91,8 +93,8 @@
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 1600px; margin: 0 auto; }
         .stat-item { border-left: 1px solid var(--border); padding-left: 40px; }
         .stat-item:first-child { border-left: none; padding-left: 0; }
-        .stat-num { font-family: 'Bebas Neue'; font-size: 7rem; color: var(--accent); display: block; line-height: 1; margin-bottom: 15px; }
-        .stat-label { font-family: 'JetBrains Mono'; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 3px; }
+        .stat-num { font-family: 'Bebas Neue'; font-size: 8rem; color: var(--accent); display: block; line-height: 1; margin-bottom: 15px; letter-spacing: -2px; }
+        .stat-label { font-family: 'JetBrains Mono'; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 4px; }
 
         /* --- PROCESS --- */
         .process-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 60px; position: relative; margin-top: 80px; }
@@ -100,42 +102,42 @@
         .process-line-bg { position: absolute; top: 30px; left: 0; width: 100%; height: 1px; background: var(--border); z-index: -2; }
         .p-step { background: var(--bg); padding-top: 50px; }
         .p-num { width: 60px; height: 60px; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 24px; margin-bottom: 40px; background: var(--bg); }
-        .p-step h4 { font-family: 'Bebas Neue'; font-size: 2.2rem; margin-bottom: 15px; letter-spacing: 1px; }
+        .p-step h4 { font-family: 'Bebas Neue'; font-size: 2.5rem; margin-bottom: 15px; letter-spacing: 1px; }
         .p-step p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.5; }
 
         /* --- CASE STUDIES --- */
         .labs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .case-card { text-decoration: none; color: #fff; border: 1px solid var(--border); overflow: hidden; background: #080808; position: relative; transition: 0.5s var(--ease); }
+        .case-card { text-decoration: none; color: #fff; border: 1px solid var(--border); overflow: hidden; background: #020202; position: relative; transition: 0.5s var(--ease); }
         .case-card:hover { border-color: var(--accent); transform: scale(0.98); }
-        .case-img { height: 450px; background: #000; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 5rem; color: #111; transition: 0.8s var(--ease); }
+        .case-img { height: 450px; background: #000; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 6rem; color: #080808; transition: 0.8s var(--ease); }
         .case-card:hover .case-img { color: var(--accent); transform: scale(1.1); }
-        .case-info { padding: 50px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; left: 0; width: 100%; }
+        .case-info { padding: 50px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); position: absolute; bottom: 0; left: 0; width: 100%; }
 
         /* --- CTA --- */
         .cta-box { text-align: center; padding: 250px 7vw; position: relative; overflow: hidden; }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Bebas Neue'; font-size: 25vw; color: rgba(255,255,255,0.015); z-index: -1; pointer-events: none; }
-        .cta-box h2 { max-width: 1000px; margin: 0 auto 60px; font-size: 10vw; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Bebas Neue'; font-size: 28vw; color: rgba(200,255,0,0.015); z-index: -1; pointer-events: none; }
+        .cta-box h2 { max-width: 1200px; margin: 0 auto 60px; font-size: 11vw; }
 
         /* --- FOOTER --- */
         footer { padding: 120px 7vw 80px; position: relative; border-top: 1px solid var(--border); }
-        .footer-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); opacity: 0.3; }
+        .footer-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); opacity: 0.2; }
         .f-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 100px; }
         .f-links { display: flex; gap: 60px; }
-        .f-links a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 700; transition: 0.3s; }
+        .f-links a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 700; transition: 0.3s; letter-spacing: 1px; }
         .f-links a:hover { color: #fff; }
-        .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 50px; border-top: 1px solid var(--border); color: var(--muted); font-family: 'JetBrains Mono'; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 50px; border-top: 1px solid var(--border); color: var(--muted); font-family: 'JetBrains Mono'; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; }
 
         @media (max-width: 1024px) {
             .grid-2x2, .stats-grid, .process-row, .labs-grid { grid-template-columns: 1fr; }
             .stat-item { border-left: none; border-bottom: 1px solid var(--border); padding: 50px 0; }
             .nav-links { display: none; }
-            h1 { font-size: 20vw; }
-            .p-step { padding-top: 0; }
+            h1 { font-size: 22vw; }
         }
     </style>
 </head>
 <body>
 
+    <div class="premium-bg"></div>
     <div class="grain-overlay"></div>
     <canvas id="bg-canvas"></canvas>
     <div id="cursor-dot"></div>
@@ -144,7 +146,7 @@
         <div class="nav-content">
             <a href="#" class="logo-wrap">
                 <span class="logo">FieldAI</span>
-                <span class="logo-tag">kinetic software</span>
+                <span class="logo-tag">premium engineering</span>
             </a>
             <div class="nav-links" id="nav-spy">
                 <a href="#services">Capabilities</a>
@@ -159,42 +161,42 @@
     <main>
         <!-- HERO -->
         <section class="hero" id="home">
-            <span class="status-badge">AI_AGENCY // DEPLOYMENT_ACTIVE</span>
+            <span class="status-badge">SOFTWARE_DEPLOYMENT_ACTIVE // LEVEL_01</span>
             <h1>
                 <span class="mask-span">We engineer AI</span>
                 <span class="mask-span" style="color: var(--accent);">that moves.</span>
             </h1>
-            <p>FieldAI builds autonomous software agents and intelligent systems that plug directly into the tools you already use. Premium kinetic results, shipped remotely.</p>
+            <p>FieldAI designs and deploys autonomous software agents and intelligent systems that plug directly into your tools. High-end kinetic results, delivered remotely.</p>
             <div class="hero-btns">
                 <div class="magnetic-wrap"><a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Start a Project</a></div>
-                <div class="magnetic-wrap"><a href="#work" class="btn btn-s">View Our Work</a></div>
+                <div class="magnetic-wrap"><a href="#work" class="btn btn-s" style="margin-left: 30px;">View Our Labs</a></div>
             </div>
         </section>
 
         <!-- SERVICES -->
         <section id="services">
             <span class="sec-label">// CORE_CAPABILITIES</span>
-            <h2>Custom software agents for exponential leverage.</h2>
+            <h2>Premium AI software for <span style="color: var(--accent);">exponential leverage.</span></h2>
             <div class="grid-2x2">
                 <div class="s-card">
                     <span class="s-tag">[AGT_001] Autonomous Agents</span>
                     <h3>Agentic Ops</h3>
-                    <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization without human intervention.</p>
+                    <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization across your business 24/7.</p>
                 </div>
                 <div class="s-card">
                     <span class="s-tag">[AUT_002] Smart Pipelines</span>
                     <h3>Workflow Logic</h3>
-                    <p>Replacing manual bottlenecks with intelligent pipelines using n8n and Make. Fully remote software connection.</p>
+                    <p>Replacing manual bottlenecks with intelligent pipelines using n8n and Make. Fully remote software connection into your tools.</p>
                 </div>
                 <div class="s-card">
                     <span class="s-tag">[BOT_003] Neural Interface</span>
                     <h3>Custom LLMs</h3>
-                    <p>Bespoke chatbots trained on your internal business logic and brand voice for WhatsApp and Web integration.</p>
+                    <p>Bespoke chatbots trained on your internal business logic and brand voice for native website and WhatsApp integration.</p>
                 </div>
                 <div class="s-card">
                     <span class="s-tag">[CNT_004] Scale Engine</span>
                     <h3>Content Systems</h3>
-                    <p>Automated content pipelines that generate, edit, and publish technical assets in your voice at global scale.</p>
+                    <p>Automated content pipelines that generate, edit, and publish technical assets in your specific voice at global scale.</p>
                 </div>
             </div>
         </section>
@@ -212,7 +214,7 @@
                 </div>
                 <div class="stat-item">
                     <span class="stat-num" data-count="100">0</span>
-                    <span class="stat-label">Pure Software Focus</span>
+                    <span class="stat-label">100% Software Only</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-num" data-count="50">0</span>
@@ -223,30 +225,30 @@
 
         <!-- PROCESS -->
         <section id="process">
-            <span class="sec-label">// HOW_IT_WORKS</span>
-            <h2>From brief to live in under 30 days.</h2>
+            <span class="sec-label">// DEPLOYMENT_SEQUENCE</span>
+            <h2>Brief to <span style="color: var(--accent);">Go-Live</span> in under 30 days.</h2>
             <div class="process-row">
                 <div class="process-line-bg"></div>
                 <div class="process-line" id="line-trigger"></div>
                 <div class="p-step">
                     <div class="p-num">01</div>
                     <h4>Discovery</h4>
-                    <p>Deep-dive into your manual bottlenecks and software stack.</p>
+                    <p>Technical identification of bottlenecks and software stack mapping.</p>
                 </div>
                 <div class="p-step">
                     <div class="p-num">02</div>
                     <h4>Architecture</h4>
-                    <p>Planning the technical logic and choosing the AI tools.</p>
+                    <p>Designing the custom agentic logic and tool orchestration.</p>
                 </div>
                 <div class="p-step">
                     <div class="p-num">03</div>
                     <h4>Connection</h4>
-                    <p>Rapid build phase and secure API integration.</p>
+                    <p>Rapid engineering phase and secure software integration.</p>
                 </div>
                 <div class="p-step">
                     <div class="p-num">04</div>
-                    <h4>Go Live</h4>
-                    <p>Tested, deployed, and handed over — fully yours.</p>
+                    <h4>Deployment</h4>
+                    <p>Live switch, environment testing, and operational handover.</p>
                 </div>
             </div>
         </section>
@@ -254,19 +256,19 @@
         <!-- SHOWCASE -->
         <section id="work">
             <span class="sec-label">// TECHNICAL_LABS</span>
-            <h2>Proven software deployments.</h2>
+            <h2>Proven software <span style="color: var(--accent);">engineering.</span></h2>
             <div class="labs-grid">
                 <a href="ww2-game/index.html" class="case-card">
-                    <div class="case-img">COMBAT ENGINE</div>
+                    <div class="case-img">COMBAT SIM</div>
                     <div class="case-info">
-                        <span class="s-tag">INTERACTIVE_3D</span>
+                        <span class="s-tag" style="color: var(--accent);">INTERACTIVE_3D_ENGINE</span>
                         <h3>Combat Simulator</h3>
                     </div>
                 </a>
                 <a href="umbilo-carwash/index.html" class="case-card">
-                    <div class="case-img">INFRASTRUCTURE</div>
+                    <div class="case-img">ELITE CW</div>
                     <div class="case-info">
-                        <span class="s-tag">UX_ENGINEERING</span>
+                        <span class="s-tag" style="color: var(--accent);">INFRASTRUCTURE_UX</span>
                         <h3>Elite Car Wash</h3>
                     </div>
                 </a>
@@ -276,9 +278,9 @@
         <!-- CTA -->
         <section id="contact" class="cta-box">
             <div class="watermark">FIELDAI</div>
-            <h2>Let's build the <span style="color:var(--accent);">future</span> of your business.</h2>
+            <h2>Build the <span style="color:var(--accent);">future</span> of your business.</h2>
             <p style="color:var(--muted); max-width: 600px; margin: 0 auto 60px;">Book a free 15-minute engineering audit. No pitch, just technical leverage.</p>
-            <div class="magnetic-wrap"><a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book Audit Now</a></div>
+            <div class="magnetic-wrap"><a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book the Call</a></div>
         </section>
     </main>
 
@@ -287,10 +289,10 @@
         <div class="f-top">
             <div class="logo-wrap">
                 <span class="logo">FieldAI</span>
-                <span class="logo-tag">kinetic software studio</span>
+                <span class="logo-tag">kinetic software engineering</span>
             </div>
             <div class="f-links">
-                <a href="#services">Capabilities</a>
+                <a href="#services">Services</a>
                 <a href="#work">Labs</a>
                 <a href="https://github.com">Github</a>
                 <a href="mailto:hello@fieldai.io">Email</a>
@@ -323,17 +325,17 @@
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 2;
-                this.vX = (Math.random() - 0.5) * 0.4;
-                this.vY = (Math.random() - 0.5) * 0.4;
+                this.vX = (Math.random() - 0.5) * 0.3;
+                this.vY = (Math.random() - 0.5) * 0.3;
             }
             draw() {
-                ctx.fillStyle = `rgba(0, 229, 255, ${0.1 + Math.random() * 0.1})`;
+                ctx.fillStyle = `rgba(200, 255, 0, ${0.08 + Math.random() * 0.08})`;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
                 this.x += this.vX; this.y += this.vY;
                 if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.init();
             }
         }
-        for(let i=0; i<80; i++) particles.push(new Particle());
+        for(let i=0; i<60; i++) particles.push(new Particle());
         function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => p.draw()); requestAnimationFrame(animate); }
         animate();
 
@@ -343,7 +345,7 @@
                 const rect = wrap.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(wrap.querySelector('.btn'), { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+                gsap.to(wrap.querySelector('.btn'), { x: x * 0.35, y: y * 0.35, duration: 0.3 });
             });
             wrap.addEventListener('mouseleave', () => {
                 gsap.to(wrap.querySelector('.btn'), { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
@@ -371,7 +373,7 @@
             entries.forEach(entry => {
                 if(entry.isIntersecting) {
                     const target = parseInt(entry.target.getAttribute('data-count'));
-                    gsap.to(entry.target, { innerText: target, duration: 2, snap: { innerText: 1 }, ease: "power2.out" });
+                    gsap.to(entry.target, { innerText: target, duration: 2.5, snap: { innerText: 1 }, ease: "power2.out" });
                     observer.unobserve(entry.target);
                 }
             });
@@ -387,7 +389,7 @@
         // Pulse line
         gsap.to("#pulse-line", { opacity: 1, repeat: -1, yoyo: true, duration: 1.5, ease: "sine.inOut" });
 
-        // Scroll Spy & Nav
+        // Scroll Spy
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 50) nav.classList.add('scrolled');
@@ -397,7 +399,7 @@
             const navLinks = document.querySelectorAll('.nav-links a');
             sections.forEach(sec => {
                 const top = window.scrollY;
-                const offset = sec.offsetTop - 150;
+                const offset = sec.offsetTop - 200;
                 const height = sec.offsetHeight;
                 const id = sec.getAttribute('id');
                 if (top >= offset && top < offset + height) {
