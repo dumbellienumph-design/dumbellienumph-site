@@ -17,7 +17,6 @@
         :root {
             --bg: #050505;
             --surface: #0a0a0a;
-            --surface-hover: #111111;
             --border: rgba(255, 255, 255, 0.08);
             --accent: #00e5ff;
             --accent-glow: rgba(0, 229, 255, 0.15);
@@ -33,8 +32,8 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; cursor: crosshair; }
 
         /* --- PHYSICS LAYERS --- */
-        #preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2000; background: #000; display: flex; align-items: center; justify-content: center; }
-        #forge-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2001; pointer-events: none; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9998; background: #000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease; }
+        #forge-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; }
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.5; }
         
         .grid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(circle at center, black, transparent 80%); pointer-events: none; opacity: 0.3; }
@@ -42,23 +41,18 @@
 
         /* --- NAVIGATION --- */
         nav { position: fixed; top: 0; width: 100%; height: 90px; z-index: 1000; display: flex; align-items: center; background: rgba(5, 5, 5, 0.4); backdrop-filter: blur(24px); border-bottom: 1px solid transparent; transition: 0.4s var(--ease); opacity: 0; }
-        nav.scrolled { height: 70px; border-color: var(--border); background: rgba(5, 5, 5, 0.85); }
+        nav.scrolled { height: 70px; border-color: var(--border); background: rgba(5, 5, 5, 0.95); }
         .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-box { text-decoration: none; color: #fff; display: flex; flex-direction: column; }
-        .logo { font-family: 'Space Grotesk'; font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
-        .logo-tag { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+        .logo { font-family: 'Space Grotesk'; font-size: 1.5rem; font-weight: 700; color: #fff; text-decoration: none; }
         .nav-links { display: flex; gap: 40px; }
-        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; font-weight: 700; opacity: 0.4; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; position: relative; padding: 5px 0; }
-        .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
-        .nav-links a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--accent); transition: 0.4s var(--ease); }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-        .nav-cta { padding: 12px 24px; border: 1px solid var(--accent); color: var(--accent); border-radius: 100px; text-decoration: none; font-size: 11px; font-weight: 700; transition: 0.3s; }
-        .nav-cta:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px var(--accent-glow); }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; font-weight: 700; opacity: 0.4; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; }
+        .nav-links a:hover { opacity: 1; color: var(--accent); }
+        .nav-cta { padding: 12px 24px; border: 1px solid var(--accent); color: var(--accent); border-radius: 100px; text-decoration: none; font-size: 11px; font-weight: 700; }
 
         /* --- TYPOGRAPHY --- */
-        h1, h2, h3, h4 { font-family: 'Space Grotesk'; font-weight: 700; line-height: 1.1; letter-spacing: -0.04em; }
+        h1, h2, h3 { font-family: 'Space Grotesk'; font-weight: 700; line-height: 1.1; letter-spacing: -0.04em; }
         h1 { font-size: clamp(3rem, 10vw, 9rem); }
-        h2 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 60px; }
+        .h-mask { display: block; transform: translateY(110%); }
         .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
 
         /* --- LAYOUT --- */
@@ -68,8 +62,7 @@
         /* --- HERO --- */
         .hero { min-height: 100vh; padding-top: 100px; }
         .hero h1 { max-width: 14ch; margin-bottom: 40px; overflow: hidden; }
-        .h-mask { display: block; transform: translateY(110%); }
-        .hero p { max-width: 600px; font-size: 1.3rem; font-weight: 300; color: var(--muted); margin-bottom: 60px; opacity: 0; transform: translateY(20px); }
+        .hero p { max-width: 600px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; opacity: 0; transform: translateY(20px); }
         .hero-btns { display: flex; gap: 20px; opacity: 0; transform: translateY(20px); }
 
         .btn { padding: 22px 48px; font-family: 'Space Grotesk'; font-weight: 700; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-flex; align-items: center; justify-content: center; letter-spacing: 1px; font-size: 14px; }
@@ -127,10 +120,7 @@
 
     <nav id="navbar">
         <div class="nav-content">
-            <a href="#" class="logo-box">
-                <span class="logo">FieldAI</span>
-                <span class="logo-tag">v2.8 // kinetic</span>
-            </a>
+            <a href="#" class="logo">FieldAI</a>
             <div class="nav-links">
                 <a href="#services">Capabilities</a>
                 <a href="#work">Case Studies</a>
@@ -149,7 +139,7 @@
                     <span class="h-mask">We engineer AI</span>
                     <span class="h-mask" style="color: var(--accent);">that moves.</span>
                 </h1>
-                <p id="hero-sub">FieldAI designs and deploys autonomous software agents, intelligent pipelines, and high-performance automation for businesses that scale.</p>
+                <p id="hero-sub">FieldAI builds autonomous software agents, intelligent pipelines, and high-performance automation for businesses that scale.</p>
                 <div class="hero-btns" id="btns">
                     <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Audit</a>
                     <a href="#work" class="btn btn-s" style="margin-left: 10px;">Technical Labs</a>
@@ -241,7 +231,7 @@
                 </div>
             </div>
             <div class="footer-bottom mono">
-                <span>© 2026 FieldAI.</span>
+                <span>© 2026 FIELDAI AGENTIC SYSTEMS.</span>
                 <span style="color: var(--accent);">ALL SYSTEMS OPERATIONAL</span>
             </div>
         </div>
@@ -249,16 +239,39 @@
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
-        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
+        
+        // --- STABILITY ENGINE ---
+        const revealSite = () => {
+            const preloader = document.getElementById('preloader');
+            if(!preloader) return;
+            gsap.to(preloader, { opacity: 0, duration: 1, onComplete: () => {
+                if(preloader.parentNode) preloader.parentNode.removeChild(preloader);
+            }});
+            gsap.to(".h-mask", { y: 0, duration: 1.2, stagger: 0.2, ease: "power4.out" });
+            gsap.to("#hero-sub, #btns, #status, nav", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+        };
+
+        // SAFETY FALLBACK: Reveal site if animation fails or scripts are blocked
+        setTimeout(revealSite, 2500);
+
+        // --- LENIS ---
+        if (typeof Lenis !== 'undefined') {
+            try {
+                const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+                requestAnimationFrame(raf);
+            } catch(e) { console.warn("Lenis blocked"); }
+        }
 
         // --- CYBER FORGE ENGINE ---
         class CyberForge {
             constructor() {
                 this.canvas = document.getElementById('forge-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.lines = []; this.particles = []; this.converged = false;
+                this.lines = [];
+                this.particles = [];
+                this.converged = false;
+                this.done = false;
                 this.init();
             }
             init() {
@@ -270,11 +283,14 @@
                     this.lines.push({
                         x1: this.canvas.width/2 + Math.cos(angle) * dist,
                         y1: this.canvas.height/2 + Math.sin(angle) * dist,
-                        p: 0, s: 0.015 + Math.random() * 0.02
+                        p: 0, 
+                        s: 0.015 + Math.random() * 0.02
                     });
                 }
+                this.draw();
             }
             draw() {
+                if(this.done) return;
                 this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
                 if(!this.converged) {
                     let all = true;
@@ -293,34 +309,35 @@
                     this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); this.ctx.fill();
                     if(p.l <= 0) this.particles.splice(i, 1);
                 });
-                if(!this.done) requestAnimationFrame(() => this.draw());
+                requestAnimationFrame(() => this.draw());
             }
             explode() {
                 for(let i=0; i<350; i++) {
                     const a = Math.random() * Math.PI * 2; const f = Math.random() * 25 + 5;
                     this.particles.push({ x: this.canvas.width/2, y: this.canvas.height/2, vx: Math.cos(a)*f, vy: Math.sin(a)*f, size: Math.random()*3+1, l: 1 });
                 }
-                gsap.to("#preloader", { opacity: 0, duration: 1.5, delay: 0.5, onComplete: () => {
-                    document.getElementById('preloader').remove();
-                    this.canvas.remove(); this.done = true;
-                }});
-                gsap.to(".h-mask", { y: 0, duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 1 });
-                gsap.to("#hero-sub, #btns, #status, nav", { opacity: 1, y: 0, duration: 1, delay: 1.6, stagger: 0.1 });
-                window.dispatchEvent(new CustomEvent('forge-complete'));
+                setTimeout(revealSite, 500);
+                setTimeout(() => { this.done = true; if(this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas); }, 2000);
             }
         }
+        new CyberForge();
 
         // --- WORLD SPACE FLOW ENGINE (LITERAL BOTTOM) ---
         class WorldFlow {
             constructor() {
                 this.canvas = document.getElementById('bg-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.particles = []; this.count = 120;
+                this.particles = [];
+                this.count = 120;
                 this.resize();
                 window.addEventListener('resize', () => this.resize());
                 this.init();
             }
-            resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.docH = document.documentElement.scrollHeight; }
+            resize() { 
+                this.canvas.width = window.innerWidth; 
+                this.canvas.height = window.innerHeight; 
+                this.docH = document.documentElement.scrollHeight; 
+            }
             init() { 
                 for(let i=0; i<this.count; i++) this.particles.push(this.createParticle(Math.random()*this.docH));
                 this.animate();
@@ -349,8 +366,6 @@
                 requestAnimationFrame(() => this.animate());
             }
         }
-
-        const forge = new CyberForge(); forge.draw();
         new WorldFlow();
 
         // --- INTERACTIVE PHYSICS ---
