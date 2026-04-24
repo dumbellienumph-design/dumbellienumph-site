@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — Kinetic AI Engineering</title>
+    <title>FieldAI — Kinetic AI Agency</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,111 +19,109 @@
             --accent-glow: rgba(0, 212, 255, 0.25);
             --text: #f0f0f0;
             --muted: #555555;
-            --danger: #ff3c3c;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- GLOBAL --- */
+        /* --- FOUNDATION --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
         
         .mono { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
-        h1, h2, h3, .heading { font-family: 'Space Grotesk', sans-serif; }
+        h1, h2, h3, .heading { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 
         /* --- BACKGROUND GRID --- */
-        .grid-overlay {
+        .grid-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.2; pointer-events: none;
+            background-image: repeating-linear-gradient(0deg, var(--border) 0.5px, transparent 1px, transparent 40px),
+                              repeating-linear-gradient(90deg, var(--border) 0.5px, transparent 1px, transparent 40px);
+            opacity: 0.15; pointer-events: none;
         }
 
         /* --- NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; height: 80px;
             z-index: 1000; display: flex; align-items: center;
-            background: rgba(8, 8, 8, 0.7); backdrop-filter: blur(12px);
-            border-bottom: 1px solid transparent; transition: border-color 0.3s;
+            background: rgba(8, 8, 8, 0.7); backdrop-filter: blur(15px);
+            border-bottom: 1px solid transparent; transition: 0.3s;
         }
-        nav.scrolled { border-color: var(--border); }
+        nav.scrolled { border-color: var(--border); background: rgba(8, 8, 8, 0.9); }
         .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
         .logo-wrap { display: flex; flex-direction: column; text-decoration: none; color: #fff; }
-        .logo { font-size: 1.4rem; font-weight: 700; }
-        .logo-tag { color: var(--muted); }
+        .logo { font-size: 1.4rem; letter-spacing: -1px; }
+        .logo-tag { color: var(--muted); margin-top: -2px; }
         .nav-links { display: flex; gap: 40px; }
-        .nav-links a { text-decoration: none; color: var(--text); font-size: 14px; opacity: 0.6; transition: 0.3s; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 13px; opacity: 0.5; transition: 0.3s; font-weight: 400; }
         .nav-links a:hover { opacity: 1; color: var(--accent); }
-        .nav-cta { padding: 10px 24px; border: 1px solid var(--accent); color: var(--accent); border-radius: 100px; text-decoration: none; font-weight: 700; font-size: 13px; transition: 0.3s; }
+        .nav-cta { padding: 10px 24px; border: 1px solid var(--accent); color: var(--accent); border-radius: 100px; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
         .nav-cta:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent-glow); }
 
         /* --- HERO --- */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 5vw; z-index: 1; }
-        .system-status { position: absolute; top: 120px; left: 5vw; color: var(--accent); }
-        .hero h1 { font-size: clamp(40px, 8vw, 100px); line-height: 0.9; margin-bottom: 24px; max-width: 1100px; animation: fadeUp 0.6s var(--ease) forwards; }
-        .accent-text { color: var(--accent); text-shadow: 0 0 20px var(--accent-glow); }
-        .hero p { max-width: 600px; font-size: 1.2rem; color: var(--muted); margin-bottom: 48px; font-weight: 300; }
+        .status-label { position: absolute; top: 130px; left: 5vw; color: var(--accent); }
+        .hero h1 { font-size: clamp(40px, 8.5vw, 95px); line-height: 0.9; margin-bottom: 24px; max-width: 1200px; animation: fadeUp 0.6s var(--ease) forwards; letter-spacing: -2px; }
+        .hero p { max-width: 650px; font-size: 1.25rem; color: var(--muted); margin-bottom: 48px; font-weight: 300; }
         .hero-btns { display: flex; gap: 20px; }
         
-        .btn { padding: 18px 36px; font-family: 'Space Grotesk'; font-weight: 700; text-decoration: none; border-radius: 4px; transition: 0.3s; font-size: 14px; text-transform: uppercase; }
+        .btn { padding: 18px 36px; font-family: 'Space Grotesk'; font-weight: 700; text-decoration: none; border-radius: 2px; transition: 0.3s; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
         .btn-p { background: var(--accent); color: #000; }
         .btn-s { border: 1px solid var(--border); color: #fff; }
-        .btn-p:hover { box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-2px); }
+        .btn-p:hover { box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
         .btn-s:hover { border-color: var(--accent); background: rgba(255,255,255,0.02); }
 
-        .client-bar { position: absolute; bottom: 80px; left: 0; width: 100%; border-top: 1px solid var(--border); padding-top: 40px; display: flex; gap: 40px; padding-left: 5vw; overflow: hidden; }
-        .client-badge { color: var(--muted); border: 1px solid var(--border); padding: 6px 12px; border-radius: 2px; }
+        .client-bar { position: absolute; bottom: 80px; left: 0; width: 100%; border-top: 1px solid var(--border); padding: 40px 5vw 0; display: flex; gap: 40px; }
+        .client-badge { color: #333; transition: 0.3s; }
+        .client-badge:hover { color: var(--muted); }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- SECTIONS --- */
         section { padding: 140px 5vw; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
         .sec-label { color: var(--muted); margin-bottom: 24px; display: block; }
-        h2 { font-size: clamp(32px, 5vw, 56px); margin-bottom: 80px; letter-spacing: -1px; }
+        h2 { font-size: clamp(32px, 5vw, 52px); margin-bottom: 80px; letter-spacing: -1px; line-height: 1; }
 
         /* --- SERVICES --- */
         .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .s-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 60px; transition: 0.4s var(--ease); }
-        .s-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.05); }
+        .s-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 60px; transition: 0.4s var(--ease); position: relative; }
+        .s-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.08); }
         .s-tag { color: var(--accent); margin-bottom: 30px; display: block; }
-        .s-card h3 { font-size: 1.8rem; margin-bottom: 16px; }
+        .s-card h3 { font-size: 1.8rem; margin-bottom: 20px; }
         .s-card p { color: var(--muted); font-size: 16px; font-weight: 300; }
 
         /* --- STATS --- */
-        .stats-bar { width: 100%; background: #0a0a0a; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 5vw; margin: 100px 0; }
-        .stats-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+        .stats-bar { width: 100%; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 5vw; margin: 100px 0; background: #090909; }
+        .stats-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
         .stat-item { padding: 0 40px; border-left: 1px solid var(--border); }
         .stat-item:first-child { border-left: none; }
-        .stat-num { font-size: 3.5rem; color: var(--accent); display: block; line-height: 1; margin-bottom: 10px; }
-        .stat-label { color: var(--muted); font-size: 12px; }
+        .stat-val { font-size: 3.5rem; color: var(--accent); display: block; line-height: 1; margin-bottom: 15px; font-family: 'Space Grotesk'; }
+        .stat-label { color: var(--muted); font-size: 11px; }
 
         /* --- PROCESS --- */
         .process-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; position: relative; margin-top: 60px; }
-        .process-row::after { content: ""; position: absolute; top: 25px; left: 0; width: 100%; height: 1px; background: repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 5px, transparent 5px, transparent 10px); z-index: -1; opacity: 0.3; }
+        .process-row::after { content: ""; position: absolute; top: 25px; left: 0; width: 100%; height: 1px; border-top: 1px dashed var(--accent); z-index: -1; opacity: 0.2; }
         .p-step { background: var(--bg); }
-        .p-num { width: 50px; height: 50px; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; margin-bottom: 30px; background: var(--bg); }
-        .p-step h4 { font-size: 1.2rem; margin-bottom: 12px; }
-        .p-step p { color: var(--muted); font-size: 14px; font-weight: 300; }
+        .p-num { width: 50px; height: 50px; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 30px; background: var(--bg); }
+        .p-step h4 { font-size: 1.15rem; margin-bottom: 12px; }
+        .p-step p { color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.5; }
 
         /* --- CTA --- */
-        .cta-sec { text-align: center; padding: 200px 5vw; position: relative; overflow: hidden; }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20vw; font-family: 'Space Grotesk'; font-weight: 700; color: rgba(255,255,255,0.02); z-index: -1; pointer-events: none; letter-spacing: -0.05em; }
+        .cta-sec { text-align: center; padding: 220px 5vw; position: relative; overflow: hidden; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 22vw; font-family: 'Space Grotesk'; font-weight: 700; color: rgba(255,255,255,0.015); z-index: -1; pointer-events: none; letter-spacing: -0.05em; }
         .cta-sec h2 { max-width: 900px; margin: 0 auto 40px; }
 
         /* --- FOOTER --- */
         footer { padding: 100px 5vw 60px; border-top: 1px solid var(--border); }
         .f-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 80px; }
-        .f-logo-wrap { display: flex; flex-direction: column; }
         .f-links { display: flex; gap: 40px; }
         .f-links a { text-decoration: none; color: var(--muted); font-size: 13px; transition: 0.3s; }
         .f-links a:hover { color: var(--accent); }
-        .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+        .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; }
 
         @media (max-width: 1024px) {
-            .grid-2x2, .stats-content, .process-row { grid-template-columns: 1fr; }
+            .grid-2x2, .stats-inner, .process-row { grid-template-columns: 1fr; }
             .stat-item { border-left: none; border-bottom: 1px solid var(--border); padding: 40px 0; }
             .process-row::after { display: none; }
             .nav-links { display: none; }
@@ -133,33 +131,33 @@
 </head>
 <body>
 
-    <div class="grid-overlay"></div>
+    <div class="grid-bg"></div>
 
     <nav id="navbar">
         <div class="nav-content">
             <a href="#" class="logo-wrap">
-                <span class="logo">FieldAI</span>
-                <span class="logo-tag mono">v2.4 // kinetic</span>
+                <span class="logo heading">FieldAI</span>
+                <span class="logo-tag mono">// kinetic ai agency</span>
             </a>
             <div class="nav-links">
-                <a href="#services">Services</a>
-                <a href="#work">Case Studies</a>
-                <a href="#process">Process</a>
-                <a href="#contact">Contact</a>
+                <a href="#services">SERVICES</a>
+                <a href="#process">PROCESS</a>
+                <a href="#results">RESULTS</a>
+                <a href="#contact">CONTACT</a>
             </div>
-            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Request a Build →</a>
+            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Start a Project →</a>
         </div>
     </nav>
 
     <main>
         <!-- HERO -->
         <section class="hero">
-            <span class="system-status mono">SYSTEM ONLINE // AI_ENGINEERING_ACTIVE</span>
-            <h1>We engineer AI that <span class="accent-text">moves.</span></h1>
-            <p>FieldAI designs and deploys custom AI agents, automation systems, and intelligent pipelines for companies that can't afford to stay manual.</p>
+            <span class="status-label mono">AI_AGENCY // SOFTWARE DEPLOYMENT ACTIVE</span>
+            <h1>We install AI into your business — <span style="color: var(--accent);">in software.</span></h1>
+            <p>FieldAI builds custom AI agents, automations, and intelligent systems that plug directly into the tools you already use. No hardware. No complexity. Just results.</p>
             <div class="hero-btns">
-                <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initiate a Project →</a>
-                <a href="#work" class="btn btn-s">View Our Work</a>
+                <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Start a Project →</a>
+                <a href="#work" class="btn btn-s">See What We Build</a>
             </div>
             
             <div class="client-bar">
@@ -167,106 +165,105 @@
                 <span class="client-badge mono">[ CLIENT_02 ]</span>
                 <span class="client-badge mono">[ CLIENT_03 ]</span>
                 <span class="client-badge mono">[ CLIENT_04 ]</span>
-                <span class="client-badge mono">[ CLIENT_05 ]</span>
             </div>
         </section>
 
         <!-- SERVICES -->
         <section id="services">
-            <span class="sec-label mono">// CAPABILITIES</span>
-            <h2>What FieldAI builds</h2>
+            <span class="sec-label mono">// WHAT WE BUILD</span>
+            <h2>AI software built around your business</h2>
             <div class="grid-2x2">
                 <div class="s-card">
-                    <span class="s-tag mono">[AGT_001] Autonomous AI Agents</span>
-                    <h3>Agentic Sales</h3>
-                    <p>Agents that prospect, follow up, qualify, and close — without a human in the loop. Built on proprietary LLM orchestration.</p>
+                    <span class="s-tag mono">[AGT_001] AI Agents</span>
+                    <h3>Autonomous Agents</h3>
+                    <p>Proprietary software agents that handle outreach, follow-up, lead qualification, and 24/7 customer support without human input.</p>
                 </div>
                 <div class="s-card">
-                    <span class="s-tag mono">[SYS_002] Workflow Automation</span>
+                    <span class="s-tag mono">[AUT_002] Workflow Automation</span>
                     <h3>Intelligent Pipelines</h3>
-                    <p>Replace every manual, repetitive process with an intelligent pipeline that never sleeps. 24/7 operational autonomy.</p>
+                    <p>Replace repetitive tasks with smart pipelines using n8n, Make, and Zapier. Plug AI directly into your existing software stack.</p>
                 </div>
                 <div class="s-card">
-                    <span class="s-tag mono">[INT_003] AI System Integration</span>
-                    <h3>Core Integration</h3>
-                    <p>We plug AI into your existing stack: CRMs, ERPs, databases, and internal APIs — fully connected and context-aware.</p>
+                    <span class="s-tag mono">[BOT_003] Custom AI Chatbots</span>
+                    <h3>Embedded Chatbots</h3>
+                    <p>Trained on your business data. Answers complex questions, captures leads, and books calls natively on your site or WhatsApp.</p>
                 </div>
                 <div class="s-card">
-                    <span class="s-tag mono">[CNT_004] Content Engines</span>
-                    <h3>Scale Distribution</h3>
-                    <p>Automated content systems trained on your voice. Publish high-volume technical assets at scale, convert at rate.</p>
+                    <span class="s-tag mono">[CNT_004] AI Content Systems</span>
+                    <h3>Content Engines</h3>
+                    <p>Automated content pipelines that write, edit, and publish technical assets in your specific brand voice at global scale.</p>
                 </div>
             </div>
         </section>
 
-        <!-- METRICS -->
-        <div class="stats-bar">
-            <div class="stats-content">
+        <!-- STATS -->
+        <div class="stats-bar" id="results">
+            <div class="stats-inner">
                 <div class="stat-item">
                     <span class="sec-label mono">// FIELD_METRICS</span>
-                    <span class="stat-num">87%</span>
+                    <span class="stat-val">80%</span>
                     <span class="stat-label mono">Avg Task Reduction</span>
                 </div>
                 <div class="stat-item">
                     <span style="visibility: hidden;">_</span>
-                    <span class="stat-num">22D</span>
-                    <span class="stat-label mono">Median Deployment</span>
+                    <span class="stat-val">22D</span>
+                    <span class="stat-label mono">Median Delivery</span>
                 </div>
                 <div class="stat-item">
                     <span style="visibility: hidden;">_</span>
-                    <span class="stat-num">3.4M+</span>
-                    <span class="stat-label mono">Actions Executed</span>
+                    <span class="stat-val">100%</span>
+                    <span class="stat-label mono">Pure Software</span>
                 </div>
                 <div class="stat-item">
                     <span style="visibility: hidden;">_</span>
-                    <span class="stat-num">50+</span>
-                    <span class="stat-label mono">Systems Deployed</span>
+                    <span class="stat-val">50+</span>
+                    <span class="stat-label mono">Business Automated</span>
                 </div>
             </div>
         </div>
 
         <!-- PROCESS -->
         <section id="process">
-            <span class="sec-label mono">// DEPLOYMENT_SEQUENCE</span>
-            <h2>From brief to live in under 30 days</h2>
+            <span class="sec-label mono">// HOW IT WORKS</span>
+            <h2>From first call to fully deployed in under 30 days</h2>
             <div class="process-row">
                 <div class="p-step">
-                    <div class="p-num heading">01</div>
-                    <h4>Discovery & Audit</h4>
-                    <p>Deep-dive into your manual bottlenecks and data architecture.</p>
+                    <div class="p-num mono">01</div>
+                    <h4>Discovery Call</h4>
+                    <p>We map your business and find exactly where AI creates leverage.</p>
                 </div>
                 <div class="p-step">
-                    <div class="p-num heading">02</div>
-                    <h4>Architecture Design</h4>
-                    <p>Building the technical blueprint for your custom AI engine.</p>
+                    <div class="p-num mono">02</div>
+                    <h4>Solution Design</h4>
+                    <p>We plan your custom AI system and choose the right software tools.</p>
                 </div>
                 <div class="p-step">
-                    <div class="p-num heading">03</div>
-                    <h4>Build & Integrate</h4>
-                    <p>Rapid engineering phase and seamless connection to your tech stack.</p>
+                    <div class="p-num mono">03</div>
+                    <h4>Build & Connect</h4>
+                    <p>We build it and plug it into your existing software stack via API.</p>
                 </div>
                 <div class="p-step">
-                    <div class="p-num heading">04</div>
-                    <h4>Deploy & Monitor</h4>
-                    <p>Live environment switch and continuous performance optimization.</p>
+                    <div class="p-num mono">04</div>
+                    <h4>Go Live</h4>
+                    <p>We deploy, test, and hand over a working system — fully yours.</p>
                 </div>
             </div>
         </section>
 
-        <!-- CASE STUDIES (LABS) -->
+        <!-- SHOWCASE (LABS) -->
         <section id="work">
             <span class="sec-label mono">// TECHNICAL_LABS</span>
-            <h2>Proven deployments</h2>
+            <h2>Proven software builds</h2>
             <div class="grid-2x2">
                 <a href="ww2-game/index.html" class="s-card" style="text-decoration:none; color:inherit;">
                     <span class="s-tag mono">[LAB_001] Interactive Engine</span>
-                    <h3>WW2 Combat Sim</h3>
-                    <p>High-performance browser-based physics simulation. Pushing web technical limits.</p>
+                    <h3>Combat Simulator</h3>
+                    <p>Advanced browser-based 3D physics engine. High-performance software engineering.</p>
                 </a>
                 <a href="umbilo-carwash/index.html" class="s-card" style="text-decoration:none; color:inherit;">
                     <span class="s-tag mono">[LAB_002] Infrastructure UX</span>
                     <h3>Elite Car Wash</h3>
-                    <p>High-octane digital branding and premium infrastructure engineering.</p>
+                    <p>High-octane digital branding and premium infrastructure software.</p>
                 </a>
             </div>
         </section>
@@ -274,22 +271,22 @@
         <!-- CTA -->
         <section id="contact" class="cta-sec">
             <div class="watermark">FIELDAI</div>
-            <h2>Your competitors are already automating. <span class="accent-text">Are you?</span></h2>
-            <p style="color: var(--muted); max-width: 600px; margin: 0 auto 48px;">Book a 30-minute call. We'll map exactly where AI creates leverage in your business — no pitch, no fluff.</p>
-            <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Schedule the Call →</a>
+            <h2>Your competitors are already automating. <span style="color: var(--accent);">Are you?</span></h2>
+            <p style="color: var(--muted); max-width: 600px; margin: 0 auto 48px;">Book a free 30-minute call. We'll show you exactly where AI fits in your business.</p>
+            <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book the Free Call →</a>
         </section>
     </main>
 
     <footer>
         <div class="f-top">
             <div class="f-logo-wrap">
-                <span class="logo">FieldAI</span>
-                <span class="logo-tag mono">// kinetic ai engineering</span>
+                <span class="logo heading">FieldAI</span>
+                <span class="logo-tag mono">// kinetic ai agency</span>
             </div>
             <div class="f-links">
                 <a href="#services">SERVICES</a>
-                <a href="#work">CASE STUDIES</a>
                 <a href="#process">PROCESS</a>
+                <a href="#results">RESULTS</a>
                 <a href="#contact">CONTACT</a>
             </div>
             <div style="text-align: right;">
@@ -301,7 +298,7 @@
             </div>
         </div>
         <div class="f-bottom mono">
-            <span>© 2026 FieldAI Ltd.</span>
+            <span>© 2026 FIELDAI AGENCY.</span>
             <span>ALL SYSTEMS OPERATIONAL.</span>
         </div>
     </footer>
