@@ -11,205 +11,263 @@
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@400&family=Inter:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg: #050505;
             --surface: #0a0a0a;
-            --border: rgba(255, 255, 255, 0.05);
-            --accent: #00d4ff;
-            --accent-glow: rgba(0, 212, 255, 0.2);
+            --border: rgba(0, 229, 255, 0.08);
+            --accent: #00e5ff;
+            --accent-glow: rgba(0, 229, 255, 0.15);
             --text: #ffffff;
-            --muted: #666666;
-            --ease: cubic-bezier(0.19, 1, 0.22, 1);
+            --muted: #555555;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- THE SHELL --- */
+        /* --- THE CORE SHELL --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.4; cursor: crosshair; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.5; }
 
         /* --- ATMOSPHERIC LAYERS --- */
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.5; }
-        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; mask-image: radial-gradient(circle at center, black, transparent 80%); }
-        #cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; background: #fff; border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; }
-        #spotlight { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; background: radial-gradient(circle 250px at var(--x, 50%) var(--y, 50%), rgba(0, 212, 255, 0.04), transparent 100%); }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.4; }
+        .grain-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        #cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; }
 
         /* --- NAVIGATION --- */
         nav {
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 900px; height: 64px;
-            z-index: 1000; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 30px; border-radius: 100px; background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(24px);
-            border: 1px solid var(--border); transition: 0.6s var(--ease);
+            position: fixed; top: 0; width: 100%; height: 90px;
+            z-index: 1000; display: flex; align-items: center;
+            background: rgba(5, 5, 5, 0.6); backdrop-filter: blur(24px);
+            border-bottom: 1px solid transparent; transition: 0.4s;
         }
-        nav.scrolled { top: 20px; width: 700px; border-color: var(--accent); background: rgba(10, 10, 10, 0.85); }
-        .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.3rem; text-decoration: none; color: #fff; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { text-decoration: none; color: var(--text); font-size: 12px; opacity: 0.4; transition: 0.3s; font-weight: 700; letter-spacing: 1px; }
-        .nav-links a:hover { opacity: 1; color: var(--accent); }
-        .nav-cta { color: var(--accent); text-decoration: none; font-size: 11px; font-weight: 700; border: 1px solid var(--accent); padding: 10px 20px; border-radius: 100px; transition: 0.3s; position: relative; overflow: hidden; }
-        .nav-cta::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent); transition: 0.5s; }
-        .nav-cta:hover::before { left: 100%; }
+        nav.scrolled { height: 70px; border-color: var(--border); background: rgba(5, 5, 5, 0.9); }
+        .nav-content { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 50px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-wrap { text-decoration: none; color: #fff; display: flex; flex-direction: column; }
+        .logo { font-family: 'Bebas Neue'; font-size: 2rem; letter-spacing: 2px; line-height: 1; }
+        .logo-tag { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+        .nav-links { display: flex; gap: 50px; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; font-weight: 700; opacity: 0.4; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; position: relative; padding: 10px 0; }
+        .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
+        .nav-links a::after { content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--accent); transition: 0.4s var(--ease); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-cta { padding: 12px 28px; background: var(--accent); color: #000; border-radius: 100px; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.4s; border: 1px solid var(--accent); }
+        .nav-cta:hover { background: transparent; color: var(--accent); box-shadow: 0 0 30px var(--accent-glow); }
 
         /* --- HERO --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 2; padding: 0 20px; }
-        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(45px, 12vw, 140px); line-height: 0.82; margin-bottom: 30px; max-width: 1400px; color: #fff; letter-spacing: -0.06em; }
-        .hero p { max-width: 700px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; font-weight: 200; line-height: 1.6; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 7vw; z-index: 2; }
+        .status-badge { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--accent); margin-bottom: 30px; letter-spacing: 6px; display: block; }
+        h1 { font-family: 'Bebas Neue'; font-size: clamp(60px, 15vw, 180px); line-height: 0.85; letter-spacing: -2px; margin-bottom: 40px; overflow: hidden; }
+        .mask-span { display: block; transform: translateY(110%); }
+        .hero p { max-width: 600px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; font-weight: 200; line-height: 1.6; }
+        .hero-btns { display: flex; gap: 30px; }
         
-        /* --- BUTTONS (SHIMMER) --- */
-        .btn { padding: 22px 48px; font-family: 'Space Grotesk'; font-weight: 700; text-decoration: none; border-radius: 100px; transition: 0.4s var(--ease); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; position: relative; overflow: hidden; }
-        .btn-p { background: #fff; color: #000; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .btn-s { border: 1px solid var(--border); color: #fff; background: rgba(255,255,255,0.02); margin-left: 20px; }
-        .btn::after { content: ""; position: absolute; top: -50%; left: -100%; width: 100%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg); transition: 0.6s; }
-        .btn:hover::after { left: 150%; }
-        .btn:hover { transform: scale(1.05) translateY(-5px); border-color: var(--accent); }
+        .magnetic-wrap { display: inline-block; }
+        .btn { padding: 24px 60px; font-family: 'Bebas Neue'; font-size: 1.8rem; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-block; letter-spacing: 2px; }
+        .btn-p { background: #fff; color: #000; }
+        .btn-s { border: 1px solid var(--border); color: #fff; }
+        .btn-p:hover { background: var(--accent); color: #000; transform: translateY(-5px); box-shadow: 0 20px 40px var(--accent-glow); }
+        .btn-s:hover { border-color: var(--accent); background: rgba(255,255,255,0.02); }
 
-        /* --- BENTO GRID (3D TILT) --- */
-        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 320px; gap: 24px; margin-top: 100px; perspective: 1000px; }
-        .bento-item { background: var(--surface); border: 1px solid var(--border); border-radius: 32px; padding: 50px; position: relative; overflow: hidden; transition: 0.6s var(--ease); display: flex; flex-direction: column; justify-content: flex-end; }
-        .bento-item:hover { border-color: var(--accent); }
-        
-        /* Border Beam Animation */
-        .bento-item::after { content: ""; position: absolute; inset: 0; border: 1px solid transparent; border-radius: 32px; background: linear-gradient(90deg, transparent, var(--accent), transparent) border-box; mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask-composite: exclude; opacity: 0; transition: 0.4s; pointer-events: none; }
-        .bento-item:hover::after { opacity: 0.4; animation: beam 3s linear infinite; }
-        @keyframes beam { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        /* --- SECTIONS --- */
+        section { padding: 180px 7vw; max-width: 1600px; margin: 0 auto; position: relative; z-index: 2; }
+        .sec-label { font-family: 'JetBrains Mono'; color: var(--muted); margin-bottom: 40px; display: block; font-size: 10px; letter-spacing: 4px; }
+        h2 { font-family: 'Bebas Neue'; font-size: clamp(40px, 10vw, 100px); margin-bottom: 100px; line-height: 1; letter-spacing: -1px; }
 
-        .bento-1 { grid-column: span 2; }
-        .bento-4 { grid-column: span 2; }
-        .bento-item h3 { font-family: 'Space Grotesk'; font-size: 2.2rem; margin-bottom: 15px; letter-spacing: -1px; }
-        .bento-item p { color: var(--muted); font-size: 1.1rem; }
+        /* --- SERVICE CARDS (GLOW) --- */
+        .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .s-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 80px 60px; transition: 0.5s var(--ease); position: relative; overflow: hidden; border-radius: 4px; }
+        .s-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(0, 229, 255, 0.15), transparent 60%); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
+        .s-card:hover::before { opacity: 1; }
+        .s-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .s-tag { font-family: 'JetBrains Mono'; color: var(--accent); margin-bottom: 40px; display: block; font-size: 11px; }
+        .s-card h3 { font-family: 'Bebas Neue'; font-size: 4rem; margin-bottom: 25px; letter-spacing: 1px; }
+        .s-card p { color: var(--muted); font-size: 18px; font-weight: 200; line-height: 1.6; }
 
-        /* --- STATS STRIP --- */
-        .stats-bar { width: 100%; padding: 120px 5vw; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 120px 0; background: #030303; }
-        .stat-item { text-align: center; border-left: 1px solid var(--border); }
-        .stat-item:first-child { border-left: none; }
-        .stat-val { font-family: 'Space Grotesk'; font-size: 5rem; color: #fff; display: block; line-height: 1; letter-spacing: -4px; margin-bottom: 10px; }
-        .stat-label { font-family: 'JetBrains Mono'; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 3px; }
+        /* --- STATS --- */
+        .stats-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 120px 7vw; margin: 120px 0; background: #030303; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 1600px; margin: 0 auto; }
+        .stat-item { border-left: 1px solid var(--border); padding-left: 40px; }
+        .stat-item:first-child { border-left: none; padding-left: 0; }
+        .stat-num { font-family: 'Bebas Neue'; font-size: 7rem; color: var(--accent); display: block; line-height: 1; margin-bottom: 15px; }
+        .stat-label { font-family: 'JetBrains Mono'; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 3px; }
+
+        /* --- PROCESS --- */
+        .process-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 60px; position: relative; margin-top: 80px; }
+        .process-line { position: absolute; top: 30px; left: 0; width: 0; height: 1px; background: var(--accent); z-index: -1; }
+        .process-line-bg { position: absolute; top: 30px; left: 0; width: 100%; height: 1px; background: var(--border); z-index: -2; }
+        .p-step { background: var(--bg); padding-top: 50px; }
+        .p-num { width: 60px; height: 60px; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 24px; margin-bottom: 40px; background: var(--bg); }
+        .p-step h4 { font-family: 'Bebas Neue'; font-size: 2.2rem; margin-bottom: 15px; letter-spacing: 1px; }
+        .p-step p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.5; }
 
         /* --- CASE STUDIES --- */
-        .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .case-card { text-decoration: none; color: #fff; border-radius: 40px; overflow: hidden; border: 1px solid var(--border); transition: 0.6s var(--ease); background: #080808; position: relative; }
-        .case-img { height: 450px; display: flex; align-items: center; justify-content: center; background: #000; font-family: 'Space Grotesk'; font-size: 4rem; color: #111; transition: 0.8s var(--ease); font-weight: 700; letter-spacing: -2px; }
+        .labs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .case-card { text-decoration: none; color: #fff; border: 1px solid var(--border); overflow: hidden; background: #080808; position: relative; transition: 0.5s var(--ease); }
+        .case-card:hover { border-color: var(--accent); transform: scale(0.98); }
+        .case-img { height: 450px; background: #000; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 5rem; color: #111; transition: 0.8s var(--ease); }
         .case-card:hover .case-img { color: var(--accent); transform: scale(1.1); }
-        .case-info { padding: 40px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); position: absolute; bottom: 0; left: 0; width: 100%; }
+        .case-info { padding: 50px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; left: 0; width: 100%; }
 
         /* --- CTA --- */
-        .cta-box { text-align: center; padding: 280px 5vw; position: relative; }
-        .cta-box h2 { font-family: 'Space Grotesk'; font-size: clamp(50px, 10vw, 120px); letter-spacing: -5px; max-width: 1100px; margin: 0 auto 60px; line-height: 0.8; }
-        .bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25vw; font-weight: 900; color: rgba(255,255,255,0.015); z-index: -1; pointer-events: none; font-family: 'Space Grotesk'; }
+        .cta-box { text-align: center; padding: 250px 7vw; position: relative; overflow: hidden; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Bebas Neue'; font-size: 25vw; color: rgba(255,255,255,0.015); z-index: -1; pointer-events: none; }
+        .cta-box h2 { max-width: 1000px; margin: 0 auto 60px; font-size: 10vw; }
 
-        footer { padding: 120px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
-        .f-brand { font-family: 'Space Grotesk'; font-size: 2rem; }
-        .f-links { display: flex; gap: 50px; margin-bottom: 10px; }
-        .f-links a { text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 700; transition: 0.3s; }
+        /* --- FOOTER --- */
+        footer { padding: 120px 7vw 80px; position: relative; border-top: 1px solid var(--border); }
+        .footer-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); opacity: 0.3; }
+        .f-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 100px; }
+        .f-links { display: flex; gap: 60px; }
+        .f-links a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 700; transition: 0.3s; }
         .f-links a:hover { color: #fff; }
+        .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 50px; border-top: 1px solid var(--border); color: var(--muted); font-family: 'JetBrains Mono'; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
 
         @media (max-width: 1024px) {
-            .bento-grid, .stats-bar, .case-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-            .bento-1, .bento-4 { grid-column: span 1; }
-            .stat-item { border-left: none; border-bottom: 1px solid var(--border); padding: 40px 0; }
-            nav .nav-links { display: none; }
+            .grid-2x2, .stats-grid, .process-row, .labs-grid { grid-template-columns: 1fr; }
+            .stat-item { border-left: none; border-bottom: 1px solid var(--border); padding: 50px 0; }
+            .nav-links { display: none; }
             h1 { font-size: 20vw; }
+            .p-step { padding-top: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="grid-overlay"></div>
+    <div class="grain-overlay"></div>
     <canvas id="bg-canvas"></canvas>
-    <div id="cursor"></div>
-    <div id="spotlight"></div>
+    <div id="cursor-dot"></div>
 
     <nav id="navbar">
-        <a href="#" class="logo">FieldAI</a>
-        <div class="nav-links">
-            <a href="#services">CAPABILITIES</a>
-            <a href="#work">CASE STUDIES</a>
-            <a href="#results">METRICS</a>
-            <a href="#contact">CONTACT</a>
+        <div class="nav-content">
+            <a href="#" class="logo-wrap">
+                <span class="logo">FieldAI</span>
+                <span class="logo-tag">kinetic software</span>
+            </a>
+            <div class="nav-links" id="nav-spy">
+                <a href="#services">Capabilities</a>
+                <a href="#results">Performance</a>
+                <a href="#work">Technical Labs</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Initiate Build</a>
         </div>
-        <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">GET A BUILD →</a>
     </nav>
 
     <main>
         <!-- HERO -->
-        <section class="hero">
-            <div class="mono" style="color: var(--accent); margin-bottom: 30px; letter-spacing: 5px;">[ STATUS: OPERATIONAL_LAB ]</div>
-            <h1 id="hero-title">We engineer AI that moves.</h1>
-            <p id="hero-sub">FieldAI builds autonomous software agents and intelligent systems that plug directly into your tools. Pure kinetic results, shipped in software.</p>
+        <section class="hero" id="home">
+            <span class="status-badge">AI_AGENCY // DEPLOYMENT_ACTIVE</span>
+            <h1>
+                <span class="mask-span">We engineer AI</span>
+                <span class="mask-span" style="color: var(--accent);">that moves.</span>
+            </h1>
+            <p>FieldAI builds autonomous software agents and intelligent systems that plug directly into the tools you already use. Premium kinetic results, shipped remotely.</p>
             <div class="hero-btns">
-                <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Build</a>
-                <a href="#work" class="btn btn-s">Technical Labs</a>
+                <div class="magnetic-wrap"><a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Start a Project</a></div>
+                <div class="magnetic-wrap"><a href="#work" class="btn btn-s">View Our Work</a></div>
             </div>
         </section>
 
-        <!-- BENTO SERVICES -->
-        <section id="services" style="padding: 160px 5vw; max-width: 1400px; margin: 0 auto;">
-            <div class="mono" style="color: var(--muted); margin-bottom: 30px;">// CORE_CAPABILITIES</div>
-            <h2 style="font-family:'Space Grotesk'; font-size: 4rem; margin-bottom: 60px; letter-spacing: -3px;">Built for the modern stack.</h2>
-            <div class="bento-grid">
-                <div class="bento-item bento-1" data-tilt>
-                    <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[AGT_001]</span>
-                    <h3>Autonomous Agents</h3>
-                    <p>Proprietary software agents trained to handle outreach, research, and data synchronization across your business 24/7.</p>
+        <!-- SERVICES -->
+        <section id="services">
+            <span class="sec-label">// CORE_CAPABILITIES</span>
+            <h2>Custom software agents for exponential leverage.</h2>
+            <div class="grid-2x2">
+                <div class="s-card">
+                    <span class="s-tag">[AGT_001] Autonomous Agents</span>
+                    <h3>Agentic Ops</h3>
+                    <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization without human intervention.</p>
                 </div>
-                <div class="bento-item bento-2" data-tilt>
-                    <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[BOT_002]</span>
+                <div class="s-card">
+                    <span class="s-tag">[AUT_002] Smart Pipelines</span>
+                    <h3>Workflow Logic</h3>
+                    <p>Replacing manual bottlenecks with intelligent pipelines using n8n and Make. Fully remote software connection.</p>
+                </div>
+                <div class="s-card">
+                    <span class="s-tag">[BOT_003] Neural Interface</span>
                     <h3>Custom LLMs</h3>
-                    <p>Bespoke chatbots trained on your internal business logic and brand voice.</p>
+                    <p>Bespoke chatbots trained on your internal business logic and brand voice for WhatsApp and Web integration.</p>
                 </div>
-                <div class="bento-item bento-3" data-tilt>
-                    <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[SYS_003]</span>
-                    <h3>Integrations</h3>
-                    <p>Connecting your CRMs, Slack, and Databases into a single engine.</p>
-                </div>
-                <div class="bento-item bento-4" data-tilt>
-                    <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[AUT_004]</span>
-                    <h3>Workflow Automation</h3>
-                    <p>Removing manual bottlenecks with intelligent pipelines using n8n and Make. Fully remote software connection.</p>
+                <div class="s-card">
+                    <span class="s-tag">[CNT_004] Scale Engine</span>
+                    <h3>Content Systems</h3>
+                    <p>Automated content pipelines that generate, edit, and publish technical assets in your voice at global scale.</p>
                 </div>
             </div>
         </section>
 
         <!-- STATS -->
-        <div class="stats-bar" id="results">
-            <div class="stat-item">
-                <span class="stat-val">80%</span>
-                <span class="stat-label">Task Reduction</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">22D</span>
-                <span class="stat-label">Median Delivery</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">100%</span>
-                <span class="stat-label">Software Only</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">50+</span>
-                <span class="stat-label">Deployments</span>
+        <div class="stats-strip" id="results">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-num" data-count="80">0</span>
+                    <span class="stat-label">Avg Task Reduction %</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="22">0</span>
+                    <span class="stat-label">Median Deployment Days</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="100">0</span>
+                    <span class="stat-label">Pure Software Focus</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="50">0</span>
+                    <span class="stat-label">Business Automated</span>
+                </div>
             </div>
         </div>
 
+        <!-- PROCESS -->
+        <section id="process">
+            <span class="sec-label">// HOW_IT_WORKS</span>
+            <h2>From brief to live in under 30 days.</h2>
+            <div class="process-row">
+                <div class="process-line-bg"></div>
+                <div class="process-line" id="line-trigger"></div>
+                <div class="p-step">
+                    <div class="p-num">01</div>
+                    <h4>Discovery</h4>
+                    <p>Deep-dive into your manual bottlenecks and software stack.</p>
+                </div>
+                <div class="p-step">
+                    <div class="p-num">02</div>
+                    <h4>Architecture</h4>
+                    <p>Planning the technical logic and choosing the AI tools.</p>
+                </div>
+                <div class="p-step">
+                    <div class="p-num">03</div>
+                    <h4>Connection</h4>
+                    <p>Rapid build phase and secure API integration.</p>
+                </div>
+                <div class="p-step">
+                    <div class="p-num">04</div>
+                    <h4>Go Live</h4>
+                    <p>Tested, deployed, and handed over — fully yours.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- SHOWCASE -->
-        <section id="work" style="padding: 160px 5vw; max-width: 1400px; margin: 0 auto;">
-            <div class="mono" style="color: var(--muted); margin-bottom: 30px;">// PROVEN_DEPLOYS</div>
-            <h2 style="font-family:'Space Grotesk'; font-size: 4rem; margin-bottom: 60px; letter-spacing: -3px;">Technical Case Studies.</h2>
-            <div class="case-grid">
+        <section id="work">
+            <span class="sec-label">// TECHNICAL_LABS</span>
+            <h2>Proven software deployments.</h2>
+            <div class="labs-grid">
                 <a href="ww2-game/index.html" class="case-card">
-                    <div class="case-img">COMBAT SIM</div>
+                    <div class="case-img">COMBAT ENGINE</div>
                     <div class="case-info">
-                        <span class="mono" style="color:var(--accent);">INTERACTIVE_3D</span>
-                        <h3 style="font-family:'Space Grotesk'; font-size: 2rem;">Combat Simulator</h3>
+                        <span class="s-tag">INTERACTIVE_3D</span>
+                        <h3>Combat Simulator</h3>
                     </div>
                 </a>
                 <a href="umbilo-carwash/index.html" class="case-card">
-                    <div class="case-img">ELITE CW</div>
+                    <div class="case-img">INFRASTRUCTURE</div>
                     <div class="case-info">
-                        <span class="mono" style="color:var(--accent);">INFRASTRUCTURE_UX</span>
-                        <h3 style="font-family:'Space Grotesk'; font-size: 2rem;">Elite Car Wash</h3>
+                        <span class="s-tag">UX_ENGINEERING</span>
+                        <h3>Elite Car Wash</h3>
                     </div>
                 </a>
             </div>
@@ -217,30 +275,37 @@
 
         <!-- CTA -->
         <section id="contact" class="cta-box">
-            <div class="bg-watermark">FIELDAI</div>
+            <div class="watermark">FIELDAI</div>
             <h2>Let's build the <span style="color:var(--accent);">future</span> of your business.</h2>
-            <p style="color:var(--muted); max-width: 600px; margin: 0 auto 60px; font-size: 1.2rem; font-weight: 200;">Book a free 15-minute engineering audit. No pitch, just technical leverage.</p>
-            <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book Audit Now</a>
+            <p style="color:var(--muted); max-width: 600px; margin: 0 auto 60px;">Book a free 15-minute engineering audit. No pitch, just technical leverage.</p>
+            <div class="magnetic-wrap"><a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book Audit Now</a></div>
         </section>
     </main>
 
     <footer>
-        <div>
-            <div class="f-brand heading">FieldAI</div>
-            <div class="mono" style="font-size: 10px; color: var(--muted); margin-top: 10px;">// KINETIC_SOFTWARE_STUDIO</div>
-        </div>
-        <div style="text-align: right;">
-            <div class="f-links">
-                <a href="#">GITHUB</a>
-                <a href="#">LINKEDIN</a>
-                <a href="#">hello@fieldai.io</a>
+        <div class="footer-line" id="pulse-line"></div>
+        <div class="f-top">
+            <div class="logo-wrap">
+                <span class="logo">FieldAI</span>
+                <span class="logo-tag">kinetic software studio</span>
             </div>
-            <div class="mono" style="font-size: 10px; color: var(--muted);">© 2026 FIELDAI · ALL SYSTEMS OPERATIONAL</div>
+            <div class="f-links">
+                <a href="#services">Capabilities</a>
+                <a href="#work">Labs</a>
+                <a href="https://github.com">Github</a>
+                <a href="mailto:hello@fieldai.io">Email</a>
+            </div>
+        </div>
+        <div class="f-bottom">
+            <span>© 2026 FIELDAI AGENTIC SYSTEMS.</span>
+            <span style="color: var(--accent);">ALL SYSTEMS OPERATIONAL.</span>
         </div>
     </footer>
 
     <script>
-        // --- LENIS ENGINE ---
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // --- SMOOTH SCROLL ---
         const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
@@ -257,84 +322,97 @@
             init() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+                this.vX = (Math.random() - 0.5) * 0.4;
+                this.vY = (Math.random() - 0.5) * 0.4;
             }
             draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${0.1 + Math.random() * 0.1})`;
+                ctx.fillStyle = `rgba(0, 229, 255, ${0.1 + Math.random() * 0.1})`;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-                this.x += this.speedX; this.y += this.speedY;
+                this.x += this.vX; this.y += this.vY;
                 if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.init();
             }
         }
-        for(let i=0; i<100; i++) particles.push(new Particle());
+        for(let i=0; i<80; i++) particles.push(new Particle());
         function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => p.draw()); requestAnimationFrame(animate); }
         animate();
 
-        // --- TEXT SCRAMBLE ENGINE ---
-        class TextScramble {
-            constructor(el) { this.el = el; this.chars = '!<>-_\\/[]{}—=+*^?#________'; this.update = this.update.bind(this); }
-            setText(newText) {
-                const oldText = this.el.innerText; const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve); this.queue = [];
-                for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || ''; const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40); const end = start + Math.floor(Math.random() * 40);
-                    this.queue.push({ from, to, start, end });
-                }
-                cancelAnimationFrame(this.frameRequest); this.frame = 0; this.update(); return promise;
-            }
-            update() {
-                let output = ''; let complete = 0;
-                for (let i = 0, n = this.queue.length; i < n; i++) {
-                    let { from, to, start, end, char } = this.queue[i];
-                    if (this.frame >= end) { complete++; output += to; }
-                    else if (this.frame >= start) { if (!char || Math.random() < 0.28) { char = this.randomChar(); this.queue[i].char = char; } output += `<span style="color:var(--accent)">${char}</span>`; }
-                    else { output += from; }
-                }
-                this.el.innerHTML = output;
-                if (complete === this.queue.length) { this.resolve(); } else { this.frameRequest = requestAnimationFrame(this.update); this.frame++; }
-            }
-            randomChar() { return this.chars[Math.floor(Math.random() * this.chars.length)]; }
-        }
-
-        const scramble = new TextScramble(document.getElementById('hero-title'));
-        window.addEventListener('load', () => scramble.setText("We engineer AI that moves."));
-
-        // --- INTERACTIVE PHYSICS ---
-        const cursor = document.getElementById('cursor');
-        window.addEventListener("mousemove", e => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            document.body.style.setProperty('--x', `${e.clientX}px`);
-            document.body.style.setProperty('--y', `${e.clientY}px`);
-        });
-
-        document.querySelectorAll('[data-tilt]').forEach(item => {
-            item.addEventListener('mousemove', e => {
-                const rect = item.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                gsap.to(item, { rotationY: x * 15, rotationX: -y * 15, scale: 1.02, duration: 0.4 });
+        // --- MAGNETIC PULL ---
+        document.querySelectorAll('.magnetic-wrap').forEach(wrap => {
+            wrap.addEventListener('mousemove', e => {
+                const rect = wrap.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(wrap.querySelector('.btn'), { x: x * 0.3, y: y * 0.3, duration: 0.3 });
             });
-            item.addEventListener('mouseleave', () => gsap.to(item, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.6 }));
+            wrap.addEventListener('mouseleave', () => {
+                gsap.to(wrap.querySelector('.btn'), { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+            });
         });
 
-        document.querySelectorAll('.btn, a').forEach(el => {
-            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 8 }));
-            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1 }));
+        // --- MOUSE TRACKING GLOW ---
+        document.querySelectorAll('.s-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+            });
         });
 
-        // GSAP Revels
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.utils.toArray("section").forEach(sec => {
-            gsap.from(sec, { scrollTrigger: { trigger: sec, start: "top 85%" }, opacity: 0, y: 50, duration: 1.4, ease: "power4.out" });
+        // --- ANIMATION SEQUENCE ---
+        window.addEventListener('load', () => {
+            gsap.to(".mask-span", { y: 0, duration: 1.4, stagger: 0.2, ease: "power4.out" });
+            gsap.from(".hero p, .hero-btns, .status-badge", { opacity: 0, y: 30, duration: 1, delay: 0.8 });
         });
 
+        // Stats Counter
+        const stats = document.querySelectorAll('.stat-num');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute('data-count'));
+                    gsap.to(entry.target, { innerText: target, duration: 2, snap: { innerText: 1 }, ease: "power2.out" });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        stats.forEach(s => observer.observe(s));
+
+        // Process Line Animation
+        gsap.to(".process-line", {
+            scrollTrigger: { trigger: "#line-trigger", start: "top 80%", end: "top 20%", scrub: true },
+            width: "100%", ease: "none"
+        });
+
+        // Pulse line
+        gsap.to("#pulse-line", { opacity: 1, repeat: -1, yoyo: true, duration: 1.5, ease: "sine.inOut" });
+
+        // Scroll Spy & Nav
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 100) nav.classList.add('scrolled');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
             else nav.classList.remove('scrolled');
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            sections.forEach(sec => {
+                const top = window.scrollY;
+                const offset = sec.offsetTop - 150;
+                const height = sec.offsetHeight;
+                const id = sec.getAttribute('id');
+                if (top >= offset && top < offset + height) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) link.classList.add('active');
+                    });
+                }
+            });
+        });
+
+        // Cursor Dot
+        const dot = document.getElementById('cursor-dot');
+        window.addEventListener('mousemove', e => {
+            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.1 });
         });
     </script>
 </body>
