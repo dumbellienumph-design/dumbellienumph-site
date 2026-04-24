@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — High-Performance AI Engineering</title>
+    <title>FieldAI — High-End AI Engineering</title>
     
     <!-- Engine Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -15,39 +15,48 @@
 
     <style>
         :root {
-            --bg: #050505;
-            --accent: #ccff00;
-            --text: #ffffff;
-            --muted: #444444;
-            --border: #151515;
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --border: rgba(255, 255, 255, 0.05);
+            --accent: #d97757; /* Claude Orange */
+            --accent-glow: rgba(217, 119, 87, 0.15);
+            --text: #f9f7f2;
+            --muted: #666666;
             --ease: cubic-bezier(0.85, 0, 0.15, 1);
         }
 
-        /* --- THE CORE SHELL --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        /* --- FOUNDATION --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; cursor: none !important; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.2; }
 
-        /* --- PHYSICS LAYERS --- */
+        /* --- ATMOSPHERIC LAYERS --- */
         #world-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.6; }
         #intro-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1002; pointer-events: none; }
         
-        .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .grid-master {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px; pointer-events: none; opacity: 0.2;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+
+        #cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; z-index: 10001; pointer-events: none; mix-blend-mode: difference; transition: transform 0.3s var(--ease); }
+        #spotlight { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; background: radial-gradient(circle 250px at var(--x, 50%) var(--y, 50%), var(--accent-glow), transparent 100%); }
 
         /* --- NAVIGATION --- */
-        nav { position: fixed; top: 0; width: 100%; height: 100px; z-index: 1000; display: flex; align-items: center; padding: 0 5vw; transition: 0.5s var(--ease); }
-        nav.scrolled { background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); height: 80px; }
-        .nav-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Space Grotesk'; font-size: 1.8rem; font-weight: 700; text-decoration: none; color: #fff; letter-spacing: -1px; }
+        nav { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1000px; height: 70px; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(24px); border-radius: 100px; border: 1px solid var(--border); transition: 0.6s var(--ease); }
+        nav.scrolled { top: 20px; width: 800px; border-color: var(--accent); background: rgba(10, 10, 10, 0.85); }
+        .logo { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 700; text-decoration: none; color: #fff; letter-spacing: -1px; }
         .nav-links { display: flex; gap: 40px; }
-        .nav-links a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #fff; opacity: 0.4; transition: 0.3s; }
+        .nav-links a { text-decoration: none; color: var(--text); font-size: 11px; opacity: 0.4; transition: 0.3s; font-weight: 700; letter-spacing: 2px; }
         .nav-links a:hover { opacity: 1; color: var(--accent); }
 
         /* --- TYPOGRAPHY --- */
-        h1 { font-family: 'Space Grotesk'; font-size: clamp(60px, 12vw, 160px); text-transform: uppercase; letter-spacing: -4px; line-height: 0.85; margin-bottom: 40px; }
-        h2 { font-family: 'Space Grotesk'; font-size: clamp(40px, 8vw, 100px); text-transform: uppercase; line-height: 0.9; margin-bottom: 60px; letter-spacing: -2px; }
-        h3 { font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 20px; }
+        h1 { font-family: 'Space Grotesk'; font-size: clamp(60px, 15vw, 180px); text-transform: uppercase; letter-spacing: -5px; line-height: 0.8; opacity: 0; transform: translateY(50px); }
+        h2 { font-family: 'Space Grotesk'; font-size: clamp(40px, 10vw, 140px); text-transform: uppercase; line-height: 0.82; margin-bottom: 60px; letter-spacing: -3px; }
+        .stroke { -webkit-text-stroke: 1px rgba(255,255,255,0.2); color: transparent; }
 
         /* --- SECTIONS --- */
         .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
@@ -55,116 +64,175 @@
 
         /* --- HERO --- */
         .hero { height: 100vh; text-align: left; }
-        .hero p { font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 200; color: var(--muted); max-width: 800px; margin: 60px 0; }
-        .hero-btns { display: flex; gap: 20px; }
+        .hero p { font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 200; color: var(--muted); max-width: 800px; margin: 60px 0; line-height: 1.4; opacity: 0; transform: translateY(30px); }
+        .hero-btns { display: flex; gap: 20px; opacity: 0; transform: translateY(30px); }
 
-        .btn { padding: 26px 50px; font-family: 'Space Grotesk'; font-size: 1.6rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.4s var(--ease); display: inline-block; border-radius: 0; }
-        .btn-primary { background: var(--accent); color: #000; }
-        .btn-primary:hover { transform: translateY(-10px) rotate(-2deg); box-shadow: 20px 20px 0 rgba(204, 255, 0, 0.1); }
+        .btn { padding: 26px 50px; font-family: 'Space Grotesk'; font-size: 1.6rem; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: 0.5s var(--ease); display: inline-block; border-radius: 0; position: relative; overflow: hidden; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { transform: translateY(-10px) rotate(-2deg); box-shadow: 30px 30px 0 rgba(217, 119, 87, 0.1); }
         .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; }
         .btn-outline:hover { border-color: #fff; background: #fff; color: #000; }
 
-        /* --- BENTO GRID --- */
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
-        .card { background: #080808; border: 1px solid var(--border); padding: 80px 60px; transition: 0.5s var(--ease); }
-        .card:hover { border-color: var(--accent); transform: translateY(-15px); }
-        .card p { color: var(--muted); font-size: 1.3rem; font-weight: 200; line-height: 1.6; }
+        /* --- CAPABILITIES (BENTO) --- */
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 400px; gap: 2px; background: var(--border); border: 1px solid var(--border); }
+        .service-card { background: #000; padding: 100px 60px; transition: 0.6s var(--ease); display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
+        .service-card:hover { background: #020202; }
+        .service-card h3 { font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 20px; }
+        .service-card p { color: var(--muted); font-size: 1.2rem; font-weight: 200; line-height: 1.5; }
+        
+        .bento-1 { grid-column: span 2; }
+        .bento-4 { grid-column: span 2; }
+
+        /* --- STATS STRIP --- */
+        .stats-bar { width: 100%; padding: 150px 5vw; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 120px 0; background: #050505; }
+        .stat-item { text-align: center; border-left: 1px solid var(--border); }
+        .stat-item:first-child { border-left: none; }
+        .stat-val { font-family: 'Space Grotesk'; font-size: 7rem; color: #fff; display: block; line-height: 1; letter-spacing: -6px; }
+        .stat-label { font-family: 'JetBrains Mono'; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 4px; margin-top: 20px; display: block; }
 
         /* --- SHOWCASE --- */
-        .work-list { display: flex; flex-direction: column; gap: 120px; }
+        .work-list { display: flex; flex-direction: column; gap: 15vh; }
         .work-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 100px; text-decoration: none; color: #fff; }
-        .work-img { aspect-ratio: 16/9; background: #030303; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk'; font-size: 5rem; color: #0a0a0a; transition: 0.8s var(--ease); overflow: hidden; }
-        .work-item:hover .work-img { color: var(--accent); transform: scale(1.02); }
-        .work-info h3 { font-size: 4rem; line-height: 0.9; }
+        .work-img { aspect-ratio: 16/9; background: #050505; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk'; font-size: 6rem; color: #0a0a0a; transition: 1s var(--ease); overflow: hidden; position: relative; }
+        .work-item:hover .work-img { color: var(--accent); transform: scale(1.02); border-color: var(--accent); }
+        .work-info h3 { font-family: 'Space Grotesk'; font-size: 6rem; line-height: 0.8; margin-bottom: 20px; }
+        .work-tag { color: var(--accent); font-weight: 900; font-size: 11px; letter-spacing: 5px; margin-bottom: 20px; display: block; }
 
         footer { padding: 150px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+        .f-logo { font-family: 'Space Grotesk'; font-size: 6rem; line-height: 0.8; letter-spacing: -4px; }
 
         @media (max-width: 1024px) {
-            h1 { font-size: 20vw; }
-            .services-grid, .work-item { grid-template-columns: 1fr; gap: 40px; }
+            h1 { font-size: 22vw; }
+            .services-grid, .stats-bar, .work-item { grid-template-columns: 1fr; grid-auto-rows: auto; }
+            .bento-1, .bento-4 { grid-column: span 1; }
+            .stat-item { border-left: none; border-bottom: 1px solid var(--border); padding: 40px 0; }
             nav .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="grain"></div>
+    <div class="grid-master"></div>
     <canvas id="world-canvas"></canvas>
     <canvas id="intro-canvas"></canvas>
+    <div id="cursor"></div>
+    <div id="spotlight"></div>
 
     <nav id="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo">FieldAI</a>
-            <div class="nav-links">
-                <a href="#services">Capabilities</a>
-                <a href="#work">Case Studies</a>
-                <a href="#contact">Contact</a>
-            </div>
+        <a href="#" class="logo">FieldAI</a>
+        <div class="nav-links">
+            <a href="#services">CAPABILITIES</a>
+            <a href="#work">SHOWCASE</a>
+            <a href="#results">METRICS</a>
+            <a href="#contact">CONTACT</a>
         </div>
     </nav>
 
     <main>
         <!-- HERO -->
-        <section class="hero" id="home">
+        <section class="hero">
             <div class="container">
-                <div class="mono" style="color: var(--accent); margin-bottom: 40px; letter-spacing: 10px;">[ SYSTEM_ACTIVE ]</div>
-                <h1 id="hero-title">WE ENGINEER AI THAT MOVES.</h1>
-                <p>Strategic AI engineering and autonomous infrastructure for global businesses that scale. High-intensity technical results, delivered remotely.</p>
-                <div class="hero-btns">
-                    <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-primary">Initialize Audit</a>
-                    <a href="#work" class="btn btn-outline" style="margin-left: 30px;">View Labs</a>
+                <div class="mono" style="color: var(--accent); margin-bottom: 40px; letter-spacing: 10px;">[ COMPILATION_ACTIVE // LEVEL_01 ]</div>
+                <div class="reveal-container"><h1 id="hero-title">WE ENGINEER AI</h1></div>
+                <div class="reveal-container"><h1 class="stroke">THAT MOVES.</h1></div>
+                <p id="hero-p">FieldAI builds autonomous software agents and intelligent systems that plug directly into your tools. Premium kinetic results, delivered in software.</p>
+                <div class="hero-btns" id="hero-btns">
+                    <a href="#contact" class="btn btn-primary">Initialize Audit</a>
+                    <a href="#work" class="btn btn-outline" style="margin-left: 30px;">Technical Labs</a>
                 </div>
             </div>
         </section>
 
-        <!-- SERVICES -->
+        <!-- BENTO SERVICES -->
         <section id="services">
             <div class="container">
-                <h2>OUR<br>CAPABILITIES.</h2>
+                <div class="mono" style="color: var(--muted); margin-bottom: 40px;">// CORE_CAPABILITIES</div>
                 <div class="services-grid">
-                    <div class="card">
-                        <span class="mono" style="color: var(--accent); margin-bottom: 40px; display:block;">01 / SALES</span>
+                    <div class="service-card bento-1 reveal">
+                        <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[AGT_001]</span>
                         <h3>Autonomous Agents</h3>
-                        <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization across your business 24/7.</p>
+                        <p>Proprietary software agents trained to handle outreach, research, and data synchronization across your business 24/7. Built on high-performance LLM orchestration.</p>
                     </div>
-                    <div class="card">
-                        <span class="mono" style="color: var(--accent); margin-bottom: 40px; display:block;">02 / PRODUCT</span>
-                        <h3>Infrastructure</h3>
-                        <p>Zero-bloat web systems designed for extreme speed and global scalability. Custom vanilla code, 100/100 performance.</p>
+                    <div class="service-card reveal">
+                        <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[BOT_002]</span>
+                        <h3>Custom LLMs</h3>
+                        <p>Bespoke chatbots trained on your internal business logic and brand voice for native integration.</p>
+                    </div>
+                    <div class="service-card reveal">
+                        <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[SYS_003]</span>
+                        <h3>API Logic</h3>
+                        <p>Seamlessly connecting your CRMs, Slack, and Databases into a single intelligent engine.</p>
+                    </div>
+                    <div class="service-card bento-4 reveal">
+                        <span class="mono" style="color:var(--accent); margin-bottom: 20px; display:block;">[AUT_004]</span>
+                        <h3>Workflow Automation</h3>
+                        <p>Replacing manual bottlenecks with intelligent pipelines using n8n, Make, and custom Python nodes. Fully remote software deployment.</p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- STATS -->
+        <div class="stats-bar" id="results">
+            <div class="stat-item">
+                <span class="stat-val">80%</span>
+                <span class="stat-label">Task Reduction</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val">22D</span>
+                <span class="stat-label">Median Delivery</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val">100%</span>
+                <span class="stat-label">Software Focus</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val">50+</span>
+                <span class="stat-label">Business Deployed</span>
+            </div>
+        </div>
 
         <!-- SHOWCASE -->
         <section id="work">
             <div class="container">
-                <h2>SELECTED<br>CASE STUDIES.</h2>
+                <div class="mono" style="color: var(--muted); margin-bottom: 40px;">// PROVEN_DEPLOYS</div>
                 <div class="work-list">
-                    <a href="ww2-game/index.html" class="work-item">
-                        <div class="work-img">COMBAT SIM</div>
+                    <a href="ww2-game/index.html" class="work-item reveal">
+                        <div class="work-img"><span>COMBAT SIM</span></div>
                         <div class="work-info">
-                            <span class="mono" style="color: var(--accent); display:block; margin-bottom: 20px;">[ INTERACTIVE / 3D ]</span>
-                            <h3>WW2 COMBAT ENGINE</h3>
-                            <p style="color:var(--muted); font-size: 1.2rem;">Advanced browser-based 3D simulation engine. Pushing the limits of web physics.</p>
+                            <span class="work-tag">INTERACTIVE / 3D</span>
+                            <h3>WW2 COMBAT SIM</h3>
+                            <p style="color:var(--muted); font-size: 1.2rem; font-weight: 200;">Advanced browser-based 3D simulation engine. Pushing the absolute limits of web performance and physics.</p>
                         </div>
                     </a>
-                    <a href="umbilo-carwash/index.html" class="work-item">
-                        <div class="work-img">ELITE CW</div>
+                    <a href="umbilo-carwash/index.html" class="work-item reveal">
+                        <div class="work-img"><span>ELITE CW</span></div>
                         <div class="work-info">
-                            <span class="mono" style="color: var(--accent); display:block; margin-bottom: 20px;">[ INFRASTRUCTURE / UX ]</span>
+                            <span class="work-tag">AUTOMOTIVE / UX</span>
                             <h3>ELITE CAR WASH</h3>
-                            <p style="color:var(--muted); font-size: 1.2rem;">High-octane digital branding and premium infrastructure software built for conversion.</p>
+                            <p style="color:var(--muted); font-size: 1.2rem; font-weight: 200;">High-octane digital branding and premium infrastructure software built for high-conversion services.</p>
                         </div>
                     </a>
                 </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section id="contact" class="cta-box">
+            <div class="container" style="text-align: center;">
+                <h2>Let's build the <span style="color:var(--accent);">future</span> of your business.</h2>
+                <p style="color:var(--muted); max-width: 600px; margin: 60px auto; font-size: 1.4rem; font-weight: 200;">Book a free 15-minute engineering audit. No pitch, just technical leverage.</p>
+                <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-primary">Book Audit Now</a>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="logo">FieldAI</div>
-        <p style="color:var(--muted); font-size: 11px; letter-spacing: 5px;">© 2026 FIELDAI · STRATEGIC GROWTH</p>
+        <div class="f-logo">FieldAI</div>
+        <div style="text-align: right;">
+            <p style="color:var(--muted); font-size: 11px; letter-spacing: 5px; margin-bottom: 10px;">JOHANNESBURG, SA · GLOBAL SHIPPING</p>
+            <p style="color:var(--muted); font-size: 11px; letter-spacing: 5px;">© 2026 FIELDAI · STRATEGIC GROWTH</p>
+        </div>
     </footer>
 
     <script>
@@ -173,158 +241,122 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // --- THE FORGE (INTRO ENGINE) ---
-        class ForgeIntro {
+        // --- CYBER CONVERGENCE INTRO ---
+        class CyberConvergence {
             constructor() {
                 this.canvas = document.getElementById('intro-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.lines = [];
-                this.particles = [];
-                this.converged = false;
-                this.done = false;
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
+                this.lines = []; this.particles = []; this.converged = false;
+                this.resize(); window.addEventListener('resize', () => this.resize());
             }
-
             resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
-
             init() {
-                const centerX = this.canvas.width / 2;
-                const centerY = this.canvas.height / 2;
+                const cX = this.canvas.width/2; const cY = this.canvas.height/2;
                 for(let i=0; i<15; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const distance = Math.max(this.canvas.width, this.canvas.height);
-                    this.lines.push({
-                        startX: centerX + Math.cos(angle) * distance,
-                        startY: centerY + Math.sin(angle) * distance,
-                        progress: 0,
-                        speed: 0.02 + Math.random() * 0.02
-                    });
+                    const angle = Math.random()*Math.PI*2; const dist = Math.max(this.canvas.width, this.canvas.height);
+                    this.lines.push({ x: cX + Math.cos(angle)*dist, y: cY + Math.sin(angle)*dist, tX: cX, tY: cY, p: 0, s: 0.02 + Math.random()*0.02 });
                 }
             }
-
+            explode() {
+                const cX = this.canvas.width/2; const cY = this.canvas.height/2;
+                for(let i=0; i<300; i++) this.particles.push({ x: cX, y: cY, vx: (Math.random()-0.5)*40, vy: (Math.random()-0.5)*40, l: 1, s: Math.random()*4+1 });
+            }
             draw() {
-                if(this.done) return;
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+                this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
                 if(!this.converged) {
-                    this.ctx.strokeStyle = '#ccff00';
-                    this.ctx.lineWidth = 2;
-                    let allIn = true;
-
+                    this.ctx.strokeStyle = '#d97757'; this.ctx.lineWidth = 2; let all = true;
                     this.lines.forEach(l => {
-                        l.progress += l.speed;
-                        if(l.progress < 1) allIn = false;
-                        else l.progress = 1;
-
-                        const curX = l.startX + (this.canvas.width/2 - l.startX) * l.progress;
-                        const curY = l.startY + (this.canvas.height/2 - l.startY) * l.progress;
-
-                        this.ctx.beginPath();
-                        this.ctx.moveTo(l.startX, l.startY);
-                        this.ctx.lineTo(curX, curY);
+                        l.p += l.s; if(l.p > 1) l.p = 1; else all = false;
+                        this.ctx.beginPath(); this.ctx.moveTo(l.x, l.y);
+                        this.ctx.lineTo(l.x + (l.tX - l.x)*l.p, l.y + (l.tY - l.y)*l.p);
                         this.ctx.stroke();
                     });
-
-                    if(allIn) { this.converged = true; this.explode(); }
+                    if(all) { this.converged = true; this.explode(); window.dispatchEvent(new CustomEvent('forge')); }
                 }
-
                 this.particles.forEach((p, i) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy -= 0.15;
-                    p.life -= 0.01;
-                    this.ctx.fillStyle = `rgba(204, 255, 0, ${p.life})`;
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                    this.ctx.fill();
-                    if(p.life <= 0) this.particles.splice(i, 1);
+                    p.x += p.vx; p.y += p.vy; p.l -= 0.015;
+                    this.ctx.fillStyle = `rgba(217, 119, 87, ${p.l})`;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); this.ctx.fill();
+                    if(p.l <= 0) this.particles.splice(i,1);
                 });
-
                 requestAnimationFrame(() => this.draw());
-            }
-
-            explode() {
-                for(let i=0; i<300; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const force = Math.random() * 25 + 10;
-                    this.particles.push({
-                        x: this.canvas.width/2,
-                        y: this.canvas.height/2,
-                        vx: Math.cos(angle) * force,
-                        vy: Math.sin(angle) * force,
-                        size: Math.random() * 4 + 1,
-                        life: 1
-                    });
-                }
-                gsap.to(this.canvas, { opacity: 0, duration: 2, delay: 1, onComplete: () => { this.done = true; this.canvas.remove(); } });
             }
         }
 
-        // --- WORLD SPACE ENGINE (LITERAL BOTTOM TO TOP) ---
-        class WorldStream {
+        // --- WORLD SPACE ENGINE ---
+        class GlobalParticleSystem {
             constructor() {
                 this.canvas = document.getElementById('world-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.count = 100;
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
+                this.particles = []; this.count = 100;
+                this.resize(); window.addEventListener('resize', () => this.resize());
+                this.init();
             }
-
-            resize() { 
-                this.canvas.width = window.innerWidth; 
-                this.canvas.height = window.innerHeight; 
-                this.docHeight = document.documentElement.scrollHeight;
-            }
-
-            init() {
-                for(let i=0; i<this.count; i++) {
-                    this.particles.push(this.createParticle(Math.random() * this.docHeight));
-                }
-                this.animate();
-            }
-
+            resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.docH = document.documentElement.scrollHeight; }
+            init() { for (let i=0; i<this.count; i++) this.particles.push(this.createParticle(Math.random()*this.docH)); this.animate(); }
             createParticle(y = null) {
                 return {
-                    x: Math.random() * this.canvas.width,
-                    y: y !== null ? y : this.docHeight + 100,
-                    speed: 1.5 + Math.random() * 2.5,
-                    size: Math.random() * 2 + 0.5,
-                    opacity: 0.1 + Math.random() * 0.4
+                    y: y !== null ? y : this.docH + 100,
+                    startX: Math.random()*this.canvas.width,
+                    speed: 1.5 + Math.random()*3,
+                    size: Math.random()*2+0.5,
+                    opacity: 0.1 + Math.random()*0.3
                 };
             }
-
             animate() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
                 const scrollY = window.scrollY;
-
-                this.particles.forEach((p, i) => {
+                this.particles.forEach(p => {
                     p.y -= p.speed;
-                    if(p.y < -100) { this.particles[i] = this.createParticle(); }
-
-                    const screenY = p.y - scrollY;
-                    if(screenY > -100 && screenY < this.canvas.height + 100) {
-                        this.ctx.fillStyle = `rgba(204, 255, 0, ${p.opacity})`;
-                        this.ctx.beginPath();
-                        this.ctx.arc(p.x, screenY, p.size, 0, Math.PI*2);
-                        this.ctx.fill();
+                    if(p.y < 0) Object.assign(p, this.createParticle());
+                    const progress = 1 - (p.y / this.docH);
+                    const curX = p.startX + (this.canvas.width/2 - p.startX) * progress;
+                    const sY = p.y - scrollY;
+                    if(sY > -100 && sY < this.canvas.height + 100) {
+                        this.ctx.globalAlpha = Math.sin(progress * Math.PI) * 0.4;
+                        this.ctx.fillStyle = '#ffffff';
+                        this.ctx.beginPath(); this.ctx.arc(curX, sY, p.size, 0, Math.PI*2); this.ctx.fill();
                     }
                 });
-
                 requestAnimationFrame(() => this.animate());
             }
         }
 
-        const forge = new ForgeIntro();
-        const world = new WorldStream();
+        const intro = new CyberConvergence(); intro.init(); intro.draw();
+        new GlobalParticleSystem();
 
-        forge.init();
-        forge.draw();
-        world.init();
+        window.addEventListener('forge', () => {
+            gsap.to("#hero-title", { opacity: 1, y: 0, duration: 1.5, ease: "power4.out" });
+            gsap.to("#hero-p, #hero-btns", { opacity: 1, y: 0, duration: 1.2, delay: 0.5 });
+            gsap.to("#intro-canvas", { opacity: 0, duration: 2, delay: 2 });
+        });
+
+        // --- PREMIUM INTERACTIVES ---
+        const cursor = document.getElementById('cursor');
+        window.addEventListener("mousemove", e => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            document.body.style.setProperty('--x', `${e.clientX}px`);
+            document.body.style.setProperty('--y', `${e.clientY}px`);
+        });
+
+        document.querySelectorAll('.btn, .work-item, .service-card, a').forEach(el => {
+            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 10 }));
+            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1 }));
+            if(el.classList.contains('btn')) {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    gsap.to(el, { x: (e.clientX - rect.left - rect.width/2)*0.4, y: (e.clientY - rect.top - rect.height/2)*0.4, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => gsap.to(el, { x:0, y:0, duration: 0.5, ease: "elastic.out(1,0.3)" }));
+            }
+        });
+
+        gsap.utils.toArray(".reveal").forEach(el => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 0, y: 80, duration: 1.5, ease: "power4.out" });
+        });
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) document.getElementById('navbar').classList.add('scrolled');
+            if (window.scrollY > 100) document.getElementById('navbar').classList.add('scrolled');
             else document.getElementById('navbar').classList.remove('scrolled');
         });
     </script>
