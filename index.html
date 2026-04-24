@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — Premium AI Engineering</title>
+    <title>FieldAI — High-Performance AI Engineering</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
-    <!-- Heavy-Duty Engine -->
+    <!-- GSAP & Lenis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
@@ -27,18 +27,16 @@
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- STABILITY --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); overflow-x: hidden; line-height: 1.4; -webkit-font-smoothing: antialiased; cursor: crosshair; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); overflow-x: hidden; line-height: 1.4; -webkit-font-smoothing: antialiased; }
 
-        /* --- ATMOSPHERICS --- */
-        .bg-grid {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 60px 60px; mask-image: radial-gradient(circle at center, black 40%, transparent 90%); opacity: 0.3;
-        }
+        /* --- THE PHYSICS LAYERS --- */
+        #world-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.5; }
+        #forge-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1002; pointer-events: none; }
+        
+        .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; pointer-events: none; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
         /* --- NAV --- */
         nav {
@@ -52,14 +50,12 @@
         .nav-links { display: flex; gap: 2rem; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; position: relative; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-        .nav-links a::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--accent); transition: 0.3s; }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
         /* --- HERO --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 7vw; }
-        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(3rem, 8vw, 7rem); line-height: 0.85; letter-spacing: -3px; margin-bottom: 2rem; overflow: hidden; }
-        .reveal-span { display: block; transform: translateY(110%); }
-        .hero p { max-width: 600px; font-size: 1.4rem; color: var(--text-muted); font-weight: 200; margin-bottom: 3rem; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 7vw; position: relative; z-index: 1; }
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(3rem, 8vw, 7rem); line-height: 0.85; letter-spacing: -3px; margin-bottom: 2rem; opacity: 0; transform: translateY(30px); }
+        .hero p { max-width: 600px; font-size: 1.4rem; color: var(--text-muted); font-weight: 200; margin-bottom: 3rem; opacity: 0; transform: translateY(30px); }
+        .hero-btns { display: flex; gap: 20px; opacity: 0; transform: translateY(30px); }
 
         .btn { padding: 22px 50px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-block; letter-spacing: 2px; }
         .btn-p { background: #fff; color: #000; }
@@ -67,53 +63,38 @@
         .btn-s { border: 1px solid var(--border); color: #fff; margin-left: 20px; }
         .btn-s:hover { border-color: var(--accent); background: rgba(255,255,255,0.02); }
 
-        /* --- BENTO --- */
+        /* --- SECTIONS --- */
         section { padding: 150px 7vw; max-width: 1600px; margin: 0 auto; position: relative; z-index: 2; }
         h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(40px, 6vw, 90px); line-height: 0.9; margin-bottom: 80px; letter-spacing: -2px; }
+        
+        /* --- BENTO --- */
         .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 60px; position: relative; overflow: hidden; transition: 0.5s var(--ease); }
-        .card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(204, 255, 0, 0.1), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .card:hover::before { opacity: 1; }
-        .card:hover { border-color: var(--accent); transform: translateY(-8px); }
-        
+        .card h3 { font-size: 2.2rem; margin-bottom: 20px; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .card p { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
         .col-8 { grid-column: span 8; }
         .col-4 { grid-column: span 4; }
-        .card h3 { font-size: 2.2rem; margin-bottom: 20px; }
-        .card p { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
-
-        /* --- STATS --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 100px; border-top: 1px solid var(--border); padding-top: 80px; }
-        .stat-item { text-align: left; }
-        .stat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 5rem; font-weight: 800; color: var(--accent); line-height: 1; display: block; margin-bottom: 15px; }
-        .stat-label { font-family: 'JetBrains Mono'; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 3px; }
-
-        /* --- PROCESS --- */
-        .process-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 60px; position: relative; margin-top: 60px; }
-        .process-line { position: absolute; top: 30px; left: 0; width: 0; height: 1px; background: var(--accent); z-index: -1; }
-        .p-step { background: var(--bg); padding-top: 30px; }
-        .p-num { width: 60px; height: 60px; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 30px; }
 
         /* --- FOOTER --- */
         footer { padding: 120px 7vw 60px; border-top: 1px solid var(--border); }
-        .footer-line { width: 100%; height: 1px; background: var(--accent); opacity: 0.1; margin-bottom: 60px; }
         .footer-bottom { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 12px; }
 
         @media (max-width: 1024px) {
             .col-8, .col-4 { grid-column: span 12; }
-            .stats-grid, .process-row { grid-template-columns: 1fr; }
             .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
+    <div class="grain"></div>
+    <canvas id="world-canvas"></canvas>
+    <canvas id="forge-canvas"></canvas>
 
     <nav id="navbar">
         <a href="#" class="nav-logo">FieldAI</a>
         <div class="nav-links">
             <a href="#services">Capabilities</a>
-            <a href="#results">Results</a>
             <a href="#work">Labs</a>
             <a href="#contact">Contact</a>
         </div>
@@ -123,15 +104,12 @@
     <main>
         <!-- HERO -->
         <section class="hero" id="home">
-            <div class="mono" style="color: var(--accent); margin-bottom: 2rem; letter-spacing: 5px;">[ SYSTEM_ONLINE ]</div>
-            <h1>
-                <span class="reveal-span">We engineer AI</span>
-                <span class="reveal-span" style="color: var(--accent);">that moves.</span>
-            </h1>
-            <p>FieldAI builds autonomous software agents and intelligent systems that plug directly into your tools. High-end kinetic results, delivered remotely.</p>
-            <div class="hero-btns">
+            <div class="mono" style="color: var(--accent); margin-bottom: 2rem; letter-spacing: 5px; opacity:0;" id="status-tag">[ SYSTEM_INITIATING ]</div>
+            <h1 id="hero-title">We engineer AI that moves.</h1>
+            <p id="hero-p">FieldAI builds autonomous software agents and intelligent systems that plug directly into your tools. Premium kinetic results, delivered remotely.</p>
+            <div class="hero-btns" id="hero-btns">
                 <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Audit</a>
-                <a href="#work" class="btn btn-s">Technical Labs</a>
+                <a href="#services" class="btn btn-s">View Frameworks</a>
             </div>
         </section>
 
@@ -163,58 +141,7 @@
             </div>
         </section>
 
-        <!-- STATS -->
-        <section id="results">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-val" data-count="80">0</span>
-                    <span class="stat-label">Task Reduction %</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-val" data-count="22">0</span>
-                    <span class="stat-label">Median Deployment Days</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-val" data-count="100">0</span>
-                    <span class="stat-label">Pure Software Focus</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-val" data-count="50">0</span>
-                    <span class="stat-label">Business Automated</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROCESS -->
-        <section id="process">
-            <div class="mono" style="color: var(--text-muted); margin-bottom: 40px;">// HOW_IT_WORKS</div>
-            <h2>From brief to live in under 30 days.</h2>
-            <div class="process-row">
-                <div class="process-line"></div>
-                <div class="p-step">
-                    <div class="p-num">01</div>
-                    <h4>Discovery</h4>
-                    <p>Mapping manual bottlenecks and technical logic.</p>
-                </div>
-                <div class="p-step">
-                    <div class="p-num">02</div>
-                    <h4>Architecture</h4>
-                    <p>Planning the technical blueprint and choosing tools.</p>
-                </div>
-                <div class="p-step">
-                    <div class="p-num">03</div>
-                    <h4>Connection</h4>
-                    <p>Rapid build phase and secure API integration.</p>
-                </div>
-                <div class="p-step">
-                    <div class="p-num">04</div>
-                    <h4>Go Live</h4>
-                    <p>Tested, deployed, and handed over — fully yours.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- CASE STUDIES (LABS) -->
+        <!-- SHOWCASE (LABS) -->
         <section id="work">
             <div class="mono" style="color: var(--text-muted); margin-bottom: 40px;">// TECHNICAL_LABS</div>
             <h2>Proven software deployments.</h2>
@@ -227,17 +154,9 @@
                 </a>
             </div>
         </section>
-
-        <!-- CTA -->
-        <section id="contact" style="text-align: center; background: radial-gradient(circle at center, rgba(204, 255, 0, 0.05), transparent 70%); border-top: 1px solid var(--border);">
-            <h2>Build the future of your business.</h2>
-            <p style="color: var(--text-muted); margin-bottom: 3rem;">Book a free 15-minute engineering audit. No pitch, just leverage.</p>
-            <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book Audit Now</a>
-        </section>
     </main>
 
     <footer>
-        <div class="footer-line"></div>
         <div class="footer-bottom">
             <span>© 2026 FIELDAI · HIGH PERFORMANCE ENGINEERING</span>
             <span style="color: var(--accent);">ALL SYSTEMS OPERATIONAL</span>
@@ -250,37 +169,170 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // --- ENTRANCE ---
-        window.addEventListener('load', () => {
-            gsap.to(".reveal-span", { y: 0, duration: 1.4, stagger: 0.2, ease: "power4.out" });
-        });
+        // --- CYBER FORGE ENGINE ---
+        class CyberForge {
+            constructor() {
+                this.canvas = document.getElementById('forge-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.lines = [];
+                this.particles = [];
+                this.converged = false;
+                this.exploded = false;
+                this.init();
+            }
 
-        // --- MOUSE TRACKING GLOW ---
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-            });
-        });
+            init() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                // Create lines moving in random directions
+                for(let i=0; i<12; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.max(this.canvas.width, this.canvas.height);
+                    this.lines.push({
+                        startX: this.canvas.width/2 + Math.cos(angle) * distance,
+                        startY: this.canvas.height/2 + Math.sin(angle) * distance,
+                        x: this.canvas.width/2 + Math.cos(angle) * distance,
+                        y: this.canvas.height/2 + Math.sin(angle) * distance,
+                        targetX: this.canvas.width/2,
+                        targetY: this.canvas.height/2,
+                        speed: 0.02 + Math.random() * 0.02,
+                        progress: 0
+                    });
+                }
+            }
 
-        // --- COUNTER UP ---
-        document.querySelectorAll('.stat-val').forEach(stat => {
-            const count = parseInt(stat.getAttribute('data-count'));
-            gsap.to(stat, {
-                innerText: count, duration: 2.5, snap: { innerText: 1 },
-                scrollTrigger: { trigger: stat, start: "top 90%" },
-                ease: "power3.out"
-            });
-        });
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // --- PROCESS LINE ---
-        gsap.to(".process-line", {
-            width: "100%", duration: 1, ease: "none",
-            scrollTrigger: { trigger: ".process-row", start: "top 80%", end: "top 20%", scrub: true }
-        });
+                if (!this.converged) {
+                    let allFinished = true;
+                    this.ctx.strokeStyle = '#ccff00';
+                    this.ctx.lineWidth = 2;
+                    
+                    this.lines.forEach(l => {
+                        l.progress += l.speed;
+                        if(l.progress > 1) l.progress = 1;
+                        else allFinished = false;
 
-        // --- NAV SPY ---
+                        l.x = l.startX + (l.targetX - l.startX) * l.progress;
+                        l.y = l.startY + (l.targetY - l.startY) * l.progress;
+
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(l.startX, l.startY);
+                        this.ctx.lineTo(l.x, l.y);
+                        this.ctx.stroke();
+                    });
+
+                    if(allFinished) {
+                        this.converged = true;
+                        this.explode();
+                    }
+                }
+
+                if(this.converged) {
+                    this.particles.forEach((p, i) => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy -= 0.1; // Rising force
+                        p.life -= 0.01;
+                        this.ctx.fillStyle = `rgba(204, 255, 0, ${p.life})`;
+                        this.ctx.beginPath();
+                        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                        this.ctx.fill();
+                        if(p.life <= 0) this.particles.splice(i, 1);
+                    });
+                }
+
+                requestAnimationFrame(() => this.draw());
+            }
+
+            explode() {
+                for(let i=0; i<300; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const force = Math.random() * 20 + 5;
+                    this.particles.push({
+                        x: this.canvas.width/2,
+                        y: this.canvas.height/2,
+                        vx: Math.cos(angle) * force,
+                        vy: Math.sin(angle) * force,
+                        size: Math.random() * 3 + 1,
+                        life: 1
+                    });
+                }
+                // Trigger content reveal
+                gsap.to("#hero-title, #hero-p, #hero-btns, #status-tag", { opacity: 1, y: 0, duration: 1, stagger: 0.1, delay: 0.5 });
+                setTimeout(() => { this.exploded = true; window.dispatchEvent(new CustomEvent('forge-complete')); }, 1000);
+            }
+        }
+
+        // --- WORLD SPACE FLOW ENGINE ---
+        class WorldParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('world-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.count = 100;
+                this.active = false;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('forge-complete', () => this.active = true);
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.docHeight = document.documentElement.scrollHeight;
+            }
+
+            createParticle(fromBottom = false) {
+                return {
+                    x: Math.random() * this.canvas.width,
+                    y: fromBottom ? this.docHeight + 50 : Math.random() * this.docHeight,
+                    speed: 1 + Math.random() * 2,
+                    size: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.1
+                };
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                if(!this.active) { requestAnimationFrame(() => this.animate()); return; }
+
+                if(this.particles.length < this.count) {
+                    this.particles.push(this.createParticle(true));
+                }
+
+                const scrollY = window.scrollY;
+
+                this.particles.forEach((p, i) => {
+                    p.y -= p.speed;
+                    
+                    // Render if in viewport
+                    const screenY = p.y - scrollY;
+                    if(screenY > -100 && screenY < this.canvas.height + 100) {
+                        this.ctx.fillStyle = `rgba(204, 255, 0, ${p.opacity})`;
+                        this.ctx.beginPath();
+                        this.ctx.arc(p.x, screenY, p.size, 0, Math.PI*2);
+                        this.ctx.fill();
+                    }
+
+                    if(p.y < -50) this.particles[i] = this.createParticle(true);
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        const forge = new CyberForge();
+        const world = new WorldParticleSystem();
+        
+        forge.draw();
+        world.animate();
+
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 100) nav.classList.add('scrolled');
