@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — High-Performance AI Studio</title>
+    <title>FieldAI — Flagship AI Chatbot Studio</title>
     
     <!-- Engine Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -27,6 +27,8 @@
 
         /* --- STABILITY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; cursor: crosshair; }
 
         /* --- PHYSICS LAYERS --- */
@@ -58,12 +60,11 @@
         section { padding: 160px 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
         /* --- HERO --- */
-        .hero { min-height: 100vh; padding-top: 100px; }
         .hero h1 { max-width: 14ch; margin-bottom: 40px; overflow: hidden; }
-        .hero p { max-width: 600px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; opacity: 0; transform: translateY(20px); }
-        .hero-btns { display: flex; gap: 20px; opacity: 0; transform: translateY(20px); }
+        .hero p { max-width: 600px; font-size: 1.3rem; color: var(--muted); margin-bottom: 60px; opacity: 0; }
+        .hero-btns { display: flex; gap: 20px; opacity: 0; }
 
-        .btn { padding: 22px 48px; font-family: 'Space Grotesk'; font-weight: 700; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); display: inline-flex; align-items: center; justify-content: center; letter-spacing: 1px; font-size: 14px; }
+        .btn { padding: 22px 48px; font-family: 'Space Grotesk'; font-weight: 700; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: 0.4s var(--ease); font-size: 14px; }
         .btn-p { background: var(--accent); color: #000; }
         .btn-s { border: 1px solid var(--border); color: #fff; }
         .btn-p:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--accent-glow); }
@@ -79,30 +80,21 @@
         .col-4 { grid-column: span 4; }
         .card-tag { margin-bottom: 40px; display: block; }
         .card h3 { font-size: 2.2rem; margin-bottom: 20px; }
-        .card p { color: var(--muted); font-size: 1.1rem; font-weight: 300; }
+        .card p { color: var(--muted); }
 
         /* --- SHOWCASE --- */
-        .showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
-        .case-card { text-decoration: none; color: #fff; display: block; group: hover; }
-        .case-img { width: 100%; aspect-ratio: 16/9; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #111; font-weight: 700; transition: 0.5s var(--ease); overflow: hidden; position: relative; }
-        .case-img::after { content: "DEPLOY SYSTEM ↗"; position: absolute; bottom: -40px; font-family: 'Space Grotesk'; font-size: 13px; color: var(--accent); transition: 0.4s var(--ease); opacity: 0; }
-        .case-card:hover .case-img { border-color: var(--accent); color: var(--accent); }
-        .case-card:hover .case-img::after { bottom: 30px; opacity: 1; }
-        .case-card h3 { font-size: 1.8rem; margin-bottom: 8px; }
-        .case-card p { color: var(--muted); font-weight: 300; }
-
-        /* --- CTA --- */
-        .cta-box { text-align: center; padding: 200px 0; border-top: 1px solid var(--border); background: radial-gradient(circle at center, rgba(0, 229, 255, 0.04), transparent 70%); position: relative; overflow: hidden; }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25vw; color: rgba(255,255,255,0.015); z-index: -1; pointer-events: none; white-space: nowrap; }
-        .cta-box h2 { max-width: 900px; margin: 0 auto 40px; }
+        .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .case-card { text-decoration: none; color: #fff; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; transition: 0.4s; padding: 40px; }
+        .case-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #111; font-weight: 700; }
+        .case-card:hover { border-color: var(--accent); }
 
         footer { padding: 120px 0 60px; border-top: 1px solid var(--border); }
-        .footer-bottom { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; }
 
         @media (max-width: 1024px) {
             .col-8, .col-4 { grid-column: span 12; }
             .showcase-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
+            h1 { font-size: 18vw; }
         }
     </style>
 </head>
@@ -131,14 +123,14 @@
         <!-- HERO -->
         <section class="hero" id="home">
             <div class="container">
-                <span class="mono" style="margin-bottom: 30px; display: block; opacity: 0; transform: translateY(20px);" id="status">[ SYSTEM_ONLINE // REMOTE_DEPLOYMENT ]</span>
+                <span class="mono" style="margin-bottom: 30px; display: block; opacity: 0;" id="status">[ SYSTEM_ONLINE // CHATBOT_DEPLOYMENT ]</span>
                 <h1>
-                    <span class="h-mask">We engineer AI</span>
-                    <span class="h-mask" style="color: var(--accent);">that moves.</span>
+                    <span class="h-mask">Intelligent AI</span>
+                    <span class="h-mask" style="color: var(--accent);"> Assistants.</span>
                 </h1>
-                <p id="hero-sub">FieldAI designs and deploys autonomous software agents, intelligent pipelines, and high-performance automation for businesses that scale.</p>
+                <p id="hero-sub">FieldAI builds and deploys high-performance AI chatbots and software agents that plug directly into your business. No hardware. No complexity. Just 24/7 results.</p>
                 <div class="hero-btns" id="btns">
-                    <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Audit</a>
+                    <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book a Chatbot Audit</a>
                     <a href="#work" class="btn btn-s" style="margin-left: 10px;">Technical Labs</a>
                 </div>
             </div>
@@ -148,35 +140,36 @@
         <section id="services">
             <div class="container">
                 <span class="mono" style="margin-bottom: 30px; display: block;">// CORE_CAPABILITIES</span>
-                <h2>Software built for leverage.</h2>
+                <h2>AI software built for leverage.</h2>
                 <div class="bento">
+                    <!-- FLAGSHIP SERVICE -->
                     <div class="card col-8">
                         <div>
-                            <span class="mono card-tag">[AGT_001] Messaging Autonomy</span>
+                            <span class="mono card-tag">[BOT_001] Flagship Service</span>
+                            <h3>Custom AI Chatbots</h3>
+                        </div>
+                        <p>Our core specialty. Using advanced tools like Voiceflow, Botpress, and Manychat, we build intelligent assistants trained exclusively on your business info. We embed them natively on your website or connect them to your WhatsApp to answer questions, capture leads, and book calls 24/7 without you lifting a finger.</p>
+                    </div>
+                    <div class="card col-4">
+                        <div>
+                            <span class="mono card-tag">[AGT_002] Sales</span>
                             <h3>WhatsApp Automation</h3>
                         </div>
-                        <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization without human intervention. Operating 24/7 natively on WhatsApp.</p>
+                        <p>Turn your official WhatsApp into a high-conversion sales channel with autonomous messaging agents.</p>
                     </div>
                     <div class="card col-4">
                         <div>
-                            <span class="mono card-tag">[AGT_002] Search Conversion</span>
+                            <span class="mono card-tag">[AGT_003] Search</span>
                             <h3>Google Messages</h3>
                         </div>
-                        <p>High-velocity automated response engines for Google Business messages and SMS lead capturing.</p>
-                    </div>
-                    <div class="card col-4">
-                        <div>
-                            <span class="mono card-tag">[INF_003] Infrastructure</span>
-                            <h3>Website Engineering</h3>
-                        </div>
-                        <p>Building zero-bloat, high-performance digital architecture designed for extreme speed and conversion.</p>
+                        <p>High-velocity automated response engines for Google Business and search lead capturing.</p>
                     </div>
                     <div class="card col-8">
                         <div>
-                            <span class="mono card-tag">[REC_004] Front-Desk AI</span>
-                            <h3>Automated Reception</h3>
+                            <span class="mono card-tag">[INF_004] Infrastructure</span>
+                            <h3>Website Engineering</h3>
                         </div>
-                        <p>Intelligent receptionists that manage bookings, answer inquiries, and handle inbound logic autonomously. High-velocity remote deployment.</p>
+                        <p>Building zero-bloat, high-performance digital architecture designed for extreme speed and native AI assistant embedding.</p>
                     </div>
                 </div>
             </div>
@@ -189,55 +182,38 @@
                 <h2>Proven deployments.</h2>
                 <div class="showcase-grid">
                     <a href="ww2-game/index.html" class="case-card">
-                        <div class="case-img">COMBAT ENGINE</div>
-                        <span class="mono" style="margin-bottom: 10px; display: block;">[ INTERACTIVE_3D ]</span>
+                        <div class="case-img">COMBAT</div>
                         <h3>WW2 Combat Simulator</h3>
-                        <p>Advanced browser-based physics and rendering engine built for high-intensity performance.</p>
+                        <p>Advanced browser-based physics and rendering engine.</p>
                     </a>
                     <a href="umbilo-carwash/index.html" class="case-card">
-                        <div class="case-img">ELITE CW</div>
-                        <span class="mono" style="margin-bottom: 10px; display: block;">[ INFRASTRUCTURE_UX ]</span>
+                        <div class="case-img">ELITE</div>
                         <h3>Elite Car Wash</h3>
-                        <p>High-conversion digital branding and infrastructure engineering for premium automotive services.</p>
+                        <p>High-conversion digital branding and infrastructure.</p>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- CTA -->
-        <section id="contact" class="cta-box">
-            <div class="watermark">FIELDAI</div>
+        <section id="contact" style="text-align: center; border-top: 1px solid var(--border);">
             <div class="container">
-                <h2>Build the <span style="color: var(--accent);">future</span> of your business.</h2>
-                <p style="color: var(--muted); max-width: 600px; margin: 0 auto 60px; font-size: 1.3rem;">Book a free 15-minute engineering audit. No pitch, just technical leverage.</p>
+                <h2>Ready to automate?</h2>
+                <p style="color: var(--muted); margin-bottom: 40px;">Book a free 15-minute engineering audit.</p>
                 <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Book Audit Call</a>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div class="logo-box">
-                    <span class="logo">FieldAI</span>
-                    <span class="logo-tag">kinetic software engineering</span>
-                </div>
-                <div style="text-align: right;">
-                    <span class="mono" style="color: #333; display: block; margin-bottom: 10px;">// CONNECT</span>
-                    <a href="mailto:hello@fieldai.io" style="text-decoration: none; color: #fff; font-family: 'Space Grotesk'; font-size: 1.5rem;">hello@fieldai.io</a>
-                </div>
-            </div>
-            <div class="footer-bottom mono">
-                <span>© 2026 FIELDAI AGENTIC SYSTEMS.</span>
-                <span style="color: var(--accent);">ALL SYSTEMS OPERATIONAL</span>
-            </div>
+        <div class="container footer-bottom">
+            <span>© 2026 FieldAI.</span>
+            <span class="mono">ALL SYSTEMS OPERATIONAL</span>
         </div>
     </footer>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
         
-        // --- STABILITY ENGINE ---
         const revealSite = () => {
             const preloader = document.getElementById('preloader');
             if(!preloader) return;
@@ -248,10 +224,8 @@
             gsap.to("#hero-sub, #btns, #status, nav", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
         };
 
-        // SAFETY FALLBACK
         setTimeout(revealSite, 2500);
 
-        // --- LENIS ---
         if (typeof Lenis !== 'undefined') {
             try {
                 const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
@@ -260,29 +234,18 @@
             } catch(e) { console.warn("Lenis blocked"); }
         }
 
-        // --- CYBER FORGE ENGINE ---
         class CyberForge {
             constructor() {
                 this.canvas = document.getElementById('forge-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.lines = [];
-                this.particles = [];
-                this.converged = false;
-                this.done = false;
+                this.lines = []; this.particles = []; this.converged = false; this.done = false;
                 this.init();
             }
             init() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
+                this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight;
                 for(let i=0; i<25; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.max(this.canvas.width, this.canvas.height);
-                    this.lines.push({
-                        x1: this.canvas.width/2 + Math.cos(angle) * dist,
-                        y1: this.canvas.height/2 + Math.sin(angle) * dist,
-                        p: 0, 
-                        s: 0.015 + Math.random() * 0.02
-                    });
+                    const angle = Math.random()*Math.PI*2; const dist = Math.max(this.canvas.width, this.canvas.height);
+                    this.lines.push({ x1: this.canvas.width/2 + Math.cos(angle)*dist, y1: this.canvas.height/2 + Math.sin(angle)*dist, p: 0, s: 0.015 + Math.random()*0.02 });
                 }
                 this.draw();
             }
@@ -290,12 +253,10 @@
                 if(this.done) return;
                 this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
                 if(!this.converged) {
-                    let all = true;
-                    this.ctx.strokeStyle = '#00e5ff'; this.ctx.lineWidth = 2;
+                    let all = true; this.ctx.strokeStyle = '#00e5ff'; this.ctx.lineWidth = 2;
                     this.lines.forEach(l => {
                         l.p += l.s; if(l.p >= 1) l.p = 1; else all = false;
-                        const cx = l.x1 + (this.canvas.width/2 - l.x1) * l.p;
-                        const cy = l.y1 + (this.canvas.height/2 - l.y1) * l.p;
+                        const cx = l.x1 + (this.canvas.width/2 - l.x1)*l.p; const cy = l.y1 + (this.canvas.height/2 - l.y1)*l.p;
                         this.ctx.beginPath(); this.ctx.moveTo(l.x1, l.y1); this.ctx.lineTo(cx, cy); this.ctx.stroke();
                     });
                     if(all) { this.converged = true; this.explode(); }
@@ -310,7 +271,7 @@
             }
             explode() {
                 for(let i=0; i<350; i++) {
-                    const a = Math.random() * Math.PI * 2; const f = Math.random() * 25 + 5;
+                    const a = Math.random()*Math.PI*2; const f = Math.random()*20 + 5;
                     this.particles.push({ x: this.canvas.width/2, y: this.canvas.height/2, vx: Math.cos(a)*f, vy: Math.sin(a)*f, size: Math.random()*3+1, l: 1 });
                 }
                 setTimeout(revealSite, 500);
@@ -319,15 +280,12 @@
         }
         new CyberForge();
 
-        // --- WORLD SPACE FLOW ENGINE (LITERAL BOTTOM) ---
         class WorldFlow {
             constructor() {
                 this.canvas = document.getElementById('bg-canvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.count = 120;
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
+                this.particles = []; this.count = 120;
+                this.resize(); window.addEventListener('resize', () => this.resize());
                 this.init();
             }
             resize() { 
@@ -365,7 +323,6 @@
         }
         new WorldFlow();
 
-        // --- INTERACTIVE PHYSICS ---
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const r = card.getBoundingClientRect();
