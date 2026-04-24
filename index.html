@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FieldAI — Premium Software Engineering</title>
+    <title>FieldAI — High-Performance AI Studio</title>
     
     <!-- Engine Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -25,10 +25,8 @@
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- STABILITY RESET --- */
+        /* --- STABILITY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        html.lenis { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto !important; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; cursor: crosshair; }
 
         /* --- PHYSICS LAYERS --- */
@@ -69,7 +67,6 @@
         .btn-p { background: var(--accent); color: #000; }
         .btn-s { border: 1px solid var(--border); color: #fff; }
         .btn-p:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--accent-glow); }
-        .btn-s:hover { border-color: #fff; background: rgba(255,255,255,0.02); }
 
         /* --- BENTO GRID --- */
         .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
@@ -126,7 +123,7 @@
                 <a href="#work">Case Studies</a>
                 <a href="#contact">Contact</a>
             </div>
-            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Initiate Build →</a>
+            <a href="https://formspree.io/f/xwpbqdnl" class="nav-cta">Initiate Build</a>
         </div>
     </nav>
 
@@ -139,7 +136,7 @@
                     <span class="h-mask">We engineer AI</span>
                     <span class="h-mask" style="color: var(--accent);">that moves.</span>
                 </h1>
-                <p id="hero-sub">FieldAI builds autonomous software agents, intelligent pipelines, and high-performance automation for businesses that scale.</p>
+                <p id="hero-sub">FieldAI designs and deploys autonomous software agents, intelligent pipelines, and high-performance automation for businesses that scale.</p>
                 <div class="hero-btns" id="btns">
                     <a href="https://formspree.io/f/xwpbqdnl" class="btn btn-p">Initialize Audit</a>
                     <a href="#work" class="btn btn-s" style="margin-left: 10px;">Technical Labs</a>
@@ -150,36 +147,36 @@
         <!-- SERVICES -->
         <section id="services">
             <div class="container">
-                <span class="mono" style="margin-bottom: 30px; display: block;">// CAPABILITIES</span>
+                <span class="mono" style="margin-bottom: 30px; display: block;">// CORE_CAPABILITIES</span>
                 <h2>Software built for leverage.</h2>
                 <div class="bento">
                     <div class="card col-8">
                         <div>
-                            <span class="mono card-tag">[AGT_001] Autonomous Agents</span>
-                            <h3>Agentic Ops</h3>
+                            <span class="mono card-tag">[AGT_001] Messaging Autonomy</span>
+                            <h3>WhatsApp Automation</h3>
                         </div>
-                        <p>Proprietary software agents that handle outreach, research, and data synchronization without human intervention. Operating 24/7 across your entire stack.</p>
+                        <p>Proprietary software agents that handle outreach, lead qualification, and data synchronization without human intervention. Operating 24/7 natively on WhatsApp.</p>
                     </div>
                     <div class="card col-4">
                         <div>
-                            <span class="mono card-tag">[BOT_002] Neural Interface</span>
-                            <h3>Custom LLMs</h3>
+                            <span class="mono card-tag">[AGT_002] Search Conversion</span>
+                            <h3>Google Messages</h3>
                         </div>
-                        <p>Bespoke chatbots trained on your internal business logic and brand voice for native website integration.</p>
+                        <p>High-velocity automated response engines for Google Business messages and SMS lead capturing.</p>
                     </div>
                     <div class="card col-4">
                         <div>
-                            <span class="mono card-tag">[INT_003] Connect</span>
-                            <h3>Integrations</h3>
+                            <span class="mono card-tag">[INF_003] Infrastructure</span>
+                            <h3>Website Engineering</h3>
                         </div>
-                        <p>Seamlessly connecting your CRMs, Slack, and Databases into a single intelligent engine via API.</p>
+                        <p>Building zero-bloat, high-performance digital architecture designed for extreme speed and conversion.</p>
                     </div>
                     <div class="card col-8">
                         <div>
-                            <span class="mono card-tag">[AUT_004] Pipelines</span>
-                            <h3>Workflow Logic</h3>
+                            <span class="mono card-tag">[REC_004] Front-Desk AI</span>
+                            <h3>Automated Reception</h3>
                         </div>
-                        <p>Replacing manual bottlenecks with intelligent pipelines using n8n, Make, and custom logic. High-velocity remote software deployment.</p>
+                        <p>Intelligent receptionists that manage bookings, answer inquiries, and handle inbound logic autonomously. High-velocity remote deployment.</p>
                     </div>
                 </div>
             </div>
@@ -251,7 +248,7 @@
             gsap.to("#hero-sub, #btns, #status, nav", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
         };
 
-        // SAFETY FALLBACK: Reveal site if animation fails or scripts are blocked
+        // SAFETY FALLBACK
         setTimeout(revealSite, 2500);
 
         // --- LENIS ---
