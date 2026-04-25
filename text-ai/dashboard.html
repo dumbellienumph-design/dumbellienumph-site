@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEXT AI — Dashboard</title>
+  <meta name="description" content="TEXT AI Dashboard — Manage all your text channels, conversations, and AI replies from one unified interface." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <style>
+    .login-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;animation:fadeIn .4s ease}
+    .login-overlay.hidden{display:none}
+    .login-box{width:100%;max-width:400px;padding:48px 36px;background:#0a0a0a;border:1px solid rgba(255,255,255,.06);border-radius:20px;text-align:center;position:relative;overflow:hidden}
+    .login-box::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);pointer-events:none}
+    .login-box .logo-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin:0 auto 20px}
+    .login-box h2{font-size:24px;font-weight:700;color:#fafafa;margin-bottom:6px}
+    .login-box .sub{font-size:14px;color:#52525b;margin-bottom:32px}
+    .login-box .form-group{margin-bottom:16px;text-align:left}
+    .login-box label{display:block;font-size:13px;font-weight:500;color:#a1a1aa;margin-bottom:6px}
+    .login-box input{width:100%;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fafafa;font-size:14px;outline:none;transition:border-color .2s}
+    .login-box input:focus{border-color:rgba(99,102,241,.4)}
+    .login-box input::placeholder{color:#3f3f46}
+    .login-btn{width:100%;padding:14px;border-radius:10px;font-size:14px;font-weight:600;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;cursor:pointer;margin-top:8px;transition:all .2s;box-shadow:0 0 20px rgba(99,102,241,.2)}
+    .login-btn:hover{box-shadow:0 0 30px rgba(99,102,241,.4);transform:translateY(-1px)}
+    .login-error{font-size:12px;color:#f87171;margin-top:12px;display:none}
+    .login-error.show{display:block}
+    .logout-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;color:#71717a;cursor:pointer;transition:all .2s;border:1px solid transparent;width:100%;margin-top:12px}
+    .logout-btn:hover{color:#f87171;background:rgba(239,68,68,.06)}
+    .logout-btn svg{width:18px;height:18px}
+  </style>
+</head>
+<body>
+
+<!-- ═══════ LOGIN GATE ═══════ -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div class="logo-icon">T</div>
+    <h2>TEXT AI</h2>
+    <p class="sub">Sign in to your dashboard</p>
+    <form id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@company.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="login-btn">Sign In</button>
+      <p class="login-error" id="login-error">Invalid email or password. Try again.</p>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">T</div>
+    <span>TEXT AI</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-section="overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </div>
+    <div class="nav-item" data-section="channels">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Channels
+    </div>
+    <div class="nav-item" data-section="conversations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Conversations
+    </div>
+    <div class="nav-item" data-section="analytics">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+      Analytics
+    </div>
+    <div class="nav-item" data-section="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      Settings
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">JD</div>
+    <div class="user-info">
+      <div class="user-name">John Doe</div>
+      <div class="user-plan">Pro Plan</div>
+    </div>
+  </div>
+  <button class="logout-btn" id="logout-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Logout
+  </button>
+</aside>
+
+<!-- ═══════ MAIN CONTENT ═══════ -->
+<main class="main">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview" class="dash-section active">
+    <div class="section-header animate-on-scroll">
+      <h1>Overview</h1>
+      <p>Your AI performance at a glance — updated in real time.</p>
+    </div>
+
+    <div class="stat-cards">
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="stat-card-value">12,847</div>
+        <div class="stat-card-label">Total Replies</div>
+        <div class="stat-card-change up">↑ 12.5%</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        </div>
+        <div class="stat-card-value">5</div>
+        <div class="stat-card-label">Active Channels</div>
+        <div class="stat-card-change up">↑ 1 new</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-card-value">1,203</div>
+        <div class="stat-card-label">Leads Captured</div>
+        <div class="stat-card-change up">↑ 8.3%</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-card-value">0.8s</div>
+        <div class="stat-card-label">Avg Response Time</div>
+        <div class="stat-card-change down">↓ 0.3s faster</div>
+      </div>
+    </div>
+
+    <div class="table-card animate-on-scroll">
+      <div class="table-header">
+        <h3>Recent Conversations</h3>
+        <span class="badge">Last 24 hours</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Contact</th><th>Channel</th><th>Last Message</th><th>Time</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">SM</div><span class="contact-name">Sarah Miller</span></div></td>
+            <td><span class="channel-badge">💬 WhatsApp</span></td>
+            <td>Hey, do you offer bulk discounts?</td>
+            <td>2m ago</td>
+            <td><span class="status-badge open">open</span></td>
+          </tr>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">JK</div><span class="contact-name">James Kim</span></div></td>
+            <td><span class="channel-badge">📸 Instagram</span></td>
+            <td>Love the product! Can I get a sample?</td>
+            <td>18m ago</td>
+            <td><span class="status-badge resolved">resolved</span></td>
+          </tr>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">AT</div><span class="contact-name">Ana Torres</span></div></td>
+            <td><span class="channel-badge">🎵 TikTok</span></td>
+            <td>Where can I buy this? Link pls!</td>
+            <td>34m ago</td>
+            <td><span class="status-badge open">open</span></td>
+          </tr>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">MB</div><span class="contact-name">Mike Brown</span></div></td>
+            <td><span class="channel-badge">📧 Email</span></td>
+            <td>I need to speak with someone about enterprise pricing</td>
+            <td>1h ago</td>
+            <td><span class="status-badge escalated">escalated</span></td>
+          </tr>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">LP</div><span class="contact-name">Lisa Patel</span></div></td>
+            <td><span class="channel-badge">🌐 Chatbot</span></td>
+            <td>Thanks for the quick response!</td>
+            <td>2h ago</td>
+            <td><span class="status-badge resolved">resolved</span></td>
+          </tr>
+          <tr>
+            <td><div class="contact-cell"><div class="contact-avatar">RJ</div><span class="contact-name">Ryan Johnson</span></div></td>
+            <td><span class="channel-badge">📘 Facebook</span></td>
+            <td>Is your store open on weekends?</td>
+            <td>3h ago</td>
+            <td><span class="status-badge resolved">resolved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── CHANNELS ── -->
+  <section id="channels" class="dash-section">
+    <div class="section-header animate-on-scroll">
+      <h1>Channels</h1>
+      <p>Connect and manage your communication channels.</p>
+    </div>
+    <div class="channels-grid">
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon whatsapp">💬</div>
+          <div><div class="toggle active"></div><div class="toggle-label connected">Connected</div></div>
+        </div>
+        <h3>WhatsApp</h3>
+        <div class="api-field"><label>API Key</label><input type="text" value="sk_wa_••••••••4f2a" readonly /></div>
+      </div>
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon tiktok">🎵</div>
+          <div><div class="toggle active"></div><div class="toggle-label connected">Connected</div></div>
+        </div>
+        <h3>TikTok</h3>
+        <div class="api-field"><label>API Key</label><input type="text" value="sk_tt_••••••••9b3c" readonly /></div>
+      </div>
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon instagram">📸</div>
+          <div><div class="toggle active"></div><div class="toggle-label connected">Connected</div></div>
+        </div>
+        <h3>Instagram</h3>
+        <div class="api-field"><label>API Key</label><input type="text" value="sk_ig_••••••••7d1e" readonly /></div>
+      </div>
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon facebook">📘</div>
+          <div><div class="toggle active"></div><div class="toggle-label connected">Connected</div></div>
+        </div>
+        <h3>Facebook</h3>
+        <div class="api-field"><label>API Key</label><input type="text" value="sk_fb_••••••••2a8f" readonly /></div>
+      </div>
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon google">🔍</div>
+          <div><div class="toggle active"></div><div class="toggle-label connected">Connected</div></div>
+        </div>
+        <h3>Google Business</h3>
+        <div class="api-field"><label>API Key</label><input type="text" value="sk_gb_••••••••5c4d" readonly /></div>
+      </div>
+      <div class="channel-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="channel-card-header">
+          <div class="channel-icon chatbot">🤖</div>
+          <div><div class="toggle"></div><div class="toggle-label disconnected">Disconnected</div></div>
+        </div>
+        <h3>Website Chatbot</h3>
+        <div class="api-field"><label>API Key</label><input type="text" placeholder="Enter API key..." /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONVERSATIONS ── -->
+  <section id="conversations" class="dash-section">
+    <div class="section-header animate-on-scroll">
+      <h1>Conversations</h1>
+      <p>View and manage all conversations across channels.</p>
+    </div>
+    <div class="convo-layout animate-on-scroll">
+      <div class="convo-list">
+        <div class="convo-list-header">
+          <h3>Inbox</h3>
+          <input type="text" class="convo-search" placeholder="Search conversations..." />
+        </div>
+        <div class="convo-item active">
+          <div class="contact-avatar">SM</div>
+          <div class="convo-item-info">
+            <div class="convo-item-top"><span class="convo-item-name">Sarah Miller</span><span class="convo-item-time">2m</span></div>
+            <div class="convo-item-preview">Hey, do you offer bulk discounts?</div>
+            <div class="convo-item-channel">💬 WhatsApp</div>
+          </div>
+        </div>
+        <div class="convo-item">
+          <div class="contact-avatar">JK</div>
+          <div class="convo-item-info">
+            <div class="convo-item-top"><span class="convo-item-name">James Kim</span><span class="convo-item-time">18m</span></div>
+            <div class="convo-item-preview">Love the product! Can I get a sample?</div>
+            <div class="convo-item-channel">📸 Instagram</div>
+          </div>
+        </div>
+        <div class="convo-item">
+          <div class="contact-avatar">AT</div>
+          <div class="convo-item-info">
+            <div class="convo-item-top"><span class="convo-item-name">Ana Torres</span><span class="convo-item-time">34m</span></div>
+            <div class="convo-item-preview">Where can I buy this? Link pls!</div>
+            <div class="convo-item-channel">🎵 TikTok</div>
+          </div>
+        </div>
+        <div class="convo-item">
+          <div class="contact-avatar">MB</div>
+          <div class="convo-item-info">
+            <div class="convo-item-top"><span class="convo-item-name">Mike Brown</span><span class="convo-item-time">1h</span></div>
+            <div class="convo-item-preview">I need to speak with someone about enterprise pricing</div>
+            <div class="convo-item-channel">📧 Email</div>
+          </div>
+        </div>
+        <div class="convo-item">
+          <div class="contact-avatar">LP</div>
+          <div class="convo-item-info">
+            <div class="convo-item-top"><span class="convo-item-name">Lisa Patel</span><span class="convo-item-time">2h</span></div>
+            <div class="convo-item-preview">Thanks for the quick response!</div>
+            <div class="convo-item-channel">🌐 Chatbot</div>
+          </div>
+        </div>
+      </div>
+      <div class="convo-chat">
+        <div class="chat-header">
+          <div class="contact-avatar">SM</div>
+          <div>
+            <div class="chat-header-name">Sarah Miller</div>
+            <div class="chat-header-channel">💬 WhatsApp • Active now</div>
+          </div>
+        </div>
+        <div class="chat-messages">
+          <div class="message incoming">
+            <div class="message-bubble">Hi there! I saw your product on Instagram and I'm really interested.</div>
+            <span class="message-time">10:24 AM</span>
+          </div>
+          <div class="message outgoing">
+            <div class="message-bubble">Hey Sarah! Thanks for reaching out. We'd love to help you out. What product caught your eye?</div>
+            <span class="message-time">10:24 AM • AI Reply</span>
+          </div>
+          <div class="message incoming">
+            <div class="message-bubble">The premium starter kit. Do you offer bulk discounts? I run a small salon and would need about 20 units.</div>
+            <span class="message-time">10:26 AM</span>
+          </div>
+          <div class="message outgoing">
+            <div class="message-bubble">Great choice! Yes, we absolutely offer bulk pricing for orders of 10+ units. For 20 units, you'd get 15% off the regular price.</div>
+            <span class="message-time">10:26 AM • AI Reply</span>
+          </div>
+          <div class="message incoming">
+            <div class="message-bubble">That sounds amazing! Hey, do you offer bulk discounts on shipping too? And what's the delivery timeline?</div>
+            <span class="message-time">10:28 AM</span>
+          </div>
+        </div>
+        <div class="ai-suggestion">
+          <div class="ai-suggestion-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1.27A7 7 0 0 1 14 22h-4a7 7 0 0 1-6.73-3H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+            AI Suggested Reply
+          </div>
+          <p>Absolutely, Sarah! For bulk orders of 20+ units, we offer free standard shipping. Delivery typically takes 5-7 business days. I can also set up a dedicated account for your salon so reordering is a breeze. Want me to send over the wholesale catalog?</p>
+          <div class="ai-suggestion-actions">
+            <button class="ai-btn primary">Send Reply</button>
+            <button class="ai-btn secondary">Edit First</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ANALYTICS (placeholder) ── -->
+  <section id="analytics" class="dash-section">
+    <div class="section-header animate-on-scroll">
+      <h1>Analytics</h1>
+      <p>Deep insights into your AI performance across all channels.</p>
+    </div>
+    <div class="stat-cards">
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+        <div class="stat-card-value">94.2%</div>
+        <div class="stat-card-label">AI Resolution Rate</div>
+        <div class="stat-card-change up">↑ 3.1%</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="stat-card-value">38.7%</div>
+        <div class="stat-card-label">Lead Conversion</div>
+        <div class="stat-card-change up">↑ 5.2%</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="stat-card-value">4.8★</div>
+        <div class="stat-card-label">Avg Satisfaction</div>
+        <div class="stat-card-change up">↑ 0.3</div>
+      </div>
+      <div class="stat-card animate-on-scroll">
+        <div class="card-glow"></div>
+        <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="stat-card-value">$47.2k</div>
+        <div class="stat-card-label">Revenue Attributed</div>
+        <div class="stat-card-change up">↑ 22%</div>
+      </div>
+    </div>
+    <div class="table-card animate-on-scroll">
+      <div class="table-header"><h3>Channel Performance</h3><span class="badge">This month</span></div>
+      <table>
+        <thead><tr><th>Channel</th><th>Messages</th><th>Replies</th><th>Resolution</th><th>Leads</th></tr></thead>
+        <tbody>
+          <tr><td>💬 WhatsApp</td><td>3,241</td><td>3,198</td><td>96.1%</td><td>412</td></tr>
+          <tr><td>📸 Instagram</td><td>2,847</td><td>2,790</td><td>93.8%</td><td>298</td></tr>
+          <tr><td>🎵 TikTok</td><td>4,102</td><td>4,050</td><td>91.2%</td><td>187</td></tr>
+          <tr><td>📧 Email</td><td>1,523</td><td>1,489</td><td>97.3%</td><td>203</td></tr>
+          <tr><td>📘 Facebook</td><td>892</td><td>871</td><td>95.5%</td><td>67</td></tr>
+          <tr><td>🌐 Chatbot</td><td>1,204</td><td>1,180</td><td>93.0%</td><td>36</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── SETTINGS ── -->
+  <section id="settings" class="dash-section">
+    <div class="section-header animate-on-scroll">
+      <h1>Settings</h1>
+      <p>Configure your AI brain and notification preferences.</p>
+    </div>
+    <div class="settings-grid">
+      <div class="settings-card animate-on-scroll">
+        <h3>Business Profile</h3>
+        <p class="desc">Your business information used by the AI.</p>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" class="form-input" value="Acme Beauty Co." />
+        </div>
+        <div class="form-group">
+          <label>Industry</label>
+          <input type="text" class="form-input" value="Beauty & Cosmetics" />
+        </div>
+        <div class="form-group">
+          <label>Website</label>
+          <input type="text" class="form-input" value="https://acmebeauty.com" />
+        </div>
+        <button class="save-btn">Save Changes</button>
+      </div>
+
+      <div class="settings-card animate-on-scroll">
+        <h3>Brand Voice</h3>
+        <p class="desc">Describe how your AI should communicate.</p>
+        <div class="form-group">
+          <label>Voice Description</label>
+          <textarea class="form-input">Friendly, professional, and approachable. We use casual language but stay knowledgeable. We love emojis sparingly and always end with a clear call-to-action. Our tone is warm and helpful — like talking to a smart friend who knows beauty inside out.</textarea>
+        </div>
+        <button class="save-btn">Save Changes</button>
+      </div>
+
+      <div class="settings-card animate-on-scroll">
+        <h3>AI Personality</h3>
+        <p class="desc">Adjust how your AI responds to customers.</p>
+        <div class="form-group">
+          <label>Response Style</label>
+          <div class="slider-container">
+            <div class="slider-labels">
+              <span>Professional</span>
+              <span class="active">Balanced</span>
+              <span>Casual</span>
+            </div>
+            <input type="range" id="ai-personality" min="0" max="100" value="60" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emoji Usage</label>
+          <div class="slider-container">
+            <div class="slider-labels">
+              <span>None</span>
+              <span class="active">Moderate</span>
+              <span>Heavy</span>
+            </div>
+            <input type="range" min="0" max="100" value="45" />
+          </div>
+        </div>
+        <button class="save-btn">Save Changes</button>
+      </div>
+
+      <div class="settings-card animate-on-scroll">
+        <h3>Notifications</h3>
+        <p class="desc">Control when and how you get alerted.</p>
+        <div class="notif-row">
+          <div class="notif-info"><h4>Escalated conversations</h4><p>Get notified when AI escalates to human</p></div>
+          <div class="toggle active"></div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-info"><h4>New leads captured</h4><p>Alert when a new lead is identified</p></div>
+          <div class="toggle active"></div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-info"><h4>Daily performance digest</h4><p>Summary of AI performance each morning</p></div>
+          <div class="toggle active"></div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-info"><h4>Channel disconnections</h4><p>Alert if a channel loses connection</p></div>
+          <div class="toggle"></div>
+        </div>
+        <button class="save-btn">Save Changes</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  /* ── Login Gate ── */
+  const VALID_EMAIL = 'demo@fieldai.co.za';
+  const VALID_PASS = 'demo1234';
+  const overlay = document.getElementById('login-overlay');
+  const loginForm = document.getElementById('login-form');
+  const loginError = document.getElementById('login-error');
+
+  if (localStorage.getItem('textai_logged_in') === 'true') {
+    overlay.classList.add('hidden');
+  }
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-password').value;
+    if (email === VALID_EMAIL && pass === VALID_PASS) {
+      localStorage.setItem('textai_logged_in', 'true');
+      overlay.style.animation = 'fadeIn .3s ease reverse';
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+      loginError.classList.remove('show');
+    } else {
+      loginError.classList.add('show');
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('textai_logged_in');
+    overlay.classList.remove('hidden');
+    overlay.style.animation = 'fadeIn .4s ease';
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-password').value = '';
+    loginError.classList.remove('show');
+  });
+</script>
+<script src="dashboard.js"></script>
+</body>
+</html>
