@@ -89,10 +89,10 @@ export const Hero = () => {
           </Magnetic>
           <Magnetic>
             <a
-              href="#capabilities"
+              href="#work"
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-secondary/40 px-7 py-3.5 text-sm font-medium text-foreground transition-all hover:border-primary/50 hover:bg-secondary"
             >
-              See Capabilities
+              See Our Work
             </a>
           </Magnetic>
         </motion.div>

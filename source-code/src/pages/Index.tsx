@@ -12,6 +12,8 @@ import { Marquee } from "@/components/landing/Marquee";
 import { NeuralField } from "@/components/landing/NeuralField";
 import { SystemTicker } from "@/components/landing/SystemTicker";
 
+import { Portfolio } from "@/components/landing/Portfolio";
+
 const Index = () => {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
@@ -23,6 +25,7 @@ const Index = () => {
         <Stats />
         <Marquee />
         <Capabilities />
+        <Portfolio />
         <Process />
         <Pricing />
         <CTA />
