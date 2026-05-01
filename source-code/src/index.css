@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core dark palette */
+    --background: 240 18% 4%;
+    --foreground: 220 20% 96%;
+
+    --card: 240 16% 7%;
+    --card-foreground: 220 20% 96%;
+
+    --popover: 240 16% 7%;
+    --popover-foreground: 220 20% 96%;
+
+    /* Electric indigo */
+    --primary: 244 90% 66%;
+    --primary-foreground: 240 18% 4%;
+    --primary-glow: 250 95% 75%;
+
+    --secondary: 240 12% 12%;
+    --secondary-foreground: 220 20% 96%;
+
+    --muted: 240 12% 11%;
+    --muted-foreground: 230 12% 60%;
+
+    --accent: 244 90% 66%;
+    --accent-foreground: 240 18% 4%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 220 20% 96%;
+
+    --border: 240 12% 14%;
+    --input: 240 12% 14%;
+    --ring: 244 90% 66%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(244 90% 66%), hsl(265 90% 70%));
+    --gradient-radial: radial-gradient(ellipse at top, hsl(244 90% 66% / 0.18), transparent 60%);
+    --gradient-text: linear-gradient(180deg, hsl(220 20% 98%), hsl(230 15% 70%));
+    --gradient-border: linear-gradient(135deg, hsl(244 90% 66% / 0.5), hsl(244 90% 66% / 0));
+
+    /* Shadows */
+    --shadow-glow: 0 0 80px -10px hsl(244 90% 66% / 0.5);
+    --shadow-elegant: 0 20px 60px -20px hsl(244 90% 50% / 0.35);
+    --shadow-card: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset, 0 30px 60px -30px hsl(0 0% 0% / 0.6);
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(244 90% 50% / 0.18), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 110%, hsl(265 90% 50% / 0.12), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.03em;
+  }
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  }
+
+  .text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass {
+    background: hsl(240 16% 8% / 0.6);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .card-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-glow::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.6), transparent 50%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-out);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+
+  .noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .marquee {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 40s linear infinite;
+  }
+}
+
+@layer utilities {
+  .container-tight {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
