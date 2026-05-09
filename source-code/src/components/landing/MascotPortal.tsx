@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 /**
  * MascotPortal — a global mascot that actively follows the cursor and,
@@ -28,6 +29,7 @@ export const MascotPortal = () => {
   const [phase, setPhase] = useState<"idle" | "fly" | "infuse" | "reveal">("idle");
   const [parked, setParked] = useState(false);
   const [hovering, setHovering] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const parkedRef = useRef(false);
   const hoveringRef = useRef(false);
   const phaseRef = useRef(phase);
@@ -231,6 +233,10 @@ export const MascotPortal = () => {
             setParked((p) => !p);
             setHovering(false);
           }}
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            setChatOpen(true);
+          }}
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
           aria-label={parked ? "Wake mascot" : "Park mascot"}
@@ -276,15 +282,44 @@ export const MascotPortal = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.9 }}
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full glass px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground"
+                className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-2xl glass px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-foreground text-center"
               >
-                <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-primary align-middle animate-pulse" />
-                {parked ? "click to wake" : "click to charge"}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                    <span>Tap to chat</span>
+                  </div>
+                  <div className="text-[8px] opacity-70">Double click to ask AI</div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.button>
       </motion.div>
+
+      {/* Bot Overlay */}
+      <AnimatePresence>
+        {chatOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed bottom-4 right-4 z-[60] h-[680px] w-[420px] overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+          >
+            <button
+              onClick={() => setChatOpen(false)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-foreground/10 p-2 text-foreground/50 transition-colors hover:bg-foreground/20 hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <iframe
+              src="https://dumbellienumph-design.github.io/fieldai-bot/?embed=true"
+              className="h-full w-full border-none"
+              allow="microphone"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Infuse burst at the button */}
       <AnimatePresence>
